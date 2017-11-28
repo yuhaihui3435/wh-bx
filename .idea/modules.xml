@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/wh-admin-vue/wh-admin-vue.iml" filepath="$PROJECT_DIR$/wh-admin-vue/wh-admin-vue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wh-bx.iml" filepath="$PROJECT_DIR$/wh-bx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/whbx-web/whbx-web.iml" filepath="$PROJECT_DIR$/whbx-web/whbx-web.iml" />
+    </modules>
+  </component>
+</project>

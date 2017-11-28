@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="whbx-web:war">
+    <output-path>$PROJECT_DIR$/whbx-web/target</output-path>
+    <root id="archive" name="whbx-web.war">
+      <element id="artifact" artifact-name="whbx-web:war exploded" />
+    </root>
+  </artifact>
+</component>
