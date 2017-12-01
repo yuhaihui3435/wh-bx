@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Param;
 import com.yhh.whbx.kits.FileKit;
 import com.yhh.whbx.vo.SSQ;
 
@@ -14,11 +16,23 @@ import java.util.List;
 /**
  * Created by yuhaihui8913 on 2017/11/16.
  */
-public class CoreDataInit {
+public class CoreData {
 
 
+    public static void loadAllCache(){
+        loadParam();loadSSQ();
+    }
 
-    public static void initSSQ(){
+    public static void loadParam(){
+        List<Param> list=Param.dao.find("select * from "+Param.TABLE);
+        for(Param p:list){
+            CacheKit.put(Consts.CACHE_NAMES.paramCache.name(),p.getK(),p.getVal());
+        }
+        StaticLog.info("系统参数加载成功");
+    }
+
+
+    public static void loadSSQ(){
         String shengStr= FileKit.loadFile2Str("jsonData/shengData.json");
         String shiStr=FileKit.loadFile2Str("jsonData/shiData.json");
         String quStr=FileKit.loadFile2Str("jsonData/quData.json");
@@ -70,8 +84,9 @@ public class CoreDataInit {
             }
             CacheKit.put(Consts.CACHE_NAMES.ssq.name(),shengCk,JSON.toJSONString(shiList));
             shiList.clear();
-
         }
+        StaticLog.info("省市区数据加载成功");
+
     }
 
 

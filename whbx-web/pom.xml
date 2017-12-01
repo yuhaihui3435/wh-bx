@@ -20,6 +20,10 @@
             <artifactId>jfinal</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>cos</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.xiaoleilu</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
@@ -56,6 +60,15 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+        </dependency>
+        <!-- html 解析器 -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
         </dependency>
     </dependencies>
     <build>

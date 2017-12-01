@@ -1,10 +1,14 @@
 package com.yhh.whbx;
 
+import org.jsoup.safety.Whitelist;
+
 /**
  * Created by yuhaihui8913 on 2017/11/14.
  * 常量类
  */
 public class Consts {
+
+    public static final Whitelist basicWithImages=Whitelist.basicWithImages();
 
     public static final String ENCRYPT_KEY="yuhaihui3435-never-late";
 
@@ -103,7 +107,7 @@ public class Consts {
     }
 
     public enum CACHE_NAMES {
-        paramCache,ssq
+        paramCache,ssq,userRoles,user,userReses
     }
 
 }

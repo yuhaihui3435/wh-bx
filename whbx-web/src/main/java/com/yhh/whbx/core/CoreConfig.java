@@ -4,6 +4,7 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
 import com.jfinal.config.*;
 import com.jfinal.core.JFinal;
+import com.jfinal.json.FastJsonFactory;
 import com.jfinal.log.Log4jLogFactory;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -24,6 +25,7 @@ public class CoreConfig extends JFinalConfig{
         constants.setError403View("/WEB-INF/template/common/403.html");
         constants.setError401View("/WEB-INF/template/common/401.html");
         constants.setEncoding("UTF-8");
+        constants.setJsonFactory(new FastJsonFactory());
         constants.setLogFactory(new Log4jLogFactory());
     }
 
@@ -85,6 +87,6 @@ public class CoreConfig extends JFinalConfig{
     @Override
     public void afterJFinalStart() {
         super.afterJFinalStart();
-        CoreDataInit.initSSQ();//省市区 Cache 初始化
+        CoreData.loadAllCache();//省市区 Cache 初始化
     }
 }
