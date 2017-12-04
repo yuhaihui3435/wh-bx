@@ -3,6 +3,10 @@
         <Row>
             <Col span="24">
             <Card>
+                <p slot="title">
+                    <Icon type="gear-a"></Icon>
+                    参数设置
+                </p>
                 <Form :label-width="80">
                     <Tabs>
 
@@ -37,12 +41,7 @@
                                 <Input v-model="param.siteSEO" type="textarea" style="width: 300px"
                                        :autosize="{minRows: 5,maxRows: 5}" placeholder="请输入..."></Input>
                             </FormItem>
-                            <FormItem label="">
-                                <Button type="primary" :loading="buttonLoading" icon="checkmark-round" @click="">
-                                    <span v-if="!buttonLoading">保存</span>
-                                    <span v-else>数据通信中...</span>
-                                </Button>
-                            </FormItem>
+
                         </Tab-pane>
                         <Tab-pane label="图片服务器信息" icon="image">
                             <FormItem label="AK">
@@ -57,12 +56,8 @@
                             <FormItem label="图片链接">
                                 <Input v-model="param.qn_url" placeholder="请输入..." style="width: 300px"></Input>
                             </FormItem>
-                            <FormItem label="">
-                                <Button type="primary" :loading="buttonLoading" icon="checkmark-round" @click="">
-                                    <span v-if="!buttonLoading">保存</span>
-                                    <span v-else>数据通信中...</span>
-                                </Button>
-                            </FormItem>
+
+
                         </Tab-pane>
                         <Tab-pane label="短信设置" icon="android-textsms">
                             <FormItem label="AK">
@@ -78,12 +73,7 @@
                                 <Input v-model="param.smsTemplate" placeholder="请输入..." style="width: 300px"
                                        type="textarea" :autosize="{minRows: 5,maxRows: 5}"></Input>
                             </FormItem>
-                            <FormItem label="">
-                                <Button type="primary" :loading="buttonLoading" icon="checkmark-round" @click="">
-                                    <span v-if="!buttonLoading">保存</span>
-                                    <span v-else>数据通信中...</span>
-                                </Button>
-                            </FormItem>
+
                         </Tab-pane>
                         <Tab-pane label="EMAIL设置" icon="email">
                             <FormItem label="smtp">
@@ -99,33 +89,25 @@
                                 <Input v-model="param.emailTemplate" placeholder="请输入..." style="width: 300px"
                                        type="textarea" :autosize="{minRows: 5,maxRows: 5}"></Input>
                             </FormItem>
-                            <FormItem label="">
-                                <Button type="primary" :loading="buttonLoading" icon="checkmark-round" @click="">
-                                    <span v-if="!buttonLoading">保存</span>
-                                    <span v-else>数据通信中...</span>
-                                </Button>
-                            </FormItem>
+
                         </Tab-pane>
                         <Tab-pane label="其它设置" icon="settings">
+                            <FormItem label="微信公众账号二维码图片">
+                                <Input v-model="param.wx_pic" placeholder="请输入..." style="width: 300px"></Input>
+                            </FormItem>
                             <FormItem label="图片上传最大值">
                                 <Input v-model="param.pic_maxSize" placeholder="请输入..." style="width: 300px"></Input>
                             </FormItem>
-                            <FormItem label="匿名图片">
-                                <Input v-model="param.anonymousAvatar" placeholder="请输入..."
-                                       style="width: 300px"></Input>
-                            </FormItem>
-                            <FormItem label="图片是否加水印">
-                                <i-switch v-model="param.watermark" @on-change=""></i-switch>
-                            </FormItem>
-                            <FormItem label="">
-                                <Button type="primary" :loading="buttonLoading" icon="checkmark-round" @click="">
-                                    <span v-if="!buttonLoading">保存</span>
-                                    <span v-else>数据通信中...</span>
-                                </Button>
-                            </FormItem>
+
+
                         </Tab-pane>
                     </Tabs>
-
+                    <FormItem>
+                    <Button type="success" :loading="buttonLoading" icon="checkmark-round" @click="saveData">
+                        <span v-if="!buttonLoading">保存</span>
+                        <span v-else>数据通信中...</span>
+                    </Button>
+                    </FormItem>
                 </Form>
             </Card>
             </Col>
@@ -135,13 +117,29 @@
 
 
 <script>
+    import {mapState} from 'vuex'
     export default {
+        name:'param',
         data () {
             return {
-                param: {
-                    buttonLoading: false
-                }
+                buttonLoading: false,
             }
+        },
+        methods:{
+            saveData:function(){
+                this.$store.dispatch('save_param')
+            }
+        },
+        components: {
+
+        },
+        computed: {
+            ...mapState({
+                'param':state =>state.param.map
+            })
+        },
+        mounted () {
+            this.$store.dispatch('param_list')
         }
     }
 </script>

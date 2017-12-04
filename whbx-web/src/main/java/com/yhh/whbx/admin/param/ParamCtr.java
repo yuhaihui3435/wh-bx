@@ -9,7 +9,9 @@ import com.yhh.whbx.core.CoreData;
 import com.yhh.whbx.kits.QiNiuKit;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yuhaihui8913 on 2017/12/1.
@@ -21,7 +23,11 @@ public class ParamCtr extends CoreController {
      */
     public void getSettingJSON() {
         List<Param> paramList = Param.dao.find("select * from " + Param.TABLE);
-        renderJson(paramList);
+        Map<String,String> map=new HashMap<>();
+        for (Param param:paramList){
+            map.put(param.getK(),param.getVal());
+        }
+        renderJson(map);
     }
 
     /**

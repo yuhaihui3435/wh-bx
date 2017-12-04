@@ -10,6 +10,8 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.yhh.whbx.admin.param.ParamCtr;
+import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.ResKit;
 
 /**
@@ -31,7 +33,12 @@ public class CoreConfig extends JFinalConfig{
 
     @Override
     public void configRoute(Routes routes) {
-
+        routes.add(new Routes() {
+            @Override
+            public void config() {
+                add("/ad00", ParamCtr.class);
+            }
+        });
     }
 
     @Override
@@ -76,7 +83,7 @@ public class CoreConfig extends JFinalConfig{
 
     @Override
     public void configInterceptor(Interceptors interceptors) {
-
+        interceptors.add(new ExceptionInterceptor());
     }
 
     @Override

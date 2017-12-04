@@ -57,11 +57,15 @@
             </div>
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
+
             <div class="single-page">
                 <keep-alive :include="cachePage">
                     <router-view></router-view>
                 </keep-alive>
             </div>
+
+            <Spin size="large" fix v-if="spinShow"><Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+                <div>数据加载中...</div></Spin>
         </div>
     </div>
 </template>
@@ -75,6 +79,7 @@
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
     import util from '@/libs/util.js';
+    import {mapState} from 'vuex'
     
     export default {
         components: {
@@ -118,7 +123,10 @@
             },
             mesCount () {
                 return this.$store.state.app.messageCount;
-            }
+            },
+            ...mapState({
+                'spinShow':state =>state.spinShow
+            })
         },
         methods: {
             init () {

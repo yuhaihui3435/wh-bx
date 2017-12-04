@@ -3,12 +3,15 @@ import Vuex from 'vuex';
 
 import app from './modules/app';
 import user from './modules/user';
+import param from './modules/param';
+import role from './modules/role';
+import art from './modules/art';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        //
+        spinShow:false
     },
     mutations: {
         //
@@ -18,8 +21,13 @@ const store = new Vuex.Store({
     },
     modules: {
         app,
-        user
+        user,
+        param,
+        role,
+        art
     }
 });
+
+
 
 export default store;
