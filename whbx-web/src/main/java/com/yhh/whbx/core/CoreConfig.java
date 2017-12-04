@@ -10,7 +10,10 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.yhh.whbx.admin.Res.ResCtr;
 import com.yhh.whbx.admin.param.ParamCtr;
+import com.yhh.whbx.admin.role.RoleCtr;
+import com.yhh.whbx.admin.user.UserCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.ResKit;
 
@@ -37,6 +40,9 @@ public class CoreConfig extends JFinalConfig{
             @Override
             public void config() {
                 add("/ad00", ParamCtr.class);
+                add("/ad01", UserCtr.class);
+                add("/ad02", RoleCtr.class);
+                add("/ad03", ResCtr.class);
             }
         });
     }

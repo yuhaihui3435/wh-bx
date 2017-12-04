@@ -99,7 +99,6 @@
                                 <Input v-model="param.pic_maxSize" placeholder="请输入..." style="width: 300px"></Input>
                             </FormItem>
 
-
                         </Tab-pane>
                     </Tabs>
                     <FormItem>

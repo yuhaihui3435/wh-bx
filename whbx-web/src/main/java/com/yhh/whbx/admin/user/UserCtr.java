@@ -13,7 +13,6 @@ import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.interceptors.UserInterceptor;
 import com.yhh.whbx.kits.ext.BCrypt;
 
 import java.math.BigInteger;
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/12/2.
  */
-@Before(UserInterceptor.class)
+
 public class UserCtr extends CoreController {
     public void list() {
         Page<User> page;

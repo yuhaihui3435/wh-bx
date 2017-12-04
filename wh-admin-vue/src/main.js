@@ -50,12 +50,12 @@ axiosIns.interceptors.request.use(function (config) {
     //     config.headers.Token = token;
     // }
 
-    store.state.spinShow=true
+    store.commit('upadteSpinshow',true);
     return config;
 });
 
 axiosIns.interceptors.response.use(function (response) {
-    store.state.spinShow=false;
+    store.commit('upadteSpinshow',false);
     let data = response.data;
     let status = response.status;
     if (status === 200) {

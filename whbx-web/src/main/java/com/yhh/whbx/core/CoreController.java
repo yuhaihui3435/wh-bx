@@ -14,8 +14,8 @@ import java.util.List;
  * Created by 于海慧（125227112@qq.com） on 2016/12/1.
  */
 public class CoreController extends Controller {
-    public static final String PAGENUMBER = "offset";
-    public static final String PAGESIZE = "limit";
+    public static final String PAGENUMBER = "pn";
+    public static final String PAGESIZE = "ps";
     public static final String ORDER="order";
     public static final String ERROR_MSG="_err_msg";
     public static final String SUCCESS_MSG="_suc_msg";
@@ -31,7 +31,7 @@ public class CoreController extends Controller {
     public int getPN() {
         int pagenumber = getParaToInt(PAGENUMBER, 0);
 
-        pagenumber = (pagenumber == 0) ? 1 : pagenumber/getPS()+1;
+        pagenumber = (pagenumber == 0) ? 1 : pagenumber;
         return pagenumber;
     }
 

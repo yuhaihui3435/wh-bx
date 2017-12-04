@@ -12,14 +12,13 @@ import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.RoleRes;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.interceptors.UserInterceptor;
 
 import java.util.List;
 
 /**
  * Created by yuhaihui8913 on 2016/12/5.
  */
-@Before(UserInterceptor.class)
+//@Before(UserInterceptor.class)
 public class RoleCtr extends CoreController{
 
 

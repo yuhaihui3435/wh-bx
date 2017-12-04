@@ -14,7 +14,9 @@ const store = new Vuex.Store({
         spinShow:false
     },
     mutations: {
-        //
+        upadteSpinshow(state,p){
+            state.spinShow=p;
+        }
     },
     actions: {
 

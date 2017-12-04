@@ -1,7 +1,12 @@
 import Cookies from 'js-cookie';
 
 const user = {
-    state: {},
+    state: {
+        userList:[],
+        totalPage:0,
+        pageNumber:1,
+
+    },
     mutations: {
         logout (state, vm) {
             Cookies.remove('user');
@@ -19,6 +24,22 @@ const user = {
             if (theme) {
                 localStorage.theme = theme;
             }
+        },
+        set_user_list(state,page){
+            state.userList=page.list
+            state.totalPage=page.totalPage
+            state.pageNumber=page.pageNumber
+        }
+
+    },
+    actions:{
+        user_list:function ({ commit,state },param) {
+            if(param&&!param.pn){
+                param.pn=state.pageNumber;
+            }
+            this._vm.$axios.post('/ad01/list',param).then((res)=>{
+                commit('set_user_list',res)
+            });
         }
     }
 };

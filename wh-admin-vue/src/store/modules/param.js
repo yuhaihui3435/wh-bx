@@ -20,7 +20,7 @@ const param = {
         save_param:function ({ commit,state },param) {
             console.info(state.map)
             console.info(this._vm.$axios)
-            this._vm.$axios.post('/ad00/save',state.map,{'headers.Content-Type':'multipart/form-data'}).then((res)=>{
+            this._vm.$axios.post('/ad00/save',state.map).then((res)=>{
 
             });
         }
