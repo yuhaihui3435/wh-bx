@@ -83,12 +83,16 @@ ajaxMethod.forEach((method)=> {
                     //     path: "/login"
                     // }),2000)
                     //if(response.data.resCode=='success'){
-                    if(data.resCode&&data.resCode=='success')
+                    if(data.resCode&&data.resCode=='success') {
                         message.success(data.resMsg);
-                    else if(data.resCode&&data.resCode=='fail')
+                    }
+                    else if(data.resCode&&data.resCode=='fail') {
                         message.error(data.resMsg);
-                    //}
+                    }
+
                     resolve(data);
+
+
                 } else if (response.status === 403) {
                     router.push({
                         path: "/403"

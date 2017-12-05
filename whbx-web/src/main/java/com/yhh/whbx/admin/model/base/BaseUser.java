@@ -233,4 +233,12 @@ public abstract class BaseUser<M extends BaseUser<M>> extends CoreModel<M> imple
 		return getStr("unionid");
 	}
 
+	public void setDAt(java.util.Date dAt) {
+		set("d_at", dAt);
+	}
+
+	public java.util.Date getDAt() {
+		return get("d_at");
+	}
+
 }

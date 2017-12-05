@@ -6,7 +6,7 @@ const user = {
         userList:[],
         totalPage:0,
         pageNumber:1,
-        user:{roleIds:[]}
+        user:{}
     },
     mutations: {
         logout (state, vm) {
@@ -31,8 +31,14 @@ const user = {
             state.totalPage=page.totalPage
             state.pageNumber=page.pageNumber
         },
-        user_reset(state,vm){
-            state.user={roleIds:[]}
+        user_reset(state,param){
+
+            if(param) {
+                state.user = kit.clone(param)
+            }
+            else
+                state.user={roleIds:[],isAdmin:'1'};
+
         }
     },
     actions:{
@@ -45,16 +51,46 @@ const user = {
             });
         },
 
-        user_save:function ({ commit,state },param) {
-
+        user_save:function ({ commit,state },action) {
+            let vm=this._vm;
             let p=kit.clone(state.user)
             let rIds=p.roleIds;
             let rIds_str=rIds.join(",");
             p.roleIds=rIds_str;
-            this._vm.$axios.post('/ad01/save',p).then((res)=>{
-                commit('user_reset');
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/'+action, p).then((res) => {
+                    if(res.resCode&&res.resCode=='success'){
+                        commit('user_reset');
+                    }
+                    resolve(res.resCode);
+                });
+            });
+        },
+        user_del:function({commit,state},param){
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/del', param).then((res) => {
+                    resolve(res.resCode)
+                })
+            });
+        },
+        user_stop:function({commit,state},param){
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/forbidden', param).then((res) => {
+                    resolve(res.resCode)
+                })
+            });
+        },
+        user_active:function({commit,state},param){
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/resumed', param).then((res) => {
+                    resolve(res.resCode)
+                })
             });
         }
+
     }
 };
 

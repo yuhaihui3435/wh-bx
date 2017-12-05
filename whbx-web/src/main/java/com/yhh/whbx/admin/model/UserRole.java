@@ -1,7 +1,5 @@
 package com.yhh.whbx.admin.model;
 
-import com.jfinal.plugin.ehcache.CacheKit;
-import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.base.BaseUserRole;
 
 import java.util.List;
@@ -16,8 +14,8 @@ public class UserRole extends BaseUserRole<UserRole> {
 		List<UserRole> userRoles = dao.find("select id from s_user_role where rId=?", roleId);
 		for (UserRole ur : userRoles) {
 			ur.delete();
-			CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),ur.getUid());
-			CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),ur.getUid());
+//			CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),ur.getUid());
+//			CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),ur.getUid());
 		}
 	}
 
@@ -25,8 +23,8 @@ public class UserRole extends BaseUserRole<UserRole> {
 		List<UserRole> userRoles = dao.find("select id from s_user_role where uId=?", userId);
 		for (UserRole ur : userRoles) {
 			ur.delete();
-			CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),ur.getUid());
-			CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),ur.getUid());
+//			CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),ur.getUid());
+//			CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),ur.getUid());
 		}
 	}
 }

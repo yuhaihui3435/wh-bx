@@ -7,7 +7,6 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.collection.CollUtil;
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Role;
@@ -28,7 +27,7 @@ public class UserCtr extends CoreController {
     public void list() {
         Page<User> page;
         String serach = getPara("search");
-        StringBuffer where = new StringBuffer("from s_user userinfo where 1=1 ");
+        StringBuffer where = new StringBuffer("from s_user userinfo where 1=1 and d_at is null  ");
         if (!isParaBlank("search")) {
             where.append(" and (instr(userinfo.email,?)>0 or instr(userinfo.phone,?)>0 or instr(userinfo.nickname,?)>0 or instr(userinfo.loginname,?)>0)");
             page = User.dao.paginate(getPN(), getPS(), "select * ", where.toString(), serach, serach, serach, serach);
@@ -71,12 +70,12 @@ public class UserCtr extends CoreController {
                 ur.save();
             }
         }
-        renderSuccessJSON("新增用户信息成功", "");
+        renderSuccessJSON("新增用户信息成功。", "");
     }
 
     @Before({UserValidator.class, Tx.class})
     public void update() {
-        User user = getModel(User.class,"");
+        User user = getModel(User.class,"",true);
         user.setMAt(new Date());
         Integer[] roledIds = null;
         if (isParaExists("roleIds")) {
@@ -98,13 +97,21 @@ public class UserCtr extends CoreController {
                 ur.setUid(user.getId().longValue());
                 ur.save();
             }
-        }CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
+        }
+//        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
+//        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
+//        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
         user.update();
-        renderSuccessJSON("更新用户信息成功", "");
+        renderSuccessJSON("更新用户信息成功。", "");
     }
-
+    @Before({Tx.class})
+    public void del(){
+        int id=getParaToInt("id");
+        User user=User.dao.findById(BigInteger.valueOf(id));
+        user.setDAt(new Date());
+        user.update();
+        renderSuccessJSON("删除用户信息成功。");
+    }
     /**
      * @param
      * @return void

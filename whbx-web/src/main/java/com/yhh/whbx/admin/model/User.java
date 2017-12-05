@@ -2,6 +2,7 @@ package com.yhh.whbx.admin.model;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.base.BaseUser;
 import com.yhh.whbx.kits.DateKit;
@@ -19,13 +20,6 @@ import java.util.List;
 public class User extends BaseUser<User> {
 	public static final User dao = new User().dao();
 
-	private String roleIds;
-
-
-	public void setRoleIds(String roleIds) {
-		this.roleIds = roleIds;
-	}
-
 	public String getReceiveMsgTxt(){
 		if(getReceiveMsg()==null)return "";
 		return getYOrNTxt(getReceiveMsg());
@@ -36,7 +30,10 @@ public class User extends BaseUser<User> {
 	}
 
 	public String getCatTxt(){
-		return DateKit.dateToStr(getCAt(),DateKit.yyyy_MM_dd);
+		return DateKit.dateToStr(getCAt(),DateKit.STR_DATEFORMATE);
+	}
+	public String getDatTxt(){
+		return getDAt()==null?"":DateKit.dateToStr(getDAt(),DateKit.STR_DATEFORMATE);
 	}
 
 	public String getLoggedTxt(){
@@ -94,12 +91,23 @@ public class User extends BaseUser<User> {
 
 	}
 
-	public List<String> getRoleNames(){
+	public List<String> getRolesName(){
 		List<String> list=new ArrayList<>();
 		for (Role role:findUserOwnRoles()){
 			list.add(role.getName());
 		}
 		return list;
+	}
+	public List<String> getRolesDesc(){
+		List<String> list=new ArrayList<>();
+		for (Role role:findUserOwnRoles()){
+			list.add(role.getDescription());
+		}
+		return list;
+	}
+
+	public String getRolesDescStr(){
+		return CollUtil.join(getRolesDesc(),",");
 	}
 
 	public List<String> getRoleIds(){

@@ -60,6 +60,7 @@ public class DateKit {
      * @return
      */
     public static String dateToStr(Date date, String format) {
+        if(date==null)return "";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }

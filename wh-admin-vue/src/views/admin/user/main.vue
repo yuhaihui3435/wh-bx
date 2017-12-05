@@ -41,7 +41,7 @@
             </p>
             <Form ref="formValidate" :label-width="80" :model="user" :rules="ruleValidate">
                 <FormItem label="用户名" prop="loginname">
-                    <Input v-model="user.loginname" placeholder="请输入..." style="width: 300px"></Input>
+                    <Input v-model="user.loginname" :disabled="!isAdd" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="姓名" prop="nickname">
                     <Input v-model="user.nickname" placeholder="请输入..." style="width: 300px"></Input>
@@ -56,14 +56,18 @@
                     <Input v-model="user.idcard" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="管理员身份" prop="isAdmin">
-                    <i-switch v-model="isAdmin" true-value="0" false-value="1">
-                        <span slot="open">是</span>
-                        <span slot="close">否</span>
-                    </i-switch>
+                    <!--<i-switch v-model="user.isAdmin" true-value="0" false-value="1">-->
+                        <!--<span slot="open">是</span>-->
+                        <!--<span slot="close">否</span>-->
+                    <!--</i-switch>-->
+                    <RadioGroup v-model="user.isAdmin">
+                        <Radio label="0" >是</Radio>
+                        <Radio label="1" >否</Radio>
+                    </RadioGroup>
                 </FormItem>
                 <FormItem label="角色" prop="roleIds">
                     <CheckboxGroup v-model="user.roleIds" @on-change="">
-                        <Checkbox v-for="role in roleList" :key="role.id" :label="role.id">
+                        <Checkbox v-for="role in roleList" :key="role.id" :label="role.id+''">
                             <span>{{role.name}}({{role.description}})</span>
                         </Checkbox>
                     </CheckboxGroup>
@@ -72,7 +76,7 @@
             </Form>
             <div slot="footer">
                 <Button type="success" :loading="modalLoading" @click="save">保存</Button>
-                <Button @click="reset">重置</Button>
+                <Button @click="reset" v-show="isAdd">重置</Button>
                 <Button type="error" @click="userModal=false">关闭</Button>
             </div>
         </Modal>
@@ -82,6 +86,88 @@
 
 <script>
     import {mapState} from 'vuex'
+
+    const delBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要删除这个用户信息吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.del(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '删除')]);
+    }
+
+    const stopBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要禁用这个用户吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.stop(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '禁用')]);
+    }
+    const actBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要激活这个用户吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.active(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'success',
+                size: 'small'
+            }
+        }, '激活')]);
+    }
+    const editBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.edit(param.row)
+                }
+            }
+        }, '编辑')
+    }
+
     export default {
         computed: {
             ...mapState({
@@ -94,51 +180,73 @@
         },
         methods: {
             del(i){
-
+                let vm=this;
+                this.$store.dispatch('user_del',{id:i}).then((res)=>{
+                    setTimeout(vm.search,1000)
+                })
             },
-            edit(i){
-
+            edit(user){
+                this.modalTitle="修改用户"
+                this.isAdd=false;
+                let vm=this
+                this.$store.dispatch('role_list').then((res) => {
+                    vm.$store.commit('user_reset',user);
+                    vm.userModal = true;
+                });
             },
             stop(i){
-
+                let vm=this;
+                this.$store.dispatch('user_stop',{ids:i}).then((res)=>{
+                    setTimeout(vm.search,1000)
+                })
             },
             active(i){
-
+                let vm=this;
+                this.$store.dispatch('user_active',{ids:i}).then((res)=>{
+                    setTimeout(vm.search,1000)
+                })
             },
             add(){
+                this.isAdd=true
+                this.modalTitle="新增用户"
                 let vm = this;
                 this.$store.dispatch('role_list').then((res) => {
                     vm.userModal = true;
+                    vm.$store.commit('user_reset');
                 });
-
             },
             save(){
                 let vm = this;
                 this.modalLoading = true;
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
-                        this.$store.dispatch('user_save').then((res) => {
-                            vm.userModal = false;
-                            this.$store.dispatch('user_list')
-                        });
+                        let action='save';
+                        if(!vm.isAdd)
+                            action='update';
+                        this.$store.dispatch('user_save',action).then((res) => {
+                            if (res && res == 'success') {
+                                vm.userModal = false;
+                                this.$store.dispatch('user_list')
+                            } else {
+                                this.modalLoading = false;
+                            }
+                        })
                     } else {
                         this.modalLoading = false;
                     }
                 })
-
-
             },
             changePage(){
 
             },
             search(){
-
+                this.$store.dispatch('user_list',{search:this.searchKey,pn:'1'})
             },
             cancelSearch(){
-
+                this.searchKey='';
             },
             refresh(){
-
+                this.$store.dispatch('user_list')
             },
             setRole(i){
 
@@ -147,7 +255,6 @@
                 if (!b) {
                     this.$refs['formValidate'].resetFields()
                     this.modalLoading = false;
-
                 }
             },
             reset(){
@@ -162,11 +269,9 @@
                 self: this,
                 searchKey: '',
                 userModal: false,
+                isAdd:true,
                 modalTitle: '新增用户',
                 modalLoading: false,
-//                user: {},
-                //ownRoles:[],
-                isAdmin: '1',
                 ruleValidate: {
                     loginname: [
                         {type: 'string', required: true, message: '用户名不能为空', trigger: 'blur'},
@@ -194,16 +299,12 @@
                     ], roleIds: [
                         {required: true, type: 'array', min: 1, message: '至少选择一个角色', trigger: 'change'},
                     ],
-//                    isAdmin: [
-//                        {required: true,  message: '请选择是否是管理员', trigger: 'change'},
-//                    ]
-
                 },
                 tableColums: [
 
                     {
                         title: '登录名',
-                        key: 'loginnanme',
+                        key: 'loginname',
                     },
                     {
                         title: '姓名',
@@ -222,6 +323,22 @@
                         key: 'idcard',
                     },
                     {
+                        title: '角色信息',
+                        key: 'rolesDescStr',
+                        render:(h,param)=>{
+                            return h('span',{
+                                props:{
+
+                                },
+                                style:{
+                                    'font-weight':'bold',
+                                    color:'#ff9900'
+
+                                }
+                            },param.row.rolesDescStr)
+                        }
+                    },
+                    {
                         title: '最后登录时间',
                         key: 'logged',
                     },
@@ -230,27 +347,68 @@
                         key: 'catTxt',
                     },
                     {
-                        title: '删除时间',
-                        key: 'loginnanme',
+                        title: '超级权限',
+                        key: 'isAdmin',
+                        width:100,
+                        render:(h,param)=>{
+                            if(param.row.isAdmin=='0'){
+                                return h('Tag',{
+                                    props: {
+                                        type: 'dot',
+                                        color: 'green'
+                                    }
+                                },'是')
+                            }else{
+                                return h('Tag',{
+                                    props: {
+                                        type: 'dot',
+                                        color: 'red'
+                                    }
+                                },'否')
+                            }
+                        }
                     },
                     {
                         title: '状态',
-                        key: 'statusTxt'
+                        key: 'statusTxt',
+                        render:(h, param)=>{
+                            if (param.row.status == '0') {
+                                return h('Tag', {
+                                    props: {
+                                        color: 'blue'
+                                    },
+                                }, param.row.statusTxt)
+                            } else if (param.row.status == '1') {
+                                return h('Tag', {
+                                    props: {
+                                        color: 'red'
+                                    },
+                                }, param.row.statusTxt)
+                            }
+                        }
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 200,
                         align: 'center',
-                        render (row, column, index) {
-                            if (row.dAt == '') {
+                        render: (h, param) =>{
+                            if (!param.row.dAt) {
+                                if (param.row.status == '0') {
+                                    return h('div', [
+                                        editBtn(this,h,param),
+                                        delBtn(this,h,param),
+                                        stopBtn(this,h,param)
+                                    ]);
+                                } else {
+                                    return h('div', [
+                                        editBtn(this,h,param),
+                                        delBtn(this,h,param),
+                                        actBtn(this,h,param)
+                                    ]);
+                                }
 
-                                if (row.status != '' && row.status == '0')
-                                    return `<i-button type="error" size="small" @click="stop(${index})">停用</i-button> <i-button type="primary" size="small" @click="edit(${index})">编辑</i-button> <i-button type="error" size="small" @click="del(${index})">删除</i-button> <i-button type="primary" size="small" @click="setRole(${index})">设置角色</i-button>`;
-                                else if (row.status != '' && row.status == '0')
-                                    return `<i-button type="primary" size="small" @click="active(${index})">激活</i-button> <i-button type="primary" size="small" @click="edit(${index})">编辑</i-button> <i-button type="error" size="small" @click="del(${index})">删除</i-button> <i-button type="primary" size="small" @click="setRole(${index})">设置角色</i-button>`;
                             }
-
                         }
                     }
 
