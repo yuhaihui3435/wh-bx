@@ -1,11 +1,12 @@
 import Cookies from 'js-cookie';
+import kit from '../../libs/kit';
 
 const user = {
     state: {
         userList:[],
         totalPage:0,
         pageNumber:1,
-
+        user:{roleIds:[]}
     },
     mutations: {
         logout (state, vm) {
@@ -29,8 +30,10 @@ const user = {
             state.userList=page.list
             state.totalPage=page.totalPage
             state.pageNumber=page.pageNumber
+        },
+        user_reset(state,vm){
+            state.user={roleIds:[]}
         }
-
     },
     actions:{
         user_list:function ({ commit,state },param) {
@@ -39,6 +42,17 @@ const user = {
             }
             this._vm.$axios.post('/ad01/list',param).then((res)=>{
                 commit('set_user_list',res)
+            });
+        },
+
+        user_save:function ({ commit,state },param) {
+
+            let p=kit.clone(state.user)
+            let rIds=p.roleIds;
+            let rIds_str=rIds.join(",");
+            p.roleIds=rIds_str;
+            this._vm.$axios.post('/ad01/save',p).then((res)=>{
+                commit('user_reset');
             });
         }
     }

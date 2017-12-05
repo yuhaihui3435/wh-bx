@@ -7,6 +7,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.collection.CollUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Role;
@@ -39,10 +40,16 @@ public class UserCtr extends CoreController {
 
     @Before({UserValidator.class, Tx.class})
     public void save() {
-        User user = getModel(User.class);
+
+        User user = getModel(User.class,"",true);
         Integer[] roledIds = null;
         if (isParaExists("roleIds")) {
-            roledIds = getParaValuesToInt("roleIds");
+            String roleIds_str=getPara("roleIds");
+            String[] roleIds_str_array=roleIds_str.split(",");
+            roledIds=new Integer[roleIds_str_array.length];
+            for (int i = 0; i < roleIds_str_array.length; i++) {
+                roledIds[i]=Integer.parseInt(roleIds_str_array[i]);
+            }
         }
         user.setCAt(new Date());
         user.setEmailStatus(Consts.YORN.no.isVal());
@@ -69,11 +76,16 @@ public class UserCtr extends CoreController {
 
     @Before({UserValidator.class, Tx.class})
     public void update() {
-        User user = getModel(User.class);
+        User user = getModel(User.class,"");
         user.setMAt(new Date());
         Integer[] roledIds = null;
         if (isParaExists("roleIds")) {
-            roledIds = getParaValuesToInt("roleIds");
+            String roleIds_str=getPara("roleIds");
+            String[] roleIds_str_array=roleIds_str.split(",");
+            roledIds=new Integer[roleIds_str_array.length];
+            for (int i = 0; i < roleIds_str_array.length; i++) {
+                roledIds[i]=Integer.parseInt(roleIds_str_array[i]);
+            }
         }
 
 

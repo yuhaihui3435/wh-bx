@@ -41,29 +41,29 @@
             </p>
             <Form ref="formValidate" :label-width="80" :model="user" :rules="ruleValidate">
                 <FormItem label="用户名" prop="loginname">
-                    <Input v-model="user.loginname" :maxlength="50" placeholder="请输入..." style="width: 300px"></Input>
+                    <Input v-model="user.loginname" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="姓名" prop="nickname">
-                    <Input v-model="user.nickname" :maxlength="50" placeholder="请输入..." style="width: 300px"></Input>
+                    <Input v-model="user.nickname" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="手机号" prop="phone">
-                    <Input v-model="user.phone" placeholder="请输入..." :maxlength="20" style="width: 300px"></Input>
+                    <Input v-model="user.phone" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="EMAIL" prop="email">
-                    <Input v-model="user.email" placeholder="请输入..." :maxlength="255" style="width: 300px"></Input>
+                    <Input v-model="user.email" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="身份证号" prop="idcard">
-                    <Input v-model="user.idcard" placeholder="请输入..." :maxlength="50" style="width: 300px"></Input>
+                    <Input v-model="user.idcard" placeholder="请输入..." style="width: 300px"></Input>
                 </FormItem>
-                <FormItem label="管理员身份">
+                <FormItem label="管理员身份" prop="isAdmin">
                     <i-switch v-model="isAdmin" true-value="0" false-value="1">
                         <span slot="open">是</span>
                         <span slot="close">否</span>
                     </i-switch>
                 </FormItem>
-                <FormItem label="角色">
-                    <CheckboxGroup v-model="ownRoles" @on-change="">
-                        <Checkbox  v-for="role in roleList"  :key="role.id" :label="role.id">
+                <FormItem label="角色" prop="roleIds">
+                    <CheckboxGroup v-model="user.roleIds" @on-change="">
+                        <Checkbox v-for="role in roleList" :key="role.id" :label="role.id">
                             <span>{{role.name}}({{role.description}})</span>
                         </Checkbox>
                     </CheckboxGroup>
@@ -71,9 +71,9 @@
 
             </Form>
             <div slot="footer">
-                <Button type="success"  :loading="modalLoading" @click="save">保存</Button>
-                <Button type="info"   @click="reset">重置</Button>
-                <Button    @click="userModal=false">关闭</Button>
+                <Button type="success" :loading="modalLoading" @click="save">保存</Button>
+                <Button @click="reset">重置</Button>
+                <Button type="error" @click="userModal=false">关闭</Button>
             </div>
         </Modal>
     </div>
@@ -88,7 +88,8 @@
                 'userList': state => state.user.userList,
                 'totalPage': state => state.user.totalPage,
                 'pageNumber': state => state.user.pageNumber,
-                'roleList':state=>state.role.roleList,
+                'roleList': state => state.role.roleList,
+                'user': state => state.user.user,
             })
         },
         methods: {
@@ -105,24 +106,25 @@
 
             },
             add(){
-                let vm=this;
-                this.$store.dispatch('role_list').then((res)=>{
-                    vm.userModal=true;
+                let vm = this;
+                this.$store.dispatch('role_list').then((res) => {
+                    vm.userModal = true;
                 });
 
             },
             save(){
-                let vm=this;
-                this.modalLoading=true;
+                let vm = this;
+                this.modalLoading = true;
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
-
+                        this.$store.dispatch('user_save').then((res) => {
+                            vm.userModal = false;
+                            this.$store.dispatch('user_list')
+                        });
                     } else {
-                        this.modalLoading=false;
+                        this.modalLoading = false;
                     }
                 })
-
 
 
             },
@@ -142,9 +144,10 @@
 
             },
             vChange(b){
-                if(!b){
+                if (!b) {
                     this.$refs['formValidate'].resetFields()
-                    this.modalLoading=false;
+                    this.modalLoading = false;
+
                 }
             },
             reset(){
@@ -160,23 +163,41 @@
                 searchKey: '',
                 userModal: false,
                 modalTitle: '新增用户',
-                modalLoading:false,
-                user: {},
-                ownRoles:[],
+                modalLoading: false,
+//                user: {},
+                //ownRoles:[],
                 isAdmin: '1',
-                ruleValidate:{
+                ruleValidate: {
                     loginname: [
-                        { required: true, message: '用户名不能为空', trigger: 'blur' }
+                        {type: 'string', required: true, message: '用户名不能为空', trigger: 'blur'},
+                        {type: 'string', max: 50, message: '用户名长度不能超过50', trigger: 'blur'}
                     ],
                     nickname: [
-                        { required: true, message: '姓名不能为空', trigger: 'blur' }
+                        {required: true, message: '姓名不能为空', max: 50, trigger: 'blur'},
+                        {type: 'string', message: '姓名长度不能超过50', max: 50, trigger: 'blur'}
                     ],
                     phone: [
-                        { required: true, message: '手机号不能为空', trigger: 'blur' }
+                        {required: true, message: '手机号不能为空', max: 20, trigger: 'blur'},
+                        {type: 'string', message: '请输入11位手机号', len: 11, trigger: 'blur'},
+                        {
+                            type: 'string',
+                            message: '手机号码无效',
+                            pattern: /^((13|14|15|17|18)[0-9]{1}\d{8})$/,
+                            trigger: 'blur'
+                        }
                     ],
-                    email:[
-                        { type: 'email', message: 'email格式不正确', trigger: 'blur' }
-                    ]
+                    email: [
+                        {type: 'email', message: 'email格式不正确', max: 255, trigger: 'blur'},
+                        {type: 'string', message: 'email长度不能超过255', max: 255, trigger: 'blur'}
+                    ], idcard: [
+                        {type: 'string', max: 50, message: '证件号长度不能超过50', trigger: 'blur'}
+                    ], roleIds: [
+                        {required: true, type: 'array', min: 1, message: '至少选择一个角色', trigger: 'change'},
+                    ],
+//                    isAdmin: [
+//                        {required: true,  message: '请选择是否是管理员', trigger: 'change'},
+//                    ]
+
                 },
                 tableColums: [
 

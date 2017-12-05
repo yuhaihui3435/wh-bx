@@ -10,6 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="wh-bx" target="1.7" />
       <module name="whbx" target="1.7" />
       <module name="whbx-web" target="1.7" />
     </bytecodeTargetLevel>
