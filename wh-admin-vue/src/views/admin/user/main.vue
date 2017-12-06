@@ -68,7 +68,7 @@
                 <FormItem label="角色" prop="roleIds">
                     <CheckboxGroup v-model="user.roleIds" @on-change="">
                         <Checkbox v-for="role in roleList" :key="role.id" :label="role.id+''">
-                            <span>{{role.name}}({{role.description}})</span>
+                            <span>{{role.description}}</span>
                         </Checkbox>
                     </CheckboxGroup>
                 </FormItem>

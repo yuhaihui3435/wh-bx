@@ -1,5 +1,6 @@
 package com.yhh.whbx.admin.model;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.yhh.whbx.admin.model.base.BaseTaxonomy;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 	}
 
 	public List<Taxonomy> findAllList(){
-		List<Taxonomy> list=dao.find("select * from s_taxonomy where parent_id is null and d_at is null ");
+		List<Taxonomy> list=dao.find("select * from s_taxonomy where parentId =0 and dAt is null ");
 		for (Taxonomy taxonomy:list){
 			findChildren(taxonomy);
 		}
@@ -32,7 +33,7 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 	}
 
 	private void findChildren(Taxonomy taxonomy){
-		List<Taxonomy> list=dao.find("select * from s_taxonomy where parent_id =? and d_at is null ",taxonomy.getId());
+		List<Taxonomy> list=dao.find("select * from s_taxonomy where parentId =? and dAt is null ",taxonomy.getId());
 		for (Taxonomy t:list){
 			findChildren(t);
 		}
@@ -41,8 +42,24 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 	}
 
 	public List<Taxonomy> findByModuleExcept(String m){
-		return dao.find("select * from s_taxonomy where module=? and parent_id is null and d_at is null ",m);
+		return dao.find("select * from s_taxonomy where module=? and parentId is null and dAt is null ",m);
 	}
 
 
+	public void updateChildrenModule(Long pId,String module){
+		Db.update("update  s_taxonomy set module=? where parentId=? and dAt is null",module,pId);
+	}
+
+
+	public List findByTitleAndPId(String title,Long pId){
+		return dao.find("select * from s_taxonomy where title=? and dAt is null and parentId=?",title,pId);
+	}
+
+	public List findByTitleAndPIdAndNEId(String title,Long pId,Long id){
+		return dao.find("select * from s_taxonomy where title=? and dAt is null and parentId=? and id<>?",title,pId,id);
+	}
+
+	public boolean getExpand(){
+		return children.size()>0?true:false;
+	}
 }

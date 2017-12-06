@@ -412,6 +412,7 @@ export default {
             language: 'zh_CN.GB2312',
             menubar: 'edit insert view format table tools',
             theme: 'modern',
+            images_upload_url:'/ad/uploadPic',
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak imagetools',
                 'searchreplace visualblocks visualchars code fullscreen fullpage',

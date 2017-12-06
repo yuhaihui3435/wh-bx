@@ -177,18 +177,18 @@ export const appRouter = [
     //         // }
     //     ]
     // },
-    // {
-    //     path: '/form',
-    //     icon: 'android-checkbox',
-    //     name: 'form',
-    //     title: '表单编辑',
-    //     component: Main,
-    //     children: [
-    //         { path: 'artical-publish', title: '文章发布', name: 'artical-publish', icon: 'compose', component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); } },
-    //         { path: 'workflow', title: '工作流', name: 'workflow', icon: 'arrow-swap', component: resolve => { require(['@/views/form/work-flow/work-flow.vue'], resolve); } }
-    //
-    //     ]
-    // },
+    {
+        path: '/form',
+        icon: 'android-checkbox',
+        name: 'form',
+        title: '表单编辑',
+        component: Main,
+        children: [
+            { path: 'artical-publish', title: '文章发布', name: 'artical-publish', icon: 'compose', component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); } },
+            { path: 'workflow', title: '工作流', name: 'workflow', icon: 'arrow-swap', component: resolve => { require(['@/views/form/work-flow/work-flow.vue'], resolve); } }
+
+        ]
+    },
     // {
     //     path: '/charts',
     //     icon: 'ios-analytics',

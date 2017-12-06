@@ -13,9 +13,11 @@ const  tax={
         set_tax_jsonArray(state,jsonArray){
             state.taxJsonArray=jsonArray;
         },
-        tax_set(state,obj){
+        set_tax(state,obj){
             if(obj !=undefined)
                 state.tax=kit.clone(obj);
+            else
+                state.tax={};
         },
 
     },
@@ -33,7 +35,7 @@ const  tax={
                 });
             });
         },
-        role_del:function ({ commit,state },param) {
+        tax_del:function ({ commit,state },param) {
             let vm=this._vm;
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/ad05/del', param).then((res) => {

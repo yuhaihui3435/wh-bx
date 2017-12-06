@@ -37,9 +37,9 @@ public class ArtCtr extends CoreController {
     public void list() {
         Page<Content> page;
         String serach = getPara("search");
-        StringBuffer where = new StringBuffer("from s_content c left join s_user u on c.user_id=u.id where 1=1 and c.d_at is null ");
+        StringBuffer where = new StringBuffer("from s_content c left join s_user u on c.user_id=u.id where 1=1 and c.dAt is null ");
         if (!isParaBlank("search")) {
-            where.append(" and (instr(c.title,?)>0 or instr(c.text,?)>0 or instr(c.summary,?)>0 or instr(c.meta_keywords,?)>0 or instr(u.nickname,?)>0)");
+            where.append(" and (instr(c.title,?)>0 or instr(c.text,?)>0 or instr(c.summary,?)>0 or instr(c.metaKeywords,?)>0 or instr(u.nickname,?)>0)");
             where.append(" order by c.c_at desc");
             page = Content.dao.paginate(getPN(), getPS(), "select c.* ", where.toString(), serach, serach, serach, serach, serach);
         } else {

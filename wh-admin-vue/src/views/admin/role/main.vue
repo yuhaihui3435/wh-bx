@@ -9,7 +9,7 @@
                 </p>
                 <Row>
                     <Col span="8">
-                    <Button type="primary" icon="person-add" @click="add">新增角色</Button>
+                    <Button type="primary" icon="android-add" @click="add">新增角色</Button>
                     <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
                     </Col>
                 </Row>

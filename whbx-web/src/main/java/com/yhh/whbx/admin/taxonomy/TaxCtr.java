@@ -1,6 +1,10 @@
 package com.yhh.whbx.admin.taxonomy;
 
 import com.alibaba.fastjson.JSON;
+import com.jfinal.aop.Before;
+import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.core.CoreController;
@@ -18,16 +22,20 @@ public class TaxCtr extends CoreController {
         StaticLog.info(JSON.toJSONString(list));
         renderJson(list);
     }
-
+    @Before({TaxValidator.class,Tx.class})
     public void save(){
         Taxonomy taxonomy=getModel(Taxonomy.class,"",true);
+        if(taxonomy.getParentId()==null){
+            taxonomy.setParentId(new Long("0"));
+        }
         taxonomy.save();
         renderSuccessJSON("新增分类成功");
     }
-
+    @Before({TaxValidator.class,Tx.class})
     public void update(){
         Taxonomy taxonomy=getModel(Taxonomy.class,"",true);
         taxonomy.update();
+        Taxonomy.dao.updateChildrenModule(taxonomy.getId(),taxonomy.getModule());
         renderSuccessJSON("更新分类成功");
     }
 
