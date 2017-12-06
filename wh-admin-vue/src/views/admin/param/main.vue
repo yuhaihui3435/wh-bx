@@ -9,7 +9,6 @@
                 </p>
                 <Form :label-width="80">
                     <Tabs>
-
                         <Tab-pane label="网站基础信息" icon="flag">
 
                             <FormItem label="网站名称">

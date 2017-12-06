@@ -7,6 +7,8 @@ import java.util.List;
  */
 public interface User {
 
+    String getId();
+
     String getKey();
 
     String getUsername();

@@ -6,6 +6,8 @@ import user from './modules/user';
 import param from './modules/param';
 import role from './modules/role';
 import art from './modules/art';
+import res from './modules/res';
+import tax from './modules/tax';
 
 Vue.use(Vuex);
 
@@ -26,7 +28,9 @@ const store = new Vuex.Store({
         user,
         param,
         role,
-        art
+        art,
+        res,
+        tax
     }
 });
 

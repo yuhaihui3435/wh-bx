@@ -24,6 +24,10 @@ public class Consts {
 
     public static final String CURR_USER_RESES="currUserReses";
 
+    public static final String T_CATALOG_CK="catalog";
+
+    public static final String T_TAG_CK="tag";
+
     public enum YORN {
         yes(true), no(false);
         boolean val;
@@ -107,7 +111,7 @@ public class Consts {
     }
 
     public enum CACHE_NAMES {
-        paramCache,ssq,userRoles,user,userReses
+        paramCache,ssq,userRoles,user,userReses,taxonomy,art
     }
 
 }

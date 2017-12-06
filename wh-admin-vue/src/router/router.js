@@ -76,8 +76,9 @@ export const appRouter = [
             { path: 'param', title: '参数管理', name: 'admin_param', component: resolve => { require(['@/views/admin/param/main.vue'], resolve); } },
             { path: 'user', title: '用户管理', name: 'admin_user', component: resolve => { require(['@/views/admin/user/main.vue'], resolve); } },
             { path: 'role', title: '角色管理', name: 'admin_role', component: resolve => { require(['@/views/admin/role/main.vue'], resolve); } },
-            { path: 'artPublish', title: '文章发布', name: 'admin_artPublish', component: resolve => { require(['@/views/admin/art/publish.vue'], resolve); } },
-            { path: 'artList', title: '文章列表', name: 'admin_artList', component: resolve => { require(['@/views/admin/art/list.vue'], resolve); } },
+            { path: 'tax', title: '分类管理', name: 'admin_tax', component: resolve => { require(['@/views/admin/taxonomy/main.vue'], resolve); } },
+            { path: 'art', title: '新闻管理', name: 'admin_art', component: resolve => { require(['@/views/admin/art/main.vue'], resolve); } },
+            // { path: 'artList', title: '文章列表', name: 'admin_artList', component: resolve => { require(['@/views/admin/art/list.vue'], resolve); } },
         ]
     },
     // {

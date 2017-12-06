@@ -17,14 +17,14 @@ public class ResValidator extends CoreValidator {
 
     protected void validate(Controller controller) {
         LogKit.debug(getActionKey());
-        Res res=controller.getModel(Res.class);
+        Res res=controller.getModel(Res.class,"",true);
         List<Res> l;
-        if(getActionKey().equals("/res/save")){
+        if(getActionKey().equals("/ad03/save")){
             l=Res.dao.find("select * from s_res where name=? and pid=?", res.getName(),res.getPid());
             if(!l.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),RES_NAME_EXIST);
             }
-        }else if(getActionKey().equals("/res/update")){
+        }else if(getActionKey().equals("/ad03/update")){
             l=Res.dao.find("select * from s_res where name=? and pid=? and id<>?", res.getName(),res.getPid(),res.getId());
             if(!l.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),RES_NAME_EXIST);

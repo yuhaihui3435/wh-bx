@@ -11,8 +11,10 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import com.yhh.whbx.admin.Res.ResCtr;
+import com.yhh.whbx.admin.art.ArtCtr;
 import com.yhh.whbx.admin.param.ParamCtr;
 import com.yhh.whbx.admin.role.RoleCtr;
+import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.ResKit;
@@ -43,6 +45,8 @@ public class CoreConfig extends JFinalConfig{
                 add("/ad01", UserCtr.class);
                 add("/ad02", RoleCtr.class);
                 add("/ad03", ResCtr.class);
+                add("/ad04", ArtCtr.class);
+                add("/ad05", TaxCtr.class);
             }
         });
     }

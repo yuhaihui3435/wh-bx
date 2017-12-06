@@ -26,15 +26,15 @@ public class RoleValidator extends CoreValidator {
     public static final String ROLENAME_EXIST="角色名称被占用";
     protected void validate(Controller controller) {
         String ak=getActionKey();
-        Role role=controller.getModel(Role.class);
+        Role role=controller.getModel(Role.class,"",true);
         List<Role> roleList;
-        if(ak.equals("/adminRole/save")){
+        if(ak.equals("/ad02/save")){
             roleList=Role.dao.find("select * from s_role where name=?",role.getName());
             if(!roleList.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),ROLENAME_EXIST);
             }
 
-        }else if(ak.equals("/adminRole/update")){
+        }else if(ak.equals("/ad02/update")){
             roleList=Role.dao.find("select * from s_role where name=? and id<>?",role.getName(),role.getId());
             if(!roleList.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),ROLENAME_EXIST);

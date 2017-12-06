@@ -44,7 +44,7 @@ public class UserInterceptor implements AuthHandle, Interceptor {
             }
         }
         //是否需要用户身份认证,方便测试
-        if(ResKit.getConfigBoolean("userAuth"))
+        if(!ResKit.getConfigBoolean("userAuth"))
             flag=true;
 
         if(flag) {

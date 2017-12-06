@@ -41,7 +41,7 @@ public class ResCtr extends CoreController {
      **/
     public void listTree() {
         int id = getParaToInt("id",0);
-        renderJson(Res.listTree(id));
+        renderJson(Res.dao.listTree(null));
     }
 
     @Before({ResValidator.class,Tx.class})

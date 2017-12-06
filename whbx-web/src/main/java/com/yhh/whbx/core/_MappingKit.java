@@ -24,6 +24,9 @@ public class _MappingKit {
 		arp.addMapping("s_role_res", RoleRes.class);
 		arp.addMapping("s_user", User.class);
 		arp.addMapping("s_user_role", UserRole.class);
+		arp.addMapping("s_content", Content.class);
+		arp.addMapping("s_mapping", Mapping.class);
+		arp.addMapping("s_taxonomy", Taxonomy.class);
 
 	}
 }

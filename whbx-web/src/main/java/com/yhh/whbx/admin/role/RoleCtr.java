@@ -1,11 +1,10 @@
 package com.yhh.whbx.admin.role;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.admin.model.Res;
 import com.yhh.whbx.admin.model.Role;
@@ -13,6 +12,7 @@ import com.yhh.whbx.admin.model.RoleRes;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,13 +36,13 @@ public class RoleCtr extends CoreController{
     }
     @Before({RoleValidator.class,Tx.class})
     public void save(){
-        Role role=getModel(Role.class);
+        Role role=getModel(Role.class,"",true);
         role.save();
         renderSuccessJSON("角色新增成功","");
     }
     @Before({RoleValidator.class,Tx.class})
     public void update(){
-        Role role=getModel(Role.class);
+        Role role=getModel(Role.class,"",true);
         role.update();
 
 
@@ -66,29 +66,18 @@ public class RoleCtr extends CoreController{
             renderFailJSON("角色删除失败,没有得到角色id","");
         }
     }
+
+
     public void loadRes(){
         int roleId=getParaToInt("roleId",-1);
         List<Res> list=Res.dao.find("select sr.* from s_res sr,s_role_res srr where sr.id=srr.resId and srr.roleId=?",roleId);
-        List<Res> all= Res.dao.find("select * from s_res");
-        all.removeAll(list);
-        JSONArray jsonArray=new JSONArray();
-        JSONObject jo=null;
-        for(Res r:all){
-            jo=new JSONObject();
-            jo.put("id",r.getId());
-            jo.put("name",r.getName());
-            jo.put("pId",r.getPid());
-            jsonArray.add(jo);
+        List<Long> rrIds=new ArrayList<>();
+        for (Res r:list){
+            rrIds.add(r.getId());
         }
-        for(Res rr:list){
-            jo=new JSONObject();
-            jo.put("id",rr.getId());
-            jo.put("name",rr.getName());
-            jo.put("pId",rr.getPid());
-            jo.put("checked",true);
-            jsonArray.add(jo);
-        }
-        renderJson(jsonArray.toJSONString());
+        String ret=Res.dao.listTree(rrIds);
+        StaticLog.info(ret);
+        renderJson(ret);
     }
     @Before(Tx.class)
     public void setRes(){

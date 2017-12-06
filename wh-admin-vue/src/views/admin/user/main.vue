@@ -24,7 +24,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="totalPage" :current="pageNumber" @on-change=""></Page>
+                        <Page :total="total" :current="pageNumber" @on-change="search"  show-total show-elevator></Page>
                     </div>
                 </div>
             </Card>
@@ -174,6 +174,7 @@
                 'userList': state => state.user.userList,
                 'totalPage': state => state.user.totalPage,
                 'pageNumber': state => state.user.pageNumber,
+                'total': state => state.user.totalRow,
                 'roleList': state => state.role.roleList,
                 'user': state => state.user.user,
             })
@@ -236,11 +237,9 @@
                     }
                 })
             },
-            changePage(){
 
-            },
-            search(){
-                this.$store.dispatch('user_list',{search:this.searchKey,pn:'1'})
+            search(pn){
+                this.$store.dispatch('user_list',{search:this.searchKey,pn:pn})
             },
             cancelSearch(){
                 this.searchKey='';
@@ -371,16 +370,19 @@
                     {
                         title: '状态',
                         key: 'statusTxt',
+                        width:120,
                         render:(h, param)=>{
                             if (param.row.status == '0') {
                                 return h('Tag', {
                                     props: {
+                                        type: 'dot',
                                         color: 'blue'
                                     },
                                 }, param.row.statusTxt)
                             } else if (param.row.status == '1') {
                                 return h('Tag', {
                                     props: {
+                                        type: 'dot',
                                         color: 'red'
                                     },
                                 }, param.row.statusTxt)

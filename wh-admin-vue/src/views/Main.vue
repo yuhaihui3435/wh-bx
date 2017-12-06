@@ -64,11 +64,16 @@
                 </keep-alive>
             </div>
 
-            <Spin size="large" fix v-if="spinShow"><Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+            <Spin size="large" fix v-if="spinShow"><Icon type="load-c" size=18 class="spin-icon-load"></Icon>
                 <div>数据加载中...</div></Spin>
         </div>
     </div>
 </template>
+<style>
+    .spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+</style>
 <script>
     import shrinkableMenu from './main-components/shrinkable-menu/shrinkable-menu.vue';
     import tagsPageOpened from './main-components/tags-page-opened.vue';

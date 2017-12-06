@@ -15,28 +15,54 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Res extends BaseRes<Res> {
 	public static final Res dao = new Res().dao();
-	public static String listTree(int id){
+	public  String listTree(List<Long> roleResIds){
+
 		List<Res> resList;
-		if(id==0){
-			resList = dao.find("select * from s_res   order by seq");
-		}else {
-			resList = dao.find("select * from s_res where id=? order by seq", id);
-		}
+		resList = dao.find("select * from s_res  where pId=0 order by seq");
 		JSONArray ja=new JSONArray();
 		JSONObject jo;
 		for(Res res:resList){
 			jo=new JSONObject();
 			jo.put("id",res.getId());
 			jo.put("pId",res.getPid());
-			jo.put("name",res.getName());
-			jo.put("resUrl",res.getUrl());
+			jo.put("title",res.getName());
+			jo.put("expand",true);
+			jo.put("url",res.getUrl());
 			jo.put("seq",res.getSeq());
+			jo.put("checked",(roleResIds!=null&&roleResIds.contains(res.getId()))?true:false);
 			jo.put("description",res.getDescription());
 			jo.put("logged",res.getLogged());
+			dao.getChildren(jo,roleResIds);
 			ja.add(jo);
 		}
 		StaticLog.info(ja.toJSONString());
 		return ja.toJSONString();
+	}
+
+	public  void getChildren(JSONObject jsonObject,List<Long> roleResIds){
+		int id=jsonObject.getIntValue("id");
+		List<Res> list=dao.find("select * from s_res where pId=? order by seq",id);
+
+		if(!list.isEmpty()){
+			JSONArray ja=new JSONArray();
+			JSONObject jo;
+			for(Res res:list){
+				jo=new JSONObject();
+				jo.put("id",res.getId());
+				jo.put("pId",res.getPid());
+				jo.put("title",res.getName());
+				jo.put("expand",true);
+				jo.put("url",res.getUrl());
+				jo.put("seq",res.getSeq());
+				jo.put("checked",(roleResIds!=null&&roleResIds.contains(res.getId()))?true:false);
+				jo.put("description",res.getDescription());
+				jo.put("logged",res.getLogged());
+				ja.add(jo);
+				dao.getChildren(jo,roleResIds);
+			}
+			jsonObject.put("children",ja);
+		}
+
 	}
 
 

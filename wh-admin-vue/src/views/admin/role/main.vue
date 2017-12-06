@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row>
-            <Col span="12">
+            <Col span="24">
             <Card>
                 <p slot="title">
                     <Icon type="help-buoy"></Icon>
@@ -9,69 +9,138 @@
                 </p>
                 <Row>
                     <Col span="8">
-                    <Button type="primary" icon="person-add">新增角色</Button>
+                    <Button type="primary" icon="person-add" @click="add">新增角色</Button>
                     <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
                     </Col>
                 </Row>
                 <Row class="margin-top-10">
-                    <Table :context="self" :data="page.list" :columns="tableColums" stripe></Table>
+                    <Table :context="self" :data="roleList" :columns="tableColums" stripe></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="page.totalPage" :current="page.pageNumber" @on-change=""></Page>
+                        <Page :total="total" :current="pageNumber" @on-change="changePage" show-total show-elevator></Page>
                     </div>
                 </div>
             </Card>
             </Col>
-            <Col span="12">
-            <Card>
-                <p slot="title">
-                    <Icon type="help-buoy"></Icon>
-                    权限设置
-                </p>
-                <Row>
-                    <Tree :data="resData" show-checkbox></Tree>
-                </Row>
-            </Card>
-            </Col>
         </Row>
+        <roleForm ref="rf"></roleForm>
+        <resTree ref="rt"></resTree>
     </div>
 </template>
 
 <script>
+    import {mapState} from 'vuex'
+    import roleForm from './form.vue'
+    import resTree from './resTree.vue'
+    const editBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.edit(param.row)
+                }
+            }
+        }, '编辑')
+    };
+    const setResBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.setRes(param.row)
+                }
+            }
+        }, '权限设置')
+    };
+    const delBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要删除这个角色信息吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.del(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '删除')]);
+    };
+
     export default {
+
+        computed: {
+            ...mapState({
+                'roleList': state => state.role.roleList,
+                'totalPage': state => state.role.totalPage,
+                'total': state => state.role.totalRow,
+                'pageNumber': state => state.role.pageNumber,
+                'role': state => state.role.role,
+
+            })
+        },
         methods: {
             del(i){
 
+                this.$store.dispatch('role_del',{'ids':i}).then((res)=>{
+                    if (res && res == 'success') {
+                        this.$store.dispatch('role_list')
+                    }
+                });
             },
-            edit(i){
-
+            edit(role){
+                this.$store.commit('role_set',role);
+                this.$refs.rf.open('编辑角色',false);
             },
             add(){
-
+                this.$refs.rf.open('新增角色',true)
             },
-            saveRole(){
-
-            },
-            changePage(){
-
+            changePage(pn){
+                this.$store.dispatch('role_list',{search:this.searchKey,pageNumber:pn})
             },
             refresh(){
-
+                this.$store.dispatch('role_list')
             },
-            setRes(i){
-
-            },
-            saveRR(){
-
+            setRes(role){
+                let title=role.name+'权限设置';
+                this.$refs.rt.open(title,role.id)
             }
 
         },
+        mounted () {
+            this.$store.dispatch('role_list')
+            this.$store.dispatch('res_list_tree')
+        },
+
+        components: {
+            roleForm: roleForm,
+            resTree: resTree
+        },
+
         data () {
             return {
+
                 self: this,
-                page: {},
-                resData:[],
                 tableColums: [
 
                     {
@@ -85,10 +154,15 @@
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 200,
                         align: 'center',
-                        render (row, column, index) {
-                                    return '<i-button type="primary" size="small" @click="edit(${index})">编辑</i-button> <i-button type="error" size="small" @click="del(${index})">删除</i-button> <i-button type="primary" size="small" @click="setRes(${index})">设置权限</i-button>';
+                        render:(h,param)=>{
+                            return h('div', [
+                                editBtn(this,h,param),
+                                setResBtn(this,h,param),
+                                delBtn(this,h,param),
+
+                            ])
                         }
                     }
 
