@@ -10,6 +10,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.yhh.whbx.CMNCtr;
 import com.yhh.whbx.admin.Res.ResCtr;
 import com.yhh.whbx.admin.art.ArtCtr;
 import com.yhh.whbx.admin.param.ParamCtr;
@@ -47,6 +48,14 @@ public class CoreConfig extends JFinalConfig{
                 add("/ad03", ResCtr.class);
                 add("/ad04", ArtCtr.class);
                 add("/ad05", TaxCtr.class);
+
+            }
+        });
+
+        routes.add(new Routes() {
+            @Override
+            public void config() {
+                add("/cmn", CMNCtr.class);
             }
         });
     }

@@ -14,7 +14,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         spinShow:false,
-        uploadPicMaxSize:5000
+        uploadPicMaxSize:524288
     },
     mutations: {
         upadteSpinshow(state,p){

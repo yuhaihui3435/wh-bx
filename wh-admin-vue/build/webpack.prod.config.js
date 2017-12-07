@@ -69,11 +69,13 @@ module.exports = merge(webpackBaseConfig, {
             {
                 from: 'src/views/my-components/text-editor/tinymce'
             }
-        ], {
+        ],
+            {
             ignore: [
                 'text-editor.vue'
             ]
-        }),
+        }
+        ),
         new HtmlWebpackPlugin({
             title: 'iView admin v' + package.version,
             favicon: './td_icon.ico',

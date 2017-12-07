@@ -78,42 +78,21 @@ public class QiNiuKit {
         return auth.uploadToken((String) CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_bucket"));
     }
 
-    public static void upload(File file, String qn_filename) {
-        try {
-            //调用put方法上传
-            Response res = getUploadManager().put(file, qn_filename, getUpToken());
-            //打印返回的信息
-            LogKit.info(res.bodyString());
-        } catch (QiniuException e) {
-            Response r = e.response;
-            // 请求失败时打印的异常的信息
-            LogKit.error(r.toString());
-            try {
-                //响应的文本信息
-                LogKit.error(r.bodyString());
-            } catch (QiniuException e1) {
-                //ignore
-            }
-        }
+    public static void upload(File file, String qn_filename) throws QiniuException {
+
+        //调用put方法上传
+        Response res = getUploadManager().put(file, qn_filename, getUpToken());
+        //打印返回的信息
+        LogKit.info(res.bodyString());
+
 
     }
 
-    public static void del(String qn_filename) {
+    public static void del(String qn_filename) throws QiniuException {
         String bucket = (String) CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_bucket");
-        try {
-            //调用put方法上传
-            getBucketManage().delete(bucket, qn_filename);
-        } catch (QiniuException e) {
-            Response r = e.response;
-            // 请求失败时打印的异常的信息
-            LogKit.error(r.toString());
-            try {
-                //响应的文本信息
-                LogKit.error(r.bodyString());
-            } catch (QiniuException e1) {
-                //ignore
-            }
-        }
+        //调用put方法上传
+        getBucketManage().delete(bucket, qn_filename);
+
 
     }
 
@@ -134,13 +113,11 @@ public class QiNiuKit {
         okhttp3.Response response = null;
         response = client.newCall(request).execute();
 
-        String rs=response.body().string();
-        LogKit.info("以base64字符串形式上传至七牛的图片返回结果："+rs);
-        JSONObject jsonObject=JSON.parseObject(rs);
+        String rs = response.body().string();
+        LogKit.info("以base64字符串形式上传至七牛的图片返回结果：" + rs);
+        JSONObject jsonObject = JSON.parseObject(rs);
 
-        return jsonObject.containsKey("hash")?Consts.YORN_STR.yes.name():Consts.YORN_STR.no.name();
-
-
+        return jsonObject.containsKey("hash") ? Consts.YORN_STR.yes.name() : Consts.YORN_STR.no.name();
 
 
     }
@@ -153,7 +130,7 @@ public class QiNiuKit {
         byte[] src = new byte[l];
         fis = new FileInputStream(new File("/Users/yuhaihui8913/Pictures/dft-avatar.jpg"));
         fis.read(src);
-        String file64= Base64.encodeToString(src,0);
+        String file64 = Base64.encodeToString(src, 0);
         System.out.println(file64);
 
         upload(new File("/Users/yuhaihui8913/Pictures/dft-avatar.jpg"), "image/avart/test.jpg");

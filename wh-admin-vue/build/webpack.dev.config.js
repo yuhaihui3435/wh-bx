@@ -35,7 +35,8 @@ module.exports = merge(webpackBaseConfig, {
             template: './src/template/index.ejs',
             inject: false
         }),
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin(
+            [
             {
                 from: 'src/views/main-components/theme-switch/theme'
             },
@@ -46,7 +47,8 @@ module.exports = merge(webpackBaseConfig, {
             ignore: [
                 'text-editor.vue'
             ]
-        })
+        }
+        )
     ],
     devServer: {
         // contentBase: path.join(__dirname, "dist"),

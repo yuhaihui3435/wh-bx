@@ -2,16 +2,24 @@ package com.yhh.whbx.admin.art;
 
 
 import com.jfinal.aop.Before;
+import com.jfinal.kit.LogKit;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheName;
 import com.jfinal.plugin.ehcache.EvictInterceptor;
 import com.jfinal.upload.UploadFile;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.admin.model.Content;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.interceptors.UserInterceptor;
+import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
+import com.yhh.whbx.kits._StrKit;
 
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,63 +58,44 @@ public class ArtCtr extends CoreController {
     }
 
     @Before({Tx.class})
-    public void saveOrUpdate() {
-
-        UploadFile uf = getFile();
-        String pName, fileName = null;
-        if(uf!=null) {
-            pName = uf.getParameterName();
-            fileName = "images/" + System.currentTimeMillis() + uf.getFileName();
-            if (!isParaBlank(pName + "_bak")) {
-                QiNiuKit.del(getPara(pName + "_bak"));
+    public void save() {
+        Content content=getModel(Content.class,"",true);
+        String base64Str=getPara("thumbnailBase64");
+        if(StrUtil.isNotBlank(base64Str)){
+            String imgKey= "/art/thumbnail/"+ DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ _StrKit.getUUID()+".jpg";
+            String qnRs=null;
+            try {
+                qnRs=QiNiuKit.put64image(base64Str,imgKey);
+            } catch (IOException e) {
+                LogKit.error("七牛上传base64图片失败:"+e.getMessage());
+                throw new CoreException("上传图片到服务器失败>>"+e.getMessage());
             }
-            QiNiuKit.upload(uf.getFile(), fileName);
-        }else{
-            fileName=getPara("thumbnail" + "_bak");
+            if(qnRs==null) {
+                renderFailJSON("图片上传失败", "");
+                return ;
+            }else{
+                if(qnRs.indexOf("200")>-1){
+                    content.setThumbnail(imgKey);
+                }else{
+                    LogKit.error("七牛base64上传失败:"+qnRs);
+                    renderFailJSON("图片上传失败", "");
+                    return ;
+                }
+            }
         }
+        content.setUserid(currUser().getId()!=null?new BigInteger(currUser().getId()):null);
+        content.save();
+        renderSuccessJSON("保存成功","");
+    }
+
+    @Before({Tx.class})
+    public void update() {
 
         renderSuccessJSON("保存成功","");
 
     }
 
-    @Before({Tx.class, EvictInterceptor.class})
-    @CacheName("article")
-    public void setTop(){
-        int id=getParaToInt("content.id");
-        Content c=Content.dao.findById(id);
-        c.setTop(false);
-        c.update();
-        renderSuccessJSON("置顶设置成功","");
-    }
-    @Before({Tx.class, EvictInterceptor.class})
-    @CacheName("article")
-    public void cancelTop(){
-        int id=getParaToInt("content.id");
-        Content c=Content.dao.findById(id);
-        c.setTop(true);
-        c.update();
-        renderSuccessJSON("置顶取消设置成功","");
-    }
-    @Before({Tx.class, EvictInterceptor.class})
-    @CacheName("article")
-    public void setGood(){
-        int id=getParaToInt("content.id");
-        Content c=Content.dao.findById(id);
-        c.setGood(false);
-        c.update();
-        renderSuccessJSON("精华设置成功","");
-    }
-    @Before({Tx.class, EvictInterceptor.class})
-    @CacheName("article")
-    public void cancelGood(){
-        int id=getParaToInt("content.id");
-        Content c=Content.dao.findById(id);
-        c.setGood(true);
-        c.update();
-        renderSuccessJSON("精华取消设置成功","");
-    }
-    @Before({Tx.class, EvictInterceptor.class})
-    @CacheName("article")
+    @Before({Tx.class})
     public void del(){
 
         String ids=getPara("ids");

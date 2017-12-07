@@ -28,7 +28,8 @@
                         </FormItem>
                     </Form>
                     <div class="margin-top-20">
-                        <textarea id="articleEditor"></textarea>
+                        <!--<textarea id="articleEditor"></textarea>-->
+                        <myTinymce></myTinymce>
                     </div>
                 </Card>
                 </Col>
@@ -65,7 +66,6 @@
                     </p>
 
                     <Row class="margin-top-20 publish-button-con">
-                        <span class="publish-button"><Button @click="handlePreview">预览</Button></span>
                         <span class="publish-button"><Button @click="handlePublish" :loading="publishLoading"
                                                              icon="ios-checkmark" style="width:90px;"
                                                              type="primary">发布</Button></span>
@@ -138,6 +138,7 @@
     import env from '../../../../build/env';
     import tinymce from 'tinymce';
     import {mapState} from 'vuex'
+    import myTinymce from '../../my-components/text-editor/my-tinymce.vue'
     export default {
         name: 'art-publish',
         computed: {
@@ -147,7 +148,9 @@
                 'uploadPicMaxSize': state => state.uploadPicMaxSize,
             })
         },
-
+        components:{
+            myTinymce
+        },
         data () {
             return {
                 articleError: '',
@@ -187,9 +190,7 @@
                     vm.imgData = this.result;
                 }
                 reader.readAsDataURL(file)
-
                 this.previewImg = true
-
                 return false;
             },
             handleRemove(){
@@ -197,14 +198,6 @@
                 this.file = '';
                 this.showImg=false;
                 this.previewImg = false;
-            },
-            handlePreview () {
-                if (this.canPublish()) {
-                    this.art.text = tinymce.activeEditor.getContent();
-                    this.$router.push({
-                        name: 'preview'
-                    });
-                }
             },
             handleFormatError (file) {
                 this.$Notice.warning({
@@ -226,37 +219,9 @@
 
         },
         mounted () {
-
-
-            tinymce.init({
-                selector: '#articleEditor',
-                branding: false,
-                elementpath: false,
-                height: 400,
-                language: 'zh_CN.GB2312',
-                menubar: 'edit insert view format table tools',
-                theme: 'modern',
-                images_upload_url: '/ad/uploadPic',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview hr anchor pagebreak imagetools',
-                    'searchreplace visualblocks visualchars code fullscreen fullpage',
-                    'insertdatetime media nonbreaking save table contextmenu directionality',
-                    'emoticons paste textcolor colorpicker textpattern imagetools codesample'
-                ],
-                toolbar1: ' newnote print fullscreen preview | undo redo | insert | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons media codesample',
-                autosave_interval: '20s',
-                image_advtab: true,
-                table_default_styles: {
-                    width: '100%',
-                    borderCollapse: 'collapse'
-                }
-            });
-
             this.$store.dispatch('art_tax_jsonArray');
 
         },
-        destroyed () {
-            tinymce.get('articleEditor').destroy();
-        }
+
     };
 </script>
