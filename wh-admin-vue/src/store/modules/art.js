@@ -5,7 +5,8 @@ const  art={
         totalPage:0,
         pageNumber:1,
         totalRow:1,
-        art:{},
+        art:{title:''},
+        artTaxList:[]
     },
     mutations: {
         set_art_list(state,page){
@@ -18,6 +19,9 @@ const  art={
             if(obj !=undefined)
                 state.role=kit.clone(obj);
         },
+        set_art_taxJsonarray(state,obj){
+            state.artTaxList=obj;
+        }
 
     },
     actions:{
@@ -42,6 +46,15 @@ const  art={
                 });
             });
         },
+        art_tax_jsonArray:function ({commit,state}) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad05/treeJsonArray', {'module':'art'}).then((res) => {
+                    commit('set_art_taxJsonarray',res)
+                });
+            });
+        }
+
     }
 }
 export default art

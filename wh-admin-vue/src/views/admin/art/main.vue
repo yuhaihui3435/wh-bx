@@ -5,11 +5,11 @@
             <Card>
                 <p slot="title">
                     <Icon type="help-buoy"></Icon>
-                    新闻列表
+                    文章列表
                 </p>
                 <Row>
                     <Col span="8">
-                    <Button type="primary" icon="person-add" @click="add">新增新闻</Button>
+                    <Button type="primary" icon="person-add" @click="add">新增文章</Button>
                     <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
                     </Col>
                     <Col span="8" offset="8" align="right">
@@ -29,11 +29,13 @@
             </Card>
             </Col>
         </Row>
+        <Publish ref="ap"></Publish>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
+    import Publish from './publish.vue'
     export default {
         data () {
             return {
@@ -114,7 +116,7 @@
         },
         methods:{
             add(){
-
+                this.$refs.ap.open('新增文章',true);
             },
             refresh(){
 
@@ -124,7 +126,7 @@
             }
         },
         components: {
-
+            Publish
         },
         computed: {
             ...mapState({

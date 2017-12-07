@@ -26,7 +26,6 @@ require('es6-promise').polyfill()
 let axiosIns = axios.create({});
 if (env == 'development') {
     axiosIns.defaults.baseURL = '/api';
-
 } else if (env == 'debug') {
     axiosIns.defaults.baseURL = '/api';
 } else if (env == 'production') {

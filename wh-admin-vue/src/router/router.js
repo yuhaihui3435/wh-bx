@@ -77,7 +77,7 @@ export const appRouter = [
             { path: 'user', title: '用户管理', name: 'admin_user', component: resolve => { require(['@/views/admin/user/main.vue'], resolve); } },
             { path: 'role', title: '角色管理', name: 'admin_role', component: resolve => { require(['@/views/admin/role/main.vue'], resolve); } },
             { path: 'tax', title: '分类管理', name: 'admin_tax', component: resolve => { require(['@/views/admin/taxonomy/main.vue'], resolve); } },
-            { path: 'art', title: '新闻管理', name: 'admin_art', component: resolve => { require(['@/views/admin/art/main.vue'], resolve); } },
+            { path: 'art', title: '文章管理', name: 'admin_art', component: resolve => { require(['@/views/admin/art/main.vue'], resolve); } },
             // { path: 'artList', title: '文章列表', name: 'admin_artList', component: resolve => { require(['@/views/admin/art/list.vue'], resolve); } },
         ]
     },
@@ -177,18 +177,18 @@ export const appRouter = [
     //         // }
     //     ]
     // },
-    {
-        path: '/form',
-        icon: 'android-checkbox',
-        name: 'form',
-        title: '表单编辑',
-        component: Main,
-        children: [
-            { path: 'artical-publish', title: '文章发布', name: 'artical-publish', icon: 'compose', component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); } },
-            { path: 'workflow', title: '工作流', name: 'workflow', icon: 'arrow-swap', component: resolve => { require(['@/views/form/work-flow/work-flow.vue'], resolve); } }
-
-        ]
-    },
+    // {
+    //     path: '/form',
+    //     icon: 'android-checkbox',
+    //     name: 'form',
+    //     title: '表单编辑',
+    //     component: Main,
+    //     children: [
+    //         { path: 'artical-publish', title: '文章发布', name: 'artical-publish', icon: 'compose', component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); } },
+    //         { path: 'workflow', title: '工作流', name: 'workflow', icon: 'arrow-swap', component: resolve => { require(['@/views/form/work-flow/work-flow.vue'], resolve); } }
+    //
+    //     ]
+    // },
     // {
     //     path: '/charts',
     //     icon: 'ios-analytics',

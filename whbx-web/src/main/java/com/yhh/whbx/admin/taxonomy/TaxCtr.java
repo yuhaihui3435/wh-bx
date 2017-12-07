@@ -1,13 +1,13 @@
 package com.yhh.whbx.admin.taxonomy;
 
-import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
-import com.jfinal.kit.Kv;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.xiaoleilu.hutool.log.StaticLog;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.core.CoreData;
 
 import java.util.Date;
 import java.util.List;
@@ -18,10 +18,22 @@ import java.util.List;
 public class TaxCtr extends CoreController {
 
     public void treeJsonArray(){
-        List list=Taxonomy.dao.findAllList();
-        StaticLog.info(JSON.toJSONString(list));
+        List list=null;
+        if(isParaExists("module")){
+            String  cacheData=CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getPara("module"));
+            if(StrUtil.isBlank(cacheData))
+                list=Taxonomy.dao.findAllListByModule(getPara("module"));
+            else{
+                renderJson(cacheData);
+                return ;
+            }
+        }else {
+            list = Taxonomy.dao.findAllList();
+        }
         renderJson(list);
     }
+
+
     @Before({TaxValidator.class,Tx.class})
     public void save(){
         Taxonomy taxonomy=getModel(Taxonomy.class,"",true);
@@ -29,6 +41,7 @@ public class TaxCtr extends CoreController {
             taxonomy.setParentId(new Long("0"));
         }
         taxonomy.save();
+        CoreData.loadTax();
         renderSuccessJSON("新增分类成功");
     }
     @Before({TaxValidator.class,Tx.class})
@@ -36,6 +49,7 @@ public class TaxCtr extends CoreController {
         Taxonomy taxonomy=getModel(Taxonomy.class,"",true);
         taxonomy.update();
         Taxonomy.dao.updateChildrenModule(taxonomy.getId(),taxonomy.getModule());
+        CoreData.loadTax();
         renderSuccessJSON("更新分类成功");
     }
 
@@ -44,6 +58,7 @@ public class TaxCtr extends CoreController {
         Taxonomy taxonomy=Taxonomy.dao.findById(id);
         taxonomy.setDAt(new Date());
         taxonomy.update();
+        CoreData.loadTax();
         renderSuccessJSON("删除分类成功");
     }
 

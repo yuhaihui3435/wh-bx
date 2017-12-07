@@ -32,6 +32,14 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 		return list;
 	}
 
+	public List<Taxonomy> findAllListByModule(String module){
+		List<Taxonomy> list=dao.find("select * from s_taxonomy where parentId =0 and dAt is null and module=?",module);
+		for (Taxonomy taxonomy:list){
+			findChildren(taxonomy);
+		}
+		return list;
+	}
+
 	private void findChildren(Taxonomy taxonomy){
 		List<Taxonomy> list=dao.find("select * from s_taxonomy where parentId =? and dAt is null ",taxonomy.getId());
 		for (Taxonomy t:list){

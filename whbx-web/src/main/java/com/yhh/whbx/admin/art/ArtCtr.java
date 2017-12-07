@@ -37,13 +37,13 @@ public class ArtCtr extends CoreController {
     public void list() {
         Page<Content> page;
         String serach = getPara("search");
-        StringBuffer where = new StringBuffer("from s_content c left join s_user u on c.user_id=u.id where 1=1 and c.dAt is null ");
+        StringBuffer where = new StringBuffer("from s_content c left join s_user u on c.userId=u.id where 1=1 and c.dAt is null ");
         if (!isParaBlank("search")) {
             where.append(" and (instr(c.title,?)>0 or instr(c.text,?)>0 or instr(c.summary,?)>0 or instr(c.metaKeywords,?)>0 or instr(u.nickname,?)>0)");
-            where.append(" order by c.c_at desc");
+            where.append(" order by c.cAt desc");
             page = Content.dao.paginate(getPN(), getPS(), "select c.* ", where.toString(), serach, serach, serach, serach, serach);
         } else {
-            where.append(" order by c.c_at desc");
+            where.append(" order by c.cAt desc");
             page = Content.dao.paginate(getPN(), getPS(), "select c.* ", where.toString());
         }
         renderJson(page);
@@ -131,24 +131,8 @@ public class ArtCtr extends CoreController {
 
     }
 
-    public void view(){
-        int id=getParaToInt("id");
-        Content c=Content.dao.findById(id);
-
-        if(c==null||c.getDAt()!=null){
-            renderError(404);
-            return ;
-        }
-        setAttr("content",c);
-        render("/admin/content/view.html");
-    }
 
 
-    public void get(){
-        int id=getParaToInt("id");
-        renderJson(Content.dao.findById(id));
-        //renderCaptcha();
-    }
 
 
 }

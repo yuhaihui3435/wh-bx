@@ -7,6 +7,7 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Param;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.kits.FileKit;
 import com.yhh.whbx.vo.SSQ;
 
@@ -20,7 +21,9 @@ public class CoreData {
 
 
     public static void loadAllCache(){
-        loadParam();loadSSQ();
+        loadParam();
+//        loadSSQ();
+        loadTax();
     }
 
     public static void loadParam(){
@@ -29,6 +32,14 @@ public class CoreData {
             CacheKit.put(Consts.CACHE_NAMES.paramCache.name(),p.getK(),p.getVal());
         }
         StaticLog.info("系统参数加载成功");
+    }
+
+    public static void loadTax(){
+        CacheKit.removeAll(Consts.CACHE_NAMES.taxonomy.name());
+        List<Taxonomy> list=Taxonomy.dao.findAllListByModule("art");
+        CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),"artJsonArray",JSON.toJSONString(list));
+        list=Taxonomy.dao.findAllListByModule("card");
+        CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),"cardJsonArray",JSON.toJSONString(list));
     }
 
 
