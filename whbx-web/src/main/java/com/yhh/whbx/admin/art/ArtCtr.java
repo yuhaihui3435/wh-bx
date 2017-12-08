@@ -3,16 +3,15 @@ package com.yhh.whbx.admin.art;
 
 import com.jfinal.aop.Before;
 import com.jfinal.kit.LogKit;
-import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.plugin.ehcache.CacheName;
-import com.jfinal.plugin.ehcache.EvictInterceptor;
-import com.jfinal.upload.UploadFile;
+import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Content;
+import com.yhh.whbx.admin.model.Mapping;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.interceptors.UserInterceptor;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
@@ -61,6 +60,9 @@ public class ArtCtr extends CoreController {
     public void save() {
         Content content=getModel(Content.class,"",true);
         String base64Str=getPara("thumbnailBase64");
+        String tax=getPara("tax");
+
+
         if(StrUtil.isNotBlank(base64Str)){
             String imgKey= "/art/thumbnail/"+ DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ _StrKit.getUUID()+".jpg";
             String qnRs=null;
@@ -68,23 +70,37 @@ public class ArtCtr extends CoreController {
                 qnRs=QiNiuKit.put64image(base64Str,imgKey);
             } catch (IOException e) {
                 LogKit.error("七牛上传base64图片失败:"+e.getMessage());
-                throw new CoreException("上传图片到服务器失败>>"+e.getMessage());
+                renderFailJSON("缩略图上传失败", "");
+                return ;
             }
             if(qnRs==null) {
                 renderFailJSON("图片上传失败", "");
                 return ;
             }else{
-                if(qnRs.indexOf("200")>-1){
+                if(qnRs.equals(Consts.YORN_STR.yes.name())){
                     content.setThumbnail(imgKey);
                 }else{
                     LogKit.error("七牛base64上传失败:"+qnRs);
-                    renderFailJSON("图片上传失败", "");
+                    renderFailJSON("缩略图上传失败", "");
                     return ;
                 }
             }
         }
-        content.setUserid(currUser().getId()!=null?new BigInteger(currUser().getId()):null);
+        content.setUserid(currUser()!=null?new BigInteger(currUser().getId()):null);
+        content.setCAt(new Date());
+        content.setStatus(Consts.CHECK_STATUS.normal.getVal());
         content.save();
+        if(StrUtil.isNotBlank(tax)){
+            String[] tax_array=tax.split(",");
+            Mapping mapping=null;
+            for(String s:tax_array){
+                mapping=new Mapping();
+                mapping.setCid(content.getId());
+                mapping.setTid(new Long(s));
+                mapping.save();
+            }
+        }
+
         renderSuccessJSON("保存成功","");
     }
 
@@ -120,6 +136,28 @@ public class ArtCtr extends CoreController {
 
     }
 
+    public void get(){
+        Long id=getParaToLong("id");
+        List<Taxonomy> all=Taxonomy.dao.findAllListByModule("art");
+        List<Taxonomy> own=Taxonomy.dao.findTaxsByCId(id);
+        if(!all.isEmpty()) {
+            all.get(0).getChildren().removeAll(own);
+            for(Taxonomy taxonomy:own){
+                taxonomy.setChecked(true);
+            }
+            all.get(0).getChildren().addAll(own);
+        }
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("art", Content.dao.findById(id));
+        jsonObject.put("artTaxList",all);
+        renderJson(jsonObject);
+    }
+
+
+    public void getTax(){
+        Long cId=getParaToLong("cId");
+        renderJson(Taxonomy.dao.findTaxsByCId(cId));
+    }
 
 
 

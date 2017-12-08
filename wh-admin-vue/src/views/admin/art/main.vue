@@ -9,7 +9,7 @@
                 </p>
                 <Row>
                     <Col span="8">
-                    <Button type="primary" icon="person-add" @click="add">新增文章</Button>
+                    <Button type="primary" icon="android-add" @click="add">新增文章</Button>
                     <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
                     </Col>
                     <Col span="8" offset="8" align="right">
@@ -34,6 +34,115 @@
 </template>
 
 <script>
+
+    const publishBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '是否终审发布',
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.publish(param.row.id)
+                },
+            }
+        }, [h('Button', {
+            props: {
+                type: 'success',
+                size: 'small'
+            }
+        }, '终审发布')]);
+    }
+
+    const taxViewBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                trigger: 'hover',
+                title:param.row.taxList.length+"个栏目",
+                placement: 'bottom',
+
+            },
+            style: {
+                marginRight: '5px'
+            },
+
+        }, [h('Tag',  param.row.taxList.length),
+            h('div', {
+
+                    slot:'content'
+
+        },[
+            h('ul', vm.artList[param.index].taxList.map(item => {
+                return h('li', {
+                    style: {
+                        textAlign: 'center',
+                        padding: '4px'
+                    }
+                }, item.title)
+            }))
+            ])]);
+    }
+
+
+    const editBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.edit(param.row)
+                }
+            }
+        }, '编辑')
+    }
+
+    const viewBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.view(param.row)
+                }
+            }
+        }, '查看')
+    }
+
+    const delBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要删除这个文章信息吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.del(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '删除')]);
+    }
+
     import {mapState} from 'vuex'
     import Publish from './publish.vue'
     export default {
@@ -41,6 +150,7 @@
             return {
                 searchKey:'',
                 self: this,
+                taxList:[],
                 tableColums: [
 
                     {
@@ -50,10 +160,16 @@
                     {
                         title: '状态',
                         key: 'status',
-                    },
-                    {
-                        title: '栏目',
-                        key: 'catalogTxt',
+                        render:(h,param)=>{
+                        let color=(param.row.status=='00')?'green':(param.row.status=='01')?'yellow':'red'
+                        let txt=(param.row.status=='00')?'正常':(param.row.status=='01')?'待审核':'审核拒绝'
+                        return h('Tag',{
+                            props: {
+                                type: 'dot',
+                                color: color
+                            }
+                        },txt)
+                    }
                     },
                     {
                         title: '精华',
@@ -97,19 +213,36 @@
                             },txt)
                         }
                     },
+
+                    {
+                     title:'所属栏目',
+                     key:'taxList',
+                     render:(h,param)=>{
+                        return taxViewBtn(this,h,param)
+                    }
+                    }
+                    ,
+
                     {
                         title: '创建时间',
-                        key: 'c_at',
+                        key: 'cAtTxt',
                     },
                     {
                         title: '作者',
-                        key: 'c_at',
+                        key: 'author',
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 200,
+                        width: 250,
                         align: 'center',
+                        render:(h,param)=>{
+                            let btns=[editBtn(this,h,param),
+                                delBtn(this,h,param),viewBtn(this,h,param)]
+                        if(param.row.flag=='01')
+                                btns.push(publishBtn(this,h,param))
+                        return h('div', btns);
+                    }
                     }
                     ]
             }
@@ -119,10 +252,20 @@
                 this.$refs.ap.open('新增文章',true);
             },
             refresh(){
-
+                this.$store.dispatch('art_list',{search:this.searchKey});
             },
             search(pn){
                 this.$store.dispatch('art_list',{search:this.searchKey,pageNumber:pn});
+            },
+            edit(art){
+
+            },
+            del(id){
+                this.$store.dispatch('art_del',{ids:id}).then((res)=>{
+                    if (res && res == 'success') {
+                    this.$store.dispatch('art_list')
+                }
+                })
             }
         },
         components: {

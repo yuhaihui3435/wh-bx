@@ -5,7 +5,7 @@ const  art={
         totalPage:0,
         pageNumber:1,
         totalRow:1,
-        art:{title:''},
+        art:{title:'',flag:'01',top:'1',good:'1',module:'art'},
         artTaxList:[]
     },
     mutations: {
@@ -17,10 +17,16 @@ const  art={
         },
         set_art(state,obj){
             if(obj !=undefined)
-                state.role=kit.clone(obj);
+                state.art=kit.clone(obj);
+            else {
+                state.art = {title: '', flag: '01', top: '1', good: '1', module: 'art'};
+            }
         },
         set_art_taxJsonarray(state,obj){
             state.artTaxList=obj;
+        },
+        set_artTax_list(state,list){
+            state.artTaxList=list
         }
 
     },
@@ -30,10 +36,23 @@ const  art={
                 commit('set_art_list',res)
             });
         },
-        art_save:function ({ commit,state },action) {
+        art_get:function ({ commit,state },param) {
             let vm=this._vm;
             return new Promise(function (resolve, reject) {
-                vm.$axios.post('/ad04/'+action, state.role).then((res) => {
+                vm.$axios.post('/ad04/get', param).then((res) => {
+                    commit('set_art', res.art)
+                    commit('set_artTax_list', res.artTaxList)
+                });
+            });
+        },
+        art_save:function ({ commit,state },param) {
+            let vm=this._vm;
+            let p=kit.clone(state.art);
+            p['text']=param.text
+            p['tax']=param.tax
+            p['thumbnailBase64']=param.thumbnailBase64
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad04/'+param.action, p).then((res) => {
                     resolve(res.resCode);
                 });
             });
@@ -53,7 +72,16 @@ const  art={
                     commit('set_art_taxJsonarray',res)
                 });
             });
-        }
+        },
+
+        art_tax_list:function ({commit,state},param) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad04/getTax', param).then((res) => {
+                    resolve(res)
+                });
+            });
+        },
 
     }
 }

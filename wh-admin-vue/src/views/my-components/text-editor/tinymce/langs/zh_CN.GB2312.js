@@ -228,5 +228,5 @@ tinymce.addI18n('zh_CN.GB2312', {
     'Table': '\u8868\u683c',
     'Format': '\u683c\u5f0f',
     'Template': '\u6a21\u677f',
-    'Insert New Note': '\u65b0\u5efa\u7b14\u8bb0'
+    'Insert New Note': '\u65b0\u5efa\u7b14\u8bb0',
 });

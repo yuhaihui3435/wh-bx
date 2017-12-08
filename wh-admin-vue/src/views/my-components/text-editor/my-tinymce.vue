@@ -78,14 +78,15 @@
         },
         methods:{
             getContent(){
-                tinymce.activeEditor.getContent();
+                return tinymce.activeEditor.getContent({format: 'raw'});
             },
             setContent(txt){
-                tinymce.activeEditor.getContent(txt)
-            }
+                tinymce.activeEditor.setContent(txt)
+            },
 
         },
         destroyed () {
+            console.info('tinymce desctroyed')
             tinymce.get('articleEditor').destroy();
         }
     }

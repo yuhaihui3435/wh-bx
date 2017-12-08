@@ -19,17 +19,20 @@
                 <Col span="18">
                 <Card>
                     <Form :label-width="80">
-                        <FormItem label="文章标题" :error="articleError">
+                        <FormItem label="文章标题" >
                             <Input v-model="art.title" icon="android-list"/>
                         </FormItem>
-                        <FormItem label="摘要" :error="articleError">
+                        <FormItem label="引用链接" >
+                            <Input v-model="art.linkTo" icon="link"/>
+                        </FormItem>
+                        <FormItem label="摘要" >
                             <Input v-model="art.summary" type="textarea" :rows="4"
                                    icon="android-list"/>
                         </FormItem>
                     </Form>
                     <div class="margin-top-20">
                         <!--<textarea id="articleEditor"></textarea>-->
-                        <myTinymce></myTinymce>
+                        <myTinymce ref="mt"></myTinymce>
                     </div>
                 </Card>
                 </Col>
@@ -42,7 +45,7 @@
                     <p class="margin-top-10">
                         <Icon type="android-time"></Icon>
                         发布&nbsp;&nbsp;状&nbsp;&nbsp;&nbsp; 态：
-                        <Select size="small" style="width:90px" value="00" v-model="art.flag">
+                        <Select size="small" style="width:90px"  v-model="art.flag" disabled>
                             <Option v-for="item in articleStateList" :value="item.value" :key="item.value">{{ item.label
                                 }}
                             </Option>
@@ -51,7 +54,7 @@
                     <p class="margin-top-10">
                         <Icon type="flag"></Icon>
                         &nbsp;&nbsp;置顶：&nbsp;<b></b>
-                        <Select size="small" style="width:90px" value="1" v-model="art.top">
+                        <Select size="small" style="width:90px"  v-model="art.top">
                             <Option v-for="item in yornList" :value="item.value" :key="item.value">{{ item.label }}
                             </Option>
                         </Select>
@@ -59,17 +62,13 @@
                     <p class="margin-top-10">
                         <Icon type="fireball"></Icon>
                         &nbsp;&nbsp;精华：&nbsp;<b></b>
-                        <Select size="small" style="width:90px" value="1" v-model="art.good">
+                        <Select size="small" style="width:90px"  v-model="art.good">
                             <Option v-for="item in yornList" :value="item.value" :key="item.value">{{ item.label }}
                             </Option>
                         </Select>
                     </p>
 
-                    <Row class="margin-top-20 publish-button-con">
-                        <span class="publish-button"><Button @click="handlePublish" :loading="publishLoading"
-                                                             icon="ios-checkmark" style="width:90px;"
-                                                             type="primary">发布</Button></span>
-                    </Row>
+
                 </Card>
                 <div class="margin-top-10">
                     <Card>
@@ -93,7 +92,7 @@
                         <div class="height-120px">
                             <Row type="flex" justify="center" align="middle" class="height-100">
                                 <Upload
-                                        action="//jsonplaceholder.typicode.com/posts/"
+                                        action=""
                                         :format="['jpg', 'png', 'jpeg', 'gif', 'bmp', 'svg']"
                                         :before-upload="handleUpload"
                                         :on-format-error="handleFormatError"
@@ -130,6 +129,10 @@
                 </div>
                 </Col>
             </Row>
+            <div slot="footer">
+                <Button type="success" :loading="publishLoading" @click="handlePublish">保存</Button>
+                <Button type="error" @click="artModal=false">关闭</Button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -153,18 +156,16 @@
         },
         data () {
             return {
-                articleError: '',
-                editPathButtonType: 'ghost',
                 articleStateList: [{value: '01', label: '草稿'}, {value: '00', 'label': '发布'}],
                 yornList: [{value: '0', label: '是'}, {value: '1', 'label': '否'}],
-                publishLoading: false,
                 artModal: false,
                 isAdd: true,
                 modalTitle: '新增文章',
                 imgData: '',
                 file: '',
                 previewImg: false,
-                showImg:false
+                showImg:false,
+                publishLoading:false
             };
         },
         methods: {
@@ -176,11 +177,46 @@
                 this.file='';
                 this.previewImg=false;
                 this.imgData='';
-                if (isAdd)
-                    this.$store.commit('set_art', {});
-                this.modalLoading = false;
+                if (isAdd){
+                    this.$store.commit('set_art');
+                    this.$refs.mt.setContent('');
+                }else{
+                    this.$refs.mt.setContent(this.art.text);
+                }
+
+
             },
             handlePublish(){
+                let vm=this;
+                this.publishLoading=true;
+                if(!this.art.title||this.art.title.length==0) {
+                    this.$Message.error("请填写标题");
+                    this.publishLoading=false;
+                    return
+                }
+
+                let taxArray=this.$refs.artTaxSelected.getCheckedNodes();
+                let taxIds='';
+                for(let s of taxArray){
+                    if(taxIds==''){
+                        taxIds=s.id;
+                    }else{
+                        taxIds=taxIds+","+s.id
+                    }
+                }
+
+                let thumbnailBase64=this.imgData
+                let text=this.$refs.mt.getContent();
+                let param={'text':text,'tax':taxIds,'thumbnailBase64':thumbnailBase64,'action':'save'}
+
+                this.$store.dispatch('art_save',param).then((res)=>{
+                    this.publishLoading = false;
+                    if (res && res == 'success') {
+                        vm.artModal = false;
+                        this.$store.dispatch('art_list')
+                    }
+                })
+
 
             },
             handleUpload(file){
@@ -223,5 +259,8 @@
 
         },
 
+        destroyed () {
+
+        }
     };
 </script>

@@ -59,6 +59,7 @@ axiosIns.interceptors.request.use(function (config) {
 
 axiosIns.interceptors.response.use(function (response) {
     store.commit('upadteSpinshow',false);
+    store.commit('updateIgnoreSpinshow',false);
     let data = response.data;
     let status = response.status;
     if (status === 200) {

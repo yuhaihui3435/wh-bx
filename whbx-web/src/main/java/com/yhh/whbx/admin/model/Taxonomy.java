@@ -16,12 +16,22 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 
 	private List<Taxonomy> children =new ArrayList<>();
 
+	private boolean checked;
+
 	public List<Taxonomy> getChildren() {
 		return children;
 	}
 
 	public void setChildren(List<Taxonomy> children) {
 		this.children = children;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 	public List<Taxonomy> findAllList(){
@@ -50,7 +60,7 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 	}
 
 	public List<Taxonomy> findByModuleExcept(String m){
-		return dao.find("select * from s_taxonomy where module=? and parentId is null and dAt is null ",m);
+		return dao.find("select * from s_taxonomy where module=? and parentId <>0 and dAt is null ",m);
 	}
 
 
@@ -67,7 +77,28 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 		return dao.find("select * from s_taxonomy where title=? and dAt is null and parentId=? and id<>?",title,pId,id);
 	}
 
+	public List findTaxsByCId(Long cId){
+		String sql="select st.*,'true' as checked  from s_taxonomy st left join s_mapping sm on st.id=sm.tid where st.parentId<>0 and sm.cid=?";
+		return dao.find(sql,cId);
+
+	}
+
 	public boolean getExpand(){
 		return children.size()>0?true:false;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Taxonomy)) {
+			return false;
+		}
+		Taxonomy t = (Taxonomy) obj;
+		return getId().longValue()==t.getId().longValue();
+	}
+
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
 }
