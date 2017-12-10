@@ -87,6 +87,11 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 		return children.size()>0?true:false;
 	}
 
+	public List<Taxonomy> findAllModule(){
+		String sql="select distinct(module) from s_taxonomy";
+		return dao.find(sql);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Taxonomy)) {
@@ -101,4 +106,8 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 		return getId().hashCode();
 	}
 
+	@Override
+	public String getTableName() {
+		return "s_taxonomy";
+	}
 }

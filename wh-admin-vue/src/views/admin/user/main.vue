@@ -16,11 +16,11 @@
                     <Input v-model="searchKey" placeholder="请输入..." style="width: 200px"/>
                     <span @click="search" style="margin: 0 10px;"><Button type="primary"
                                                                           icon="search">搜索</Button></span>
-                    <Button @click="cancelSearch" type="ghost">取消</Button>
+
                     </Col>
                 </Row>
                 <Row class="margin-top-10">
-                    <Table :context="self" :data="userList" :columns="tableColums" stripe></Table>
+                    <Table :context="self" border :data="userList" :columns="tableColums" stripe></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
@@ -241,11 +241,9 @@
             search(pn){
                 this.$store.dispatch('user_list',{search:this.searchKey,pn:pn})
             },
-            cancelSearch(){
-                this.searchKey='';
-            },
+
             refresh(){
-                this.$store.dispatch('user_list')
+                this.$store.dispatch('user_list',{search:this.searchKey})
             },
             setRole(i){
 

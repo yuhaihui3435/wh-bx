@@ -1,0 +1,58 @@
+<style lang="less">
+    @import '../../../styles/common.less';
+    @import './preview.less';
+</style>
+<template>
+    <div>
+        <Modal
+                v-model="artViewModal"
+                :mask-closable="false"
+                width="900"
+                :styles="{top: '20px'}"
+        >
+            <p slot="header">
+                <Icon type="information-circled"></Icon>
+                <span>文章预览</span>
+            </p>
+            <Card>
+                <h1>{{ art.title }}</h1>
+                <p class="preview-publish-time">
+                    <Icon type="android-alarm-clock"></Icon>
+                    &nbsp;发布时间：{{ art.pAtTxt }}
+                </p>
+                <div class="preview-content-con" v-html="art.text"></div>
+                <div class="preview-classifition-con">
+                    <b class="preview-tip">
+                        <Icon type="navicon-round"></Icon>
+                        &nbsp;栏目：</b>
+                    <a class="preview-classifition-item" v-for="item in art.taxList" :key="item.id">
+                        <Icon type="android-folder-open"></Icon>
+                        {{ item.title }}
+                    </a>
+                </div>
+            </Card>
+        </Modal>
+    </div>
+</template>
+<script>
+
+    import {mapState} from 'vuex'
+    export default {
+        name:'art-view',
+        computed: {
+            ...mapState({
+                'art': state => state.art.art,
+            })
+        },
+        data () {
+            return {
+                artViewModal: false,
+            };
+        },
+        methods:{
+            open(){
+                this.artViewModal=true;
+            }
+        }
+    }
+</script>

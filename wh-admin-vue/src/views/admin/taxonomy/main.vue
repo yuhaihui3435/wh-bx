@@ -80,6 +80,7 @@
                 });
             },
             addChild(){
+                this.$refs['formValidate'].resetFields()
                 this.formTitle="新增分类"
                 let taxSelected=this.$refs.taxTree.getSelectedNodes();
 
@@ -93,6 +94,7 @@
                 }
             },
             edit(){
+                this.$refs['formValidate'].resetFields()
                 this.formTitle="修改分类"
                 this.ac=false;
                 let taxSelected=this.$refs.taxTree.getSelectedNodes();

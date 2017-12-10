@@ -12,4 +12,9 @@ public class Param extends BaseParam<Param> {
 	public Param findByKey(String key){
 		return dao.findFirst("select * from "+TABLE+" where k=?",key);
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE;
+	}
 }

@@ -19,7 +19,7 @@
                     </Col>
                 </Row>
                 <Row class="margin-top-10">
-                    <Table :context="self" :data="artList" :columns="tableColums"   stripe></Table>
+                    <Table :context="self" :data="artList" :columns="tableColums" stripe border></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
@@ -30,12 +30,13 @@
             </Col>
         </Row>
         <Publish ref="ap"></Publish>
+        <artView ref="view"></artView>
     </div>
 </template>
 
 <script>
 
-    const publishBtn=(vm,h,param)=>{
+    const publishBtn = (vm, h, param) => {
         return h('Poptip', {
             props: {
                 confirm: '',
@@ -57,11 +58,11 @@
         }, '终审发布')]);
     }
 
-    const taxViewBtn=(vm,h,param)=>{
+    const taxViewBtn = (vm, h, param) => {
         return h('Poptip', {
             props: {
                 trigger: 'hover',
-                title:param.row.taxList.length+"个栏目",
+                title: param.row.taxList.length + "个栏目",
                 placement: 'bottom',
 
             },
@@ -69,25 +70,25 @@
                 marginRight: '5px'
             },
 
-        }, [h('Tag',  param.row.taxList.length),
+        }, [h('Tag', param.row.taxList.length),
             h('div', {
 
-                    slot:'content'
+                slot: 'content'
 
-        },[
-            h('ul', vm.artList[param.index].taxList.map(item => {
-                return h('li', {
-                    style: {
-                        textAlign: 'center',
-                        padding: '4px'
-                    }
-                }, item.title)
-            }))
+            }, [
+                h('ul', vm.artList[param.index].taxList.map(item => {
+                    return h('li', {
+                        style: {
+                            textAlign: 'center',
+                            padding: '4px'
+                        }
+                    }, item.title)
+                }))
             ])]);
     }
 
 
-    const editBtn=(vm,h,param)=>{
+    const editBtn = (vm, h, param) => {
         return h('Button', {
             props: {
                 type: 'primary',
@@ -104,7 +105,7 @@
         }, '编辑')
     }
 
-    const viewBtn=(vm,h,param)=>{
+    const viewBtn = (vm, h, param) => {
         return h('Button', {
             props: {
                 type: 'primary',
@@ -115,13 +116,13 @@
             },
             on: {
                 click: () => {
-                    vm.view(param.row)
+                    vm.view(param.row.id)
                 }
             }
         }, '查看')
     }
 
-    const delBtn=(vm,h,param)=>{
+    const delBtn = (vm, h, param) => {
         return h('Poptip', {
             props: {
                 confirm: '',
@@ -145,12 +146,13 @@
 
     import {mapState} from 'vuex'
     import Publish from './publish.vue'
+    import artView from './view.vue'
     export default {
         data () {
             return {
-                searchKey:'',
+                searchKey: '',
                 self: this,
-                taxList:[],
+                taxList: [],
                 tableColums: [
 
                     {
@@ -160,72 +162,77 @@
                     {
                         title: '状态',
                         key: 'status',
-                        render:(h,param)=>{
-                        let color=(param.row.status=='00')?'green':(param.row.status=='01')?'yellow':'red'
-                        let txt=(param.row.status=='00')?'正常':(param.row.status=='01')?'待审核':'审核拒绝'
-                        return h('Tag',{
-                            props: {
-                                type: 'dot',
-                                color: color
-                            }
-                        },txt)
-                    }
-                    },
-                    {
-                        title: '精华',
-                        key: 'good',
-                        render:(h,param)=>{
-                            let color=(param.row.good=='0')?'green':'red'
-                            let txt=(param.row.good=='0')?'是':'否'
-                            return h('Tag',{
+                        render: (h, param) => {
+                            let color = (param.row.status == '00') ? 'green' : (param.row.status == '01') ? 'yellow' : 'red'
+                            let txt = (param.row.status == '00') ? '正常' : (param.row.status == '01') ? '待审核' : '审核拒绝'
+                            return h('Tag', {
                                 props: {
                                     type: 'dot',
                                     color: color
                                 }
-                            },txt)
+                            }, txt)
+                        }
+                    },
+                    {
+                        title: '精华',
+                        key: 'good',
+                        render: (h, param) => {
+                            let color = (param.row.good == '0') ? 'green' : 'red'
+                            let txt = (param.row.good == '0') ? '是' : '否'
+                            return h('Tag', {
+                                props: {
+                                    type: 'dot',
+                                    color: color
+                                }
+                            }, txt)
                         }
                     },
                     {
                         title: '置顶',
                         key: 'top',
-                        render:(h,param)=>{
-                            let color=(param.row.top=='0')?'green':'red'
-                            let txt=(param.row.top=='0')?'是':'否'
-                            return h('Tag',{
+                        render: (h, param) => {
+                            let color = (param.row.top == '0') ? 'green' : 'red'
+                            let txt = (param.row.top == '0') ? '是' : '否'
+                            return h('Tag', {
                                 props: {
                                     type: 'dot',
                                     color: color
                                 }
-                            },txt)
+                            }, txt)
                         }
                     },
                     {
                         title: '发布状态',
                         key: 'flag',
-                        render:(h,param)=>{
-                            let color=(param.row.flag=='00')?'green':'red'
-                            let txt=(param.row.flag=='00')?'已发布':'草稿'
-                            return h('Tag',{
+                        width:150,
+                        render: (h, param) => {
+                            let color = (param.row.flag == '00') ? 'green' : 'red'
+                            let txt = (param.row.flag == '00') ? '已发布' : '草稿'
+                            return h('Tag', {
                                 props: {
                                     type: 'dot',
                                     color: color
                                 }
-                            },txt)
+                            }, txt)
                         }
                     },
 
                     {
-                     title:'所属栏目',
-                     key:'taxList',
-                     render:(h,param)=>{
-                        return taxViewBtn(this,h,param)
-                    }
+                        title: '所属栏目',
+                        key: 'taxList',
+                        render: (h, param) => {
+                            return taxViewBtn(this, h, param)
+                        }
                     }
                     ,
 
                     {
                         title: '创建时间',
                         key: 'cAtTxt',
+                    },
+                    {
+                        title: '发布时间',
+                        key: 'pAtTxt',
                     },
                     {
                         title: '作者',
@@ -236,44 +243,57 @@
                         key: 'action',
                         width: 250,
                         align: 'center',
-                        render:(h,param)=>{
-                            let btns=[editBtn(this,h,param),
-                                delBtn(this,h,param),viewBtn(this,h,param)]
-                        if(param.row.flag=='01')
-                                btns.push(publishBtn(this,h,param))
-                        return h('div', btns);
+                        render: (h, param) => {
+                            let btns = [editBtn(this, h, param),
+                                delBtn(this, h, param), viewBtn(this, h, param)]
+                            if (param.row.flag == '01')
+                                btns.push(publishBtn(this, h, param))
+                            return h('div', btns);
+                        }
                     }
-                    }
-                    ]
+                ]
             }
         },
-        methods:{
+        methods: {
             add(){
-                this.$refs.ap.open('新增文章',true);
+                this.$refs.ap.open('新增文章', true);
             },
             refresh(){
-                this.$store.dispatch('art_list',{search:this.searchKey});
+                this.$store.dispatch('art_list', {search: this.searchKey});
             },
             search(pn){
-                this.$store.dispatch('art_list',{search:this.searchKey,pageNumber:pn});
+                this.$store.dispatch('art_list', {search: this.searchKey, pn: pn});
             },
             edit(art){
+                this.$store.dispatch('art_get',{id:art.id}).then(()=>{
+                    this.$refs.ap.open('修改文章', false);
+                })
+            },
+            view(id){
+                this.$store.dispatch('art_get',{id:id}).then(()=>{
+                    this.$refs.view.open();
+                })
+            },
 
+            publish(id){
+                this.$store.dispatch('art_publish', {id: id}).then((res) => {
+                    this.refresh()
+                })
             },
             del(id){
-                this.$store.dispatch('art_del',{ids:id}).then((res)=>{
+                this.$store.dispatch('art_del', {ids: id}).then((res) => {
                     if (res && res == 'success') {
-                    this.$store.dispatch('art_list')
-                }
+                        this.$store.dispatch('art_list')
+                    }
                 })
             }
         },
         components: {
-            Publish
+            Publish,artView
         },
         computed: {
             ...mapState({
-                'artList':state =>state.art.artList,
+                'artList': state => state.art.artList,
                 'totalPage': state => state.art.totalPage,
                 'total': state => state.art.totalRow,
                 'pageNumber': state => state.art.pageNumber,

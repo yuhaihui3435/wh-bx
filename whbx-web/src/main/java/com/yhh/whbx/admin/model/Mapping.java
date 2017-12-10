@@ -1,5 +1,8 @@
 package com.yhh.whbx.admin.model;
 
+import com.jfinal.kit.LogKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.DbKit;
 import com.yhh.whbx.admin.model.base.BaseMapping;
 
 /**
@@ -8,4 +11,14 @@ import com.yhh.whbx.admin.model.base.BaseMapping;
 @SuppressWarnings("serial")
 public class Mapping extends BaseMapping<Mapping> {
 	public static final Mapping dao = new Mapping().dao();
+
+	public void delByCId(Long cId){
+		String sql="delete from s_mapping where cid=?";
+		Db.use(DbKit.MAIN_CONFIG_NAME).update(sql,cId);
+	}
+
+	@Override
+	public String getTableName() {
+		return "s_mapping";
+	}
 }

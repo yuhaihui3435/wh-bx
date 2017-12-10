@@ -182,6 +182,7 @@
                     this.$refs.mt.setContent('');
                 }else{
                     this.$refs.mt.setContent(this.art.text);
+                    //this.imgData=this.art.thumbnailImgUrl;
                 }
 
 
@@ -207,6 +208,7 @@
 
                 let thumbnailBase64=this.imgData
                 let text=this.$refs.mt.getContent();
+                //let action=(this.art.id)?'update':'save'
                 let param={'text':text,'tax':taxIds,'thumbnailBase64':thumbnailBase64,'action':'save'}
 
                 this.$store.dispatch('art_save',param).then((res)=>{

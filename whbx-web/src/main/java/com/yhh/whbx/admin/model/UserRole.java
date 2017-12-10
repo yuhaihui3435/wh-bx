@@ -27,4 +27,9 @@ public class UserRole extends BaseUserRole<UserRole> {
 //			CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),ur.getUid());
 		}
 	}
+
+	@Override
+	public String getTableName() {
+		return "s_user_role";
+	}
 }

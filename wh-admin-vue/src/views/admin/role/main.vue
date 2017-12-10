@@ -14,7 +14,7 @@
                     </Col>
                 </Row>
                 <Row class="margin-top-10">
-                    <Table :context="self" :data="roleList" :columns="tableColums" stripe></Table>
+                    <Table :context="self" border :data="roleList" :columns="tableColums" stripe></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
@@ -116,7 +116,7 @@
                 this.$refs.rf.open('新增角色',true)
             },
             changePage(pn){
-                this.$store.dispatch('role_list',{search:this.searchKey,pageNumber:pn})
+                this.$store.dispatch('role_list',{pn:pn})
             },
             refresh(){
                 this.$store.dispatch('role_list')

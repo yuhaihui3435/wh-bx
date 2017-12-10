@@ -15,4 +15,9 @@ public class Role extends BaseRole<Role> {
 	public List<Role> findRolesByUserId(BigInteger userId){
 		return dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),userId,"select r.* from s_role r left join s_user_role ur on r.id=ur.rid where ur.uid=?",userId );
 	}
+
+	@Override
+	public String getTableName() {
+		return "s_role";
+	}
 }

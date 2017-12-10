@@ -27,4 +27,9 @@ public class RoleRes extends BaseRoleRes<RoleRes> {
 	public Res getRes(){
 		return Res.dao.findById(getResId());
 	}
+
+	@Override
+	public String getTableName() {
+		return "s_user_role";
+	}
 }

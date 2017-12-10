@@ -81,6 +81,32 @@ export const appRouter = [
             // { path: 'artList', title: '文章列表', name: 'admin_artList', component: resolve => { require(['@/views/admin/art/list.vue'], resolve); } },
         ]
     },
+    {
+        path: '/sale',
+        icon: 'social-yen-outline',
+        name: 'sale',
+        title: '销售人员管理',
+        component: Main,
+        children: [
+            { path: 'salesmen', title: '销售人员管理', name: 'sale_salesmen', component: resolve => { require(['@/views/sale/salesmen/main.vue'], resolve); } },
+
+        ]
+    },
+    {
+        path: '/card',
+        icon: 'card',
+        name: 'card',
+        title: '卡管理',
+        component: Main,
+        children: [
+            { path: 'type', title: '卡类型管理', name: 'card_type', component: resolve => { require(['@/views/card/type/main.vue'], resolve); } },
+            { path: 'apply', title: '卡申请', name: 'card_apply', component: resolve => { require(['@/views/card/apply/main.vue'], resolve); } },
+            { path: 'oow', title: '卡出库', name: 'card_oow', component: resolve => { require(['@/views/card/oow/main.vue'], resolve); } },
+            { path: 'query', title: '卡查询', name: 'card_query', component: resolve => { require(['@/views/card/query/main.vue'], resolve); } },
+            { path: 'act', title: '卡激活', name: 'card_act', component: resolve => { require(['@/views/card/act/main.vue'], resolve); } },
+
+        ]
+    },
     // {
     //     path: '/access',
     //     icon: 'key',

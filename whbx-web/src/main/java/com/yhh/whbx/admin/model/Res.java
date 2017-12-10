@@ -101,4 +101,9 @@ public class Res extends BaseRes<Res> {
 		List<Res> list= Res.dao.findByCache(Consts.CACHE_NAMES.userReses.name(),userId+""+rId,"select r.* from s_res r left join s_role_res rr on r.id=rr.resId  where rr.roleId in (?) and r.pid=? order by r.seq",p,rId);
 		return list;
 	}
+
+	@Override
+	public String getTableName() {
+		return "s_res";
+	}
 }

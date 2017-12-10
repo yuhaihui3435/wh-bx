@@ -181,4 +181,8 @@ public class User extends BaseUser<User> {
 		return user;
 	}
 
+	@Override
+	public String getTableName() {
+		return "s_user";
+	}
 }

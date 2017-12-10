@@ -8,6 +8,7 @@ import role from './modules/role';
 import art from './modules/art';
 import res from './modules/res';
 import tax from './modules/tax';
+import salesmen from './modules/salesmen';
 
 Vue.use(Vuex);
 
@@ -38,7 +39,8 @@ const store = new Vuex.Store({
         role,
         art,
         res,
-        tax
+        tax,
+        salesmen
     }
 });
 

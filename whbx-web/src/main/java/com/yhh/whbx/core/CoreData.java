@@ -36,10 +36,15 @@ public class CoreData {
 
     public static void loadTax(){
         CacheKit.removeAll(Consts.CACHE_NAMES.taxonomy.name());
-        List<Taxonomy> list=Taxonomy.dao.findAllListByModule("art");
-        CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),"artJsonArray",JSON.toJSONString(list));
-        list=Taxonomy.dao.findAllListByModule("card");
-        CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),"cardJsonArray",JSON.toJSONString(list));
+        List<Taxonomy> list =Taxonomy.dao.findAllModule();
+        List<Taxonomy> list1=null;
+        for (Taxonomy taxonomy:list){
+            list1=Taxonomy.dao.findByModuleExcept(taxonomy.getModule());
+            CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),taxonomy.getModule().concat("List"),list1);
+            for(Taxonomy taxonomy1:list1){
+                CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(),taxonomy1.getId().toString(),taxonomy1);
+            }
+        }
     }
 
 

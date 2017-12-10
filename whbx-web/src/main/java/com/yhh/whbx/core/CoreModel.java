@@ -5,7 +5,9 @@ import com.jfinal.plugin.activerecord.Model;
 import com.yhh.whbx.Consts;
 import org.jsoup.Jsoup;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/11/30.
@@ -55,4 +57,17 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
         if(val==null)return "";
         return (val.equals(Consts.STATUS.enable.getVal())? Consts.STATUS.enable.getValTxt(): Consts.STATUS.forbidden.getValTxt());
     }
+
+    public List<M> findByPropEQ(String name, Object val){
+        return super.find("select * from "+getTableName()+" where "+name+"=?",val);
+    }
+    public List<M> findByPropLIKE(String name, String val){
+        return super.find("select * from "+getTableName()+" where "+name+" like ?","%"+val+"%");
+    }
+
+    public List<M> findAll(){
+        return super.find("select * from "+getTableName());
+    }
+
+    public abstract String getTableName();
 }

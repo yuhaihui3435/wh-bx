@@ -17,6 +17,9 @@ public class Content extends BaseContent<Content> {
 	public String getCAtTxt(){
 		return getCAt()==null?"": DateKit.dateToStr(getCAt(),DateKit.STR_DATEFORMATE);
 	}
+	public String getPAtTxt(){
+		return getPAt()==null?"": DateKit.dateToStr(getPAt(),DateKit.STR_DATEFORMATE);
+	}
 
 	public String getAuthor(){
 		return getUserid()==null?"":User.dao.findById(getUserid()).getNickname();
@@ -45,4 +48,8 @@ public class Content extends BaseContent<Content> {
 		return getId().hashCode();
 	}
 
+	@Override
+	public String getTableName() {
+		return "s_content";
+	}
 }

@@ -5,6 +5,7 @@ import com.alibaba.druid.wall.WallFilter;
 import com.jfinal.config.*;
 import com.jfinal.core.JFinal;
 import com.jfinal.json.FastJsonFactory;
+import com.jfinal.kit.PathKit;
 import com.jfinal.log.Log4jLogFactory;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -17,8 +18,10 @@ import com.yhh.whbx.admin.param.ParamCtr;
 import com.yhh.whbx.admin.role.RoleCtr;
 import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
+import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.ResKit;
+import com.yhh.whbx.sale.salesmen.SalesmenCtr;
 
 /**
  * Created by yuhaihui8913 on 2017/11/14.
@@ -58,6 +61,20 @@ public class CoreConfig extends JFinalConfig{
                 add("/cmn", CMNCtr.class);
             }
         });
+
+        routes.add(new Routes() {
+            @Override
+            public void config() {
+                add("/sl00", SalesmenCtr.class);
+            }
+        });
+
+        routes.add(new Routes() {
+            @Override
+            public void config() {
+                add("/c00", CardTypeCtr.class);
+            }
+        });
     }
 
     @Override
@@ -88,6 +105,8 @@ public class CoreConfig extends JFinalConfig{
         //开启DB+record 映射关系插件
         ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
         _MappingKit.mapping(arp);
+        arp.setBaseSqlTemplatePath(PathKit.getRootClassPath()+"/sql");
+        arp.addSqlTemplate("all.sql");
         arp.setShowSql(true);
         plugins.add(arp);
         //开启eheache缓存
