@@ -1,5 +1,9 @@
 package com.yhh.whbx.card.model;
 
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.model.base.BaseCardtype;
 
 import java.util.List;
@@ -15,4 +19,18 @@ public class Cardtype extends BaseCardtype<Cardtype> {
 	public String getTableName() {
 		return "b_cardType";
 	}
+
+	public String getStatusTxt(){
+		return StrUtil.isNotBlank(getStatus())?getStatus().equals(Consts.STATUS.enable.getVal())?Consts.STATUS.enable.getValTxt():Consts.STATUS.forbidden.getValTxt():"";
+	}
+	public String getTypeTxt(){
+		return getType()!=null?(String)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString()):"";
+	}
+	public String getCategoryTxt(){
+		return getCategory()!=null?(String)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString()):"";
+	}
+	public List<Attachment> getClauseList(){
+		return Attachment.dao.findByObjId(getId().intValue());
+	}
+
 }

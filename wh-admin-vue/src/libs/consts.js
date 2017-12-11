@@ -19,6 +19,22 @@ consts.editBtn=(vm,h,param)=>{
         }
     }, '编辑')
 };
+consts.viewBtn=(vm,h,param)=>{
+    return h('Button', {
+        props: {
+            type: 'primary',
+            size: 'small'
+        },
+        style: {
+            marginRight: '5px'
+        },
+        on: {
+            click: () => {
+                vm.view(param.row.id)
+            }
+        }
+    }, '查看')
+};
 
 consts.delBtn=(vm,h,param)=>{
     return h('Poptip', {

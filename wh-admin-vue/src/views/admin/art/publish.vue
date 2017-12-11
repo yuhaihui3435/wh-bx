@@ -32,7 +32,7 @@
                     </Form>
                     <div class="margin-top-20">
                         <!--<textarea id="articleEditor"></textarea>-->
-                        <myTinymce ref="mt"></myTinymce>
+                        <myTinymce ref="mt" textareaId="txt"></myTinymce>
                     </div>
                 </Card>
                 </Col>

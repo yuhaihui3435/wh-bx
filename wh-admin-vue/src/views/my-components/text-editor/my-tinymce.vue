@@ -1,13 +1,17 @@
 <template>
     <div>
-        <textarea id="articleEditor"></textarea>
+        <textarea :id="textareaId"></textarea>
     </div>
 </template>
 
 <script>
     import env from '../../../../build/env';
+    import kit from '../../../libs/kit';
     import tinymce from 'tinymce';
     import {mapState} from 'vuex'
+
+
+
     export default{
         name: 'my-tinymce',
         computed: {
@@ -15,10 +19,16 @@
                 'uploadPicMaxSize': state => state.uploadPicMaxSize,
             })
         },
+        data(){
+            return {
+
+            }
+        },
+        props:['textareaId'],
         mounted () {
             let maxSize=this.uploadPicMaxSize;
             tinymce.init({
-                selector: '#articleEditor',
+                selector: '#'+this.textareaId,
                 branding: false,
                 elementpath: false,
                 height: 400,
@@ -86,8 +96,7 @@
 
         },
         destroyed () {
-            console.info('tinymce desctroyed')
-            tinymce.get('articleEditor').destroy();
+            tinymce.get(this.textareaId).destroy();
         }
     }
 </script>

@@ -9,6 +9,7 @@ import art from './modules/art';
 import res from './modules/res';
 import tax from './modules/tax';
 import salesmen from './modules/salesmen';
+import cardtype from './modules/cardtype';
 
 Vue.use(Vuex);
 
@@ -40,7 +41,8 @@ const store = new Vuex.Store({
         art,
         res,
         tax,
-        salesmen
+        salesmen,
+        cardtype
     }
 });
 

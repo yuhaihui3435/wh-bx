@@ -2,20 +2,25 @@ package com.yhh.whbx.card.type;
 
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
+import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.jfinal.upload.UploadFile;
+import com.qiniu.common.QiniuException;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 
+import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.kits.DateKit;
+import com.yhh.whbx.kits.QiNiuKit;
+import com.yhh.whbx.kits._StrKit;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 简介
@@ -64,21 +69,74 @@ public class CardTypeCtr extends CoreController {
     }
     @Before({CardtypeValidator.class, Tx.class})
     public void save(){
-        Cardtype Cardtype=getModel(Cardtype.class,"",true);
-        Cardtype.setCAt(new Date());
-        Cardtype.setStatus(Consts.STATUS.enable.getVal());
-        Cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
-        Cardtype.save();
+        List<UploadFile> list=getFiles();
+        String savePath=getPara("sp");
+        if(StrUtil.isBlank(savePath))
+            savePath="/cmn/files/";
+
+        Cardtype cardtype=getModel(Cardtype.class,"",true);
+        cardtype.setCAt(new Date());
+        cardtype.setStatus(Consts.STATUS.enable.getVal());
+        cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        cardtype.save();
+
+        String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
+        String filename=null;
+        List<Attachment> attachments=new ArrayList<>();
+        Attachment attachment=null;
+        for (UploadFile uploadFile:list){
+            filename= DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ cardtype.getName()+"_"+uploadFile.getFileName();
+            try {
+                QiNiuKit.upload(uploadFile.getFile(),savePath+filename);
+            } catch (QiniuException e) {
+                LogKit.error("上传文件失败>>"+e.getMessage());
+                renderFailJSON("文件上传失败");
+            }
+
+            attachment=new Attachment();
+            attachment.setCAt(new Date());
+            attachment.setModule("cardtype");
+            attachment.setName(filename);
+            attachment.setObjId(cardtype.getId().intValue());
+            attachment.setPath(savePath+filename);
+            attachment.save();
+        }
+
         renderSuccessJSON("新增卡类型成功。");
     }
     @Before({CardtypeValidator.class, Tx.class})
     public void update(){
-        Cardtype Cardtype=getModel(Cardtype.class,"",true);
-        Cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
-        Cardtype.update();
+        List<UploadFile> list=getFiles();
+        String savePath=getPara("sp");
+        if(StrUtil.isBlank(savePath))
+            savePath="/cmn/files/";
+        Cardtype cardtype=getModel(Cardtype.class,"",true);
+        cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        cardtype.update();
+        String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
+        String filename=null;
+        List<Attachment> attachments=new ArrayList<>();
+        Attachment attachment=null;
+        for (UploadFile uploadFile:list){
+            filename= DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ cardtype.getName()+"_"+uploadFile.getFileName();
+            try {
+                QiNiuKit.upload(uploadFile.getFile(),savePath+filename);
+            } catch (QiniuException e) {
+                LogKit.error("上传文件失败>>"+e.getMessage());
+                renderFailJSON("文件上传失败");
+            }
+
+            attachment=new Attachment();
+            attachment.setCAt(new Date());
+            attachment.setModule("cardtype");
+            attachment.setName(filename);
+            attachment.setObjId(cardtype.getId().intValue());
+            attachment.setPath(savePath+filename);
+            attachment.save();
+        }
         renderSuccessJSON("修改卡类型信息成功");
     }
-
+    @Before({ Tx.class})
     public void del(){
         Long id=getParaToLong("id");
         Cardtype Cardtype= com.yhh.whbx.card.model.Cardtype.dao.findById(id);
@@ -86,6 +144,21 @@ public class CardTypeCtr extends CoreController {
         Cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
         Cardtype.update();
         renderSuccessJSON("删除卡类型信息成功");
+    }
+    @Before({ Tx.class})
+    public void delFile(){
+        Long fId=getParaToLong("fileId");
+        Attachment attachment=Attachment.dao.findById(fId);
+        attachment.setDAt(new Date());
+//        try {
+//            QiNiuKit.del(attachment.getPath());
+//        } catch (QiniuException e) {
+//            LogKit.error("删除文件>>"+attachment.getPath()+"失败");
+//            renderFailJSON("文件删除失败，请稍后重试");
+//        }
+        attachment.update();
+        renderSuccessJSON("删除文件成功");
+
     }
 
     public void get(){
