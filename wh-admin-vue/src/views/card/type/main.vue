@@ -96,7 +96,7 @@
 
             },
             add(){
-                this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！'})
+                this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！',manyPeople:'1'})
                 this.$refs.ctf.open('新增卡类型', true)
             },
             search(){

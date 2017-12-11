@@ -102,5 +102,6 @@ consts.actBtn=(vm,h,param)=>{
 }
 
 consts.status=[{value:'0',label:'正常'},{value:'1',label:'禁用'}]
+consts.yon=[{value:'0',label:'是'},{value:'1',label:'否'}]
 
 export default consts

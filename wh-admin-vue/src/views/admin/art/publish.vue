@@ -93,11 +93,8 @@
                             <Row type="flex" justify="center" align="middle" class="height-100">
                                 <Upload
                                         action=""
-                                        :format="['jpg', 'png', 'jpeg', 'gif', 'bmp', 'svg']"
                                         :before-upload="handleUpload"
-                                        :on-format-error="handleFormatError"
                                         :max-size="uploadPicMaxSize"
-                                        :on-exceeded-size="handlerSizeError"
                                 >
                                     <span>选择图片上传&nbsp;&nbsp;</span>
                                     <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
@@ -223,6 +220,27 @@
             },
             handleUpload(file){
                 let vm = this;
+                let name=file.name;
+                let ary=name.split(".");
+                let format=['jpg', 'png', 'jpeg', 'gif', 'bmp', 'svg'];
+                let fileSize=file.size;
+                if(format.indexOf(ary[1])==-1){
+                    this.$Notice.warning({
+                        title: '文件格式不正确',
+                        desc: '文件 >>' + file.name + '<< 格式不正确，请选择doc,docx,xls,xlsx,pdf,txt文件。'
+                    });
+                    return false;
+                }
+                if(parseInt(fileSize)>parseInt(this.uploadPicMaxSize)){
+                    this.$Notice.warning({
+                        title: '文件大小错误',
+                        desc: '文件 >>' +file.name+'<< 过大，不能超过' + parseInt(vm.uploadPicMaxSize)/1024/1024 + "M"
+                    });
+                    return false;
+                }
+
+
+
                 let reader = new FileReader();
                 reader.onload = function () {
                     vm.imgData = this.result;
