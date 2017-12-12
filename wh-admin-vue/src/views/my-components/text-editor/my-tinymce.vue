@@ -21,13 +21,13 @@
         },
         data(){
             return {
-
+                editor:'',
             }
         },
         props:['textareaId'],
         mounted () {
             let maxSize=this.uploadPicMaxSize;
-            tinymce.init({
+            this.editor=tinymce.createEditor(this.textareaId,{
                 selector: '#'+this.textareaId,
                 branding: false,
                 elementpath: false,
@@ -85,18 +85,20 @@
                 }
             });
 
+
         },
         methods:{
             getContent(){
-                return tinymce.activeEditor.getContent({format: 'raw'});
+                return this.editor.getContent({format: 'raw'});
             },
             setContent(txt){
-                tinymce.activeEditor.setContent(txt)
+                console.info(this.editor)
+                this.editor.setContent(txt)
             },
 
         },
         destroyed () {
-            tinymce.get(this.textareaId).destroy();
+            this.editor.destroy();
         }
     }
 </script>

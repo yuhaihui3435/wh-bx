@@ -38,6 +38,11 @@ axiosIns.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
 axiosIns.defaults.headers.get['X-Requested-With'] = 'XMLHttpRequest';
 axiosIns.defaults.responseType = 'json';
 axiosIns.defaults.transformRequest = [function (data) {
+
+    if(  data instanceof FormData){
+
+        return data;
+    }
     return qs.stringify(data);
 }
 ];

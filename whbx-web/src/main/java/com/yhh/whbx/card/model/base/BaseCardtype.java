@@ -1,6 +1,5 @@
 package com.yhh.whbx.card.model.base;
 
-import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.IBean;
 import com.yhh.whbx.core.CoreModel;
 
@@ -176,6 +175,13 @@ public abstract class BaseCardtype<M extends BaseCardtype<M>> extends CoreModel<
 
 	public java.lang.Integer getOper() {
 		return getInt("oper");
+	}
+	public void setIpAgeToplmtDay(java.lang.String ipAgeToplmtDay) {
+		set("ipAgeToplmtDay", ipAgeToplmtDay);
+	}
+
+	public java.lang.String getIpAgeToplmtDay() {
+		return getStr("ipAgeToplmtDay");
 	}
 
 }

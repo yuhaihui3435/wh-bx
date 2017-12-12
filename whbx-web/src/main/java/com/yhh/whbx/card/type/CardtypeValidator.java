@@ -26,6 +26,7 @@ public class CardtypeValidator extends CoreValidator {
     public static final String NAME_EXIST="名称已经存在";
     @Override
     protected void validate(Controller controller) {
+        controller.getFiles();
         Cardtype cardtype=controller.getModel(Cardtype.class,"",true);
         String ak=getActionKey();
         List<Cardtype> list=null;

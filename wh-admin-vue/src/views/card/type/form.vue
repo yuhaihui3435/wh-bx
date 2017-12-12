@@ -14,8 +14,8 @@
             <Row>
                 <Col span="24">
                 <Card>
-                    <Tabs>
-                        <TabPane label="基本信息" icon="home">
+                    <Tabs v-model="actTabName">
+                        <TabPane label="基本信息" icon="home" name="baseInfo">
 
                             <Form :label-width="80" :model="cardtype" ref="formValidate" :rules="ruleValidate">
 
@@ -41,7 +41,7 @@
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="类型" prop="type">
-                                            <Select v-model="cardtype.type" clearable >
+                                            <Select v-model="cardtype.type" clearable @on-change="typeChange">
                                                 <Option v-for="item in cttList" :value="item.id+''" :key="item.id+''">
                                                     {{item.title}}
                                                 </Option>
@@ -49,24 +49,24 @@
                                         </FormItem>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row v-show="!driverType">
                                         <Col span="12">
-                                        <FormItem label="投保人年龄上限" prop="phAgeToplmt">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                        <FormItem label="投保人年龄上限" prop="phAgeToplmt" >
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.phAgeToplmt"></InputNumber>
                                         </FormItem>
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="投保人年龄下限" prop="phAgeLowerlmt">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.phAgeLowerlmt"></InputNumber>
                                         </FormItem>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="被投保人年龄上限" prop="phAgeToplmt">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="0" :step="1"
                                                          v-model="cardtype.ipAgeToplmt"></InputNumber>
                                             年
                                             <InputNumber :max="366" :min="1" :step="1"
@@ -78,13 +78,13 @@
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="被投保人年龄下限" prop="ipAgeLowerlmt">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.ipAgeLowerlmt"></InputNumber>
                                         </FormItem>
                                         </Col>
                                     </Row>
 
-                                    <Row>
+                                    <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="是否多人" prop="manyPeople">
                                             <Select v-model="cardtype.manyPeople" clearable >
@@ -96,7 +96,7 @@
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="投保人数" prop="peopleCount">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.peopleCount"></InputNumber>
                                         </FormItem>
                                         </Col>
@@ -104,18 +104,18 @@
                                     <Row>
                                         <Col span="12">
                                         <FormItem label="有效年限" prop="finiteEffect">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.finiteEffect"></InputNumber>
                                         </FormItem>
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="单身份证可激活张数" prop="actCount">
-                                            <InputNumber :max="99" :min="1" :step="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.actCount"></InputNumber>
                                         </FormItem>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="职类" prop="category">
                                             <Select v-model="cardtype.category" clearable >
@@ -138,14 +138,14 @@
                             </Form>
 
                         </TabPane>
-                        <TabPane label="协议信息" icon="document">
+                        <TabPane label="协议信息" icon="document" name="protocol">
 
                             <Card>
                                 <myTinymce ref="protocol" textareaId="protocol"></myTinymce>
                             </Card>
 
                         </TabPane>
-                        <TabPane label="服务凭证信息" icon="document-text">
+                        <TabPane label="服务凭证信息" icon="document-text" name="serviceCert">
 
                             <Card>
 
@@ -153,7 +153,7 @@
                             </Card>
 
                         </TabPane>
-                        <TabPane label="保险条款文件" icon="ios-folder">
+                        <TabPane label="保险条款文件" icon="ios-folder" name="InsuranceClauseDocument">
 
                             <Card>
 
@@ -246,7 +246,7 @@
                 this.cardtypeModal = true;
                 this.modalLoading = false;
                 if (isAdd) {
-                    this.$store.commit('set_cardtype');
+//                    this.$store.commit('set_cardtype');
                     this.$refs.protocol.setContent('');
                     this.$refs.serviceCert.setContent('');
                 } else {
@@ -257,8 +257,10 @@
             save(){
                 let vm = this;
                 this.modalLoading = true;
-                let serviceCert = this.$refs.serviceCert.getContent('');
-                let protocol = this.$refs.protocol.getContent('');
+                console.info(this.$refs.serviceCert)
+                console.info(this.$refs.protocol)
+                let serviceCert = this.$refs.serviceCert.getContent();
+                let protocol = this.$refs.protocol.getContent();
                 let param = {serviceCert: serviceCert, protocol: protocol,uploadList:this.uploadList}
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
@@ -281,9 +283,12 @@
                 })
             },
             vChange(b){
+                //本模式窗体 隐藏时候恢复窗体的一些初始设置
                 if (!b) {
                     this.$refs['formValidate'].resetFields()
                     this.modalLoading = false;
+                    this.driverType=false;//类型下拉框恢复初始状态
+                    this.actTabName="baseInfo"//恢复tab的初始状态选中第一个tab
                 }
             },
             reset(){
@@ -327,7 +332,18 @@
                 this.del_modal_loading=false;
                 this.delModal=false;
             },
-
+            typeChange(value){
+                console.info(value)
+                for (let t of this.cttList){
+                    if(t.id==value){
+                        if(t.text=='driverInsurance'){
+                            this.driverType=true;
+                        }else{
+                            this.driverType=false;
+                        }
+                    }
+                }
+            }
 
         },
         mounted () {
@@ -345,6 +361,8 @@
                 del_modal_loading:false,
                 modalTitle: '新增卡类型',
                 modalLoading: false,
+                driverType:false,
+                actTabName:'baseInfo',
                 statusList: consts.yon,
                 ruleValidate: {
                     code: [

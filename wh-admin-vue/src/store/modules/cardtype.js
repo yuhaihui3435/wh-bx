@@ -1,7 +1,7 @@
 /**
  * Created by yuhaihui on 2017/12/9.
  */
-import kit from '../../libs/kit';
+import kit from "../../libs/kit";
 const cardtype = {
     state: {
         cardtypeList: [],
@@ -42,35 +42,31 @@ const cardtype = {
             let p = kit.clone(state.cardtype);
             p.serviceCert = param.serviceCert
             p.protocol = param.protocol
+            p.phAgeToplmt=(p.phAgeToplmt == undefined||p.phAgeToplmt=='')?'1':p.phAgeToplmt;
+            p.phAgeLowerlmt=(p.phAgeLowerlmt == undefined||p.phAgeLowerlmt=='')?'1':p.phAgeLowerlmt;
+            p.ipAgeToplmt=(p.ipAgeToplmt == undefined||p.ipAgeToplmt=='')?'1':p.ipAgeToplmt;
+            p.ipAgeLowerlmt=(p.ipAgeLowerlmt == undefined||p.ipAgeLowerlmt=='')?'1':p.ipAgeLowerlmt;
+            p.ipAgeToplmtDay=(p.ipAgeToplmtDay == undefined||p.ipAgeToplmtDay=='')?'1':p.ipAgeToplmtDay;
             let uploadList = param.uploadList;
             let fd = new FormData();
-            if (uploadList.length > 0) {
-                fd.append("files", uploadList);
-                for (let s in p) {
-                    fd.append(s, p[s])
-                }
+            let i=0;
+            for(let f of uploadList) {
+                fd.append("file"+i, f);
+                i++;
             }
-            alert(fd.getHeaders())
-
-            let getHeaders = (form=>{
-                return new Promise((resolve,reject)=>{
-                    form.getLength((err,length)=>{
-                        if(err) reject(err)
-                        let headers = Object.assign({'Content-Length':length},form.getHeaders())
-                        resolve(headers)
-                    })
-                })
-            })
-
-            getHeaders(fd)
-                .then(headers=>{
-                    return new Promise(function (resolve, reject) {
-                        vm.$axios.post('/c00/' + param.action, fd,headers).then((res) => {
-                            resolve(res.resCode);
-                        });
-                    });
-            })
-
+            for (let s in p) {
+                fd.append(s, p[s])
+            }
+            let config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'  
+                }
+            };
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c00/' + param.action, fd, config).then((res) => {
+                    resolve(res.resCode);
+                });
+            });
 
 
         },
@@ -104,6 +100,15 @@ const cardtype = {
                 vm.$axios.post('/c00/get', param).then((res) => {
                     res.type = res.type + '';
                     res.category = res.category + '';
+                    res.phAgeToplmt=parseInt(res.phAgeToplmt);
+                    res.phAgeLowerlmt=parseInt(res.phAgeLowerlmt);
+                    res.ipAgeToplmt=parseInt(res.ipAgeToplmt);
+                    res.ipAgeLowerlmt=parseInt(res.ipAgeLowerlmt);
+                    res.ipAgeToplmtDay=parseInt(res.ipAgeToplmtDay);
+                    res.manyPeople=parseInt(res.manyPeople);
+                    res.peopleCount=parseInt(res.peopleCount);
+                    res.finiteEffect=parseInt(res.finiteEffect);
+                    res.actCount=parseInt(res.actCount);
                     commit('set_cardtype', res)
                     resolve()
                 });

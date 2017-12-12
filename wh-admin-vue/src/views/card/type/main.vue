@@ -89,14 +89,14 @@
                     }
                 });
             },
-            edit(salesmen){
+            edit(cardtype){
                 this.$store.dispatch('cardtype_get', {id: cardtype.id}).then(() => {
                     this.$refs.ctf.open('编辑卡类型', false);
                 })
 
             },
             add(){
-                this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！',manyPeople:'1'})
+                this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！',manyPeople:'1',ipAgeToplmt:0})
                 this.$refs.ctf.open('新增卡类型', true)
             },
             search(){
@@ -197,7 +197,7 @@
                     {
                         title: '操作',
                         key: 'action',
-                        width: 200,
+                        width: 250,
                         align: 'center',
                         render: (h, param) => {
                             let btns = new Array;

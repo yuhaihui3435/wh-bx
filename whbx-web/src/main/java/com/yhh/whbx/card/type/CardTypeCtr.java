@@ -12,13 +12,11 @@ import com.jfinal.upload.UploadFile;
 import com.qiniu.common.QiniuException;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
-
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
-import com.yhh.whbx.kits._StrKit;
 
 import java.util.*;
 
@@ -85,7 +83,7 @@ public class CardTypeCtr extends CoreController {
         List<Attachment> attachments=new ArrayList<>();
         Attachment attachment=null;
         for (UploadFile uploadFile:list){
-            filename= DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ cardtype.getName()+"_"+uploadFile.getFileName();
+            filename= DateKit.dateToStr(new Date(),DateKit.yyyyMMdd)+"/"+ cardtype.getName()+"_"+uploadFile.getOriginalFileName();
             try {
                 QiNiuKit.upload(uploadFile.getFile(),savePath+filename);
             } catch (QiniuException e) {
@@ -96,7 +94,7 @@ public class CardTypeCtr extends CoreController {
             attachment=new Attachment();
             attachment.setCAt(new Date());
             attachment.setModule("cardtype");
-            attachment.setName(filename);
+            attachment.setName(uploadFile.getOriginalFileName());
             attachment.setObjId(cardtype.getId().intValue());
             attachment.setPath(savePath+filename);
             attachment.save();
