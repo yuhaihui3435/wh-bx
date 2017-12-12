@@ -51,7 +51,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="total" :current="pageNumber" @on-change="changePage" show-total
+                        <Page :total="total" :current="pageNumber" @on-change="changePage" show-total :pageSize="15"
                               show-elevator></Page>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
             },
 
             stop(id){
-                this.$store.dispatch('salesmen_updateStatus',{id:id,status:'1'}).then((res) => {
+                this.$store.dispatch('cardtype_updateStatus',{id:id,status:'1'}).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardtype_page')
                     }

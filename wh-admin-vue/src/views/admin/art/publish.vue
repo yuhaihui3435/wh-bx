@@ -31,8 +31,7 @@
                         </FormItem>
                     </Form>
                     <div class="margin-top-20">
-                        <!--<textarea id="articleEditor"></textarea>-->
-                        <myTinymce ref="mt" textareaId="txt"></myTinymce>
+                        <VueTinymce ref="mt" :setting="tinymceCfg" v-model="art.text" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
                     </div>
                 </Card>
                 </Col>
@@ -136,9 +135,9 @@
 
 <script>
     import env from '../../../../build/env';
-    import tinymce from 'tinymce';
     import {mapState} from 'vuex'
-    import myTinymce from '../../my-components/text-editor/my-tinymce.vue'
+    import consts from '../../../libs/consts'
+    import {VueTinymce, Config} from '../../my-components/text-editor/'
     export default {
         name: 'art-publish',
         computed: {
@@ -149,7 +148,7 @@
             })
         },
         components:{
-            myTinymce
+            VueTinymce
         },
         data () {
             return {
@@ -162,7 +161,11 @@
                 file: '',
                 previewImg: false,
                 showImg:false,
-                publishLoading:false
+                publishLoading:false,
+                tinymceCfg: Object.assign(Config, {
+                    height: 200
+                }),
+                tinymceImgUploadUrl:consts.imgUploadUrl,
             };
         },
         methods: {
@@ -176,9 +179,9 @@
                 this.imgData='';
                 if (isAdd){
                     this.$store.commit('set_art');
-                    this.$refs.mt.setContent('');
+                    //this.$refs.mt.setContent('');
                 }else{
-                    this.$refs.mt.setContent(this.art.text);
+                    //this.$refs.mt.setContent(this.art.text);
                     //this.imgData=this.art.thumbnailImgUrl;
                 }
 
@@ -204,9 +207,9 @@
                 }
 
                 let thumbnailBase64=this.imgData
-                let text=this.$refs.mt.getContent();
+                //let text=this.$refs.mt.getContent();
                 //let action=(this.art.id)?'update':'save'
-                let param={'text':text,'tax':taxIds,'thumbnailBase64':thumbnailBase64,'action':'save'}
+                let param={'tax':taxIds,'thumbnailBase64':thumbnailBase64,'action':'save'}
 
                 this.$store.dispatch('art_save',param).then((res)=>{
                     this.publishLoading = false;

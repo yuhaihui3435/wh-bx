@@ -24,7 +24,7 @@ const cardtype = {
         },
         set_cardtype(state, obj){
             if (obj != undefined)
-                state.cardtype = kit.clone(obj);
+                state.cardtype = Object.assign({},obj);
         },
         set_cardtype_dataReady(state, obj){
             state.cttList = obj.cttList;
@@ -40,8 +40,8 @@ const cardtype = {
         cardtype_save: function ({commit, state}, param) {
             let vm = this._vm;
             let p = kit.clone(state.cardtype);
-            p.serviceCert = param.serviceCert
-            p.protocol = param.protocol
+            // p.serviceCert = param.serviceCert
+            // p.protocol = param.protocol
             p.phAgeToplmt=(p.phAgeToplmt == undefined||p.phAgeToplmt=='')?'1':p.phAgeToplmt;
             p.phAgeLowerlmt=(p.phAgeLowerlmt == undefined||p.phAgeLowerlmt=='')?'1':p.phAgeLowerlmt;
             p.ipAgeToplmt=(p.ipAgeToplmt == undefined||p.ipAgeToplmt=='')?'1':p.ipAgeToplmt;
@@ -78,6 +78,15 @@ const cardtype = {
                 });
             });
         },
+
+        cardtype_del_file: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c00/delFile', param).then((res) => {
+                    resolve(res.resCode);
+                });
+            });
+        },
         cardtype_updateStatus: function ({commit, state}, param) {
             let vm = this._vm;
             return new Promise(function (resolve, reject) {
@@ -109,6 +118,7 @@ const cardtype = {
                     res.peopleCount=parseInt(res.peopleCount);
                     res.finiteEffect=parseInt(res.finiteEffect);
                     res.actCount=parseInt(res.actCount);
+                    res.faceVal=res.faceVal+'';
                     commit('set_cardtype', res)
                     resolve()
                 });

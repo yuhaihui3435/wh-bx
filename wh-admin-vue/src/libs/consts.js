@@ -1,8 +1,8 @@
-
+import env from '../../build/env';
 let consts={
 
 }
-
+consts.imgUploadUrl=(env == 'development' ? '/api' : '') + '/cmn/act01'
 consts.editBtn=(vm,h,param)=>{
     return h('Button', {
         props: {

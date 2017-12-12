@@ -35,13 +35,13 @@
                                     </Row>
                                     <Row>
                                         <Col span="12">
-                                    <FormItem label="面值" prop="faceVal">
-                                        <Input v-model="cardtype.faceVal"></Input>
-                                    </FormItem>
+                                        <FormItem label="面值" prop="faceVal">
+                                            <Input v-model="cardtype.faceVal"></Input>
+                                        </FormItem>
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="类型" prop="type">
-                                            <Select v-model="cardtype.type" clearable @on-change="typeChange">
+                                            <Select v-model="cardtype.type" clearable @on-change="typeChange" :disabled="!isAdd">
                                                 <Option v-for="item in cttList" :value="item.id+''" :key="item.id+''">
                                                     {{item.title}}
                                                 </Option>
@@ -51,7 +51,7 @@
                                     </Row>
                                     <Row v-show="!driverType">
                                         <Col span="12">
-                                        <FormItem label="投保人年龄上限" prop="phAgeToplmt" >
+                                        <FormItem label="投保人年龄上限" prop="phAgeToplmt">
                                             <InputNumber :max="99" :min="1" :step="1" value="1"
                                                          v-model="cardtype.phAgeToplmt"></InputNumber>
                                         </FormItem>
@@ -87,7 +87,7 @@
                                     <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="是否多人" prop="manyPeople">
-                                            <Select v-model="cardtype.manyPeople" clearable >
+                                            <Select v-model="cardtype.manyPeople" clearable>
                                                 <Option v-for="item in statusList" :value="item.value+''"
                                                         :key="item.value+''">{{item.label}}
                                                 </Option>
@@ -118,7 +118,7 @@
                                     <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="职类" prop="category">
-                                            <Select v-model="cardtype.category" clearable >
+                                            <Select v-model="cardtype.category" clearable>
                                                 <Option v-for="item in ioList" :value="item.id+''" :key="item.id+''">
                                                     {{item.title}}
                                                 </Option>
@@ -141,7 +141,7 @@
                         <TabPane label="协议信息" icon="document" name="protocol">
 
                             <Card>
-                                <myTinymce ref="protocol" textareaId="protocol"></myTinymce>
+                                <VueTinymce ref="protocol" v-model="cardtype.protocol" :setting="tinymceCfg" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
                             </Card>
 
                         </TabPane>
@@ -149,7 +149,7 @@
 
                             <Card>
 
-                                <myTinymce ref="serviceCert" textareaId="serviceCert"></myTinymce>
+                                <VueTinymce ref="serviceCert" :setting="tinymceCfg" v-model="cardtype.serviceCert" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
                             </Card>
 
                         </TabPane>
@@ -157,10 +157,10 @@
 
                             <Card>
 
-                                <!--<p slot="title">-->
-                                    <!--<Icon type="image"></Icon>-->
-                                    <!--保险条款上传-->
-                                <!--</p>-->
+                                <p slot="title">
+                                <Icon type="image"></Icon>
+                                待上传文件
+                                </p>
 
                                 <div class="height-120px">
                                     <Row type="flex" justify="center" align="middle" class="height-100">
@@ -168,7 +168,7 @@
                                                 action=""
                                                 :format="['doc','docx','xls','xlsx','pdf','txt']"
                                                 :before-upload="handleUpload"
-                                                 multiple
+                                                multiple
                                         >
                                             <span>选择文件上传&nbsp;&nbsp;</span>
                                             <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
@@ -185,10 +185,12 @@
                                                     <Row>
                                                         <Icon type="document"></Icon>
                                                         &nbsp;{{item.name}}&nbsp;&nbsp;
-                                                        <Poptip confirm title="您确认删除这个文件吗？"
-                                                                @on-ok="handleRemove(index)">
-                                                            <Icon type="trash-a" @click.native="delModal=true;del_index=index"  color="red">ss</Icon>
-                                                        </Poptip>
+
+                                                            <Icon type="trash-a"
+                                                                  @click.native="delModal=true;del_index=index"
+                                                                  color="red">
+                                                            </Icon>
+
                                                     </Row>
                                                 </template>
                                             </div>
@@ -197,6 +199,30 @@
                                 </div>
                             </Card>
 
+                            <Card class="margin-top-10" v-show="!isAdd">
+                                <p slot="title">
+                                <Icon type="document"></Icon>
+                                已上传文件
+                                </p>
+                                <div class="margin-top-10" v-show="cardtype.clauseList&&cardtype.clauseList.length>0">
+                                    <Card>
+                                        <div>
+                                            <div v-for="(item,index) in cardtype.clauseList">
+                                                <template>
+                                                    <Row>
+                                                        <Icon type="document"></Icon>
+                                                        &nbsp;{{item.name}}&nbsp;&nbsp;
+                                                            <Icon type="trash-a"
+                                                                  @click.native="uploaded_delModal=true;del_index=index"
+                                                                  color="red">
+                                                            </Icon>
+                                                    </Row>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </div>
+                            </Card>
                         </TabPane>
                     </Tabs>
                 </Card>
@@ -222,13 +248,28 @@
                 <Button type="error" size="large" long :loading="del_modal_loading" @click="handleRemove()">删除</Button>
             </div>
         </Modal>
+
+        <Modal v-model="uploaded_delModal" width="360">
+            <p slot="header" style="color:#f60;text-align:center">
+                <Icon type="information-circled"></Icon>
+                <span>删除确认</span>
+            </p>
+            <div style="text-align:center">
+
+                <p>您确认要删除该文件吗?</p>
+            </div>
+            <div slot="footer">
+                <Button type="error" size="large" long :loading="del_modal_loading" @click="uploaded_handleRemove()">删除</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
-    import tinymce from 'tinymce';
-    import myTinymce from '../../my-components/text-editor/my-tinymce.vue'
+    import {VueTinymce, Config} from '../../my-components/text-editor/'
+
+
     export default {
         computed: {
             ...mapState({
@@ -240,29 +281,23 @@
         },
         methods: {
             open(title, isAdd){
-                let vm = this;
+                this.uploadList=[]
+                this.uploadNameList=[]
                 this.modalTitle = title;
                 this.isAdd = isAdd;
                 this.cardtypeModal = true;
                 this.modalLoading = false;
                 if (isAdd) {
-//                    this.$store.commit('set_cardtype');
-                    this.$refs.protocol.setContent('');
-                    this.$refs.serviceCert.setContent('');
+                    this.driverType = false;//类型下拉框恢复初始状态
                 } else {
-                    this.$refs.protocol.setContent(this.cardtype.protocol);
-                    this.$refs.serviceCert.setContent(this.cardtype.serviceCert);
                 }
             },
             save(){
                 let vm = this;
                 this.modalLoading = true;
-                console.info(this.$refs.serviceCert)
-                console.info(this.$refs.protocol)
-                let serviceCert = this.$refs.serviceCert.getContent();
-                let protocol = this.$refs.protocol.getContent();
-                let param = {serviceCert: serviceCert, protocol: protocol,uploadList:this.uploadList}
+                let param = { uploadList: this.uploadList}
                 this.$refs['formValidate'].validate((valid) => {
+                    console.info(valid)
                     if (valid) {
                         let action = 'save';
                         if (!vm.isAdd)
@@ -287,8 +322,7 @@
                 if (!b) {
                     this.$refs['formValidate'].resetFields()
                     this.modalLoading = false;
-                    this.driverType=false;//类型下拉框恢复初始状态
-                    this.actTabName="baseInfo"//恢复tab的初始状态选中第一个tab
+                    this.actTabName = "baseInfo"//恢复tab的初始状态选中第一个tab
                 }
             },
             reset(){
@@ -296,28 +330,28 @@
             },
             handleUpload(file){
                 let vm = this;
-                let name=file.name;
-                if(vm.uploadNameList.indexOf(name)>-1){
+                let name = file.name;
+                if (vm.uploadNameList.indexOf(name) > -1) {
                     this.$Notice.warning({
                         title: '文件已存在',
                         desc: '文件 >>' + file.name + '<< 正等待上传。'
                     });
                     return false;
                 }
-                let ary=name.split(".");
-                let format=['doc','docx','xls','xlsx','pdf','txt'];
-                let fileSize=file.size;
-                if(format.indexOf(ary[1])==-1){
+                let ary = name.split(".");
+                let format = ['doc', 'docx', 'xls', 'xlsx', 'pdf', 'txt'];
+                let fileSize = file.size;
+                if (format.indexOf(ary[1]) == -1) {
                     this.$Notice.warning({
                         title: '文件格式不正确',
                         desc: '文件 >>' + file.name + '<< 格式不正确，请选择doc,docx,xls,xlsx,pdf,txt文件。'
                     });
                     return false;
                 }
-                if(parseInt(fileSize)>parseInt(this.uploadPicMaxSize)){
+                if (parseInt(fileSize) > parseInt(this.uploadPicMaxSize)) {
                     this.$Notice.warning({
                         title: '文件大小错误',
-                        desc: '文件 >>' +file.name+'<< 过大，不能超过' + parseInt(vm.uploadPicMaxSize)/1024/1024 + "M"
+                        desc: '文件 >>' + file.name + '<< 过大，不能超过' + parseInt(vm.uploadPicMaxSize) / 1024 / 1024 + "M"
                     });
                     return false;
                 }
@@ -326,20 +360,32 @@
                 return false;
             },
             handleRemove(){
-                this.del_modal_loading=true;
+                this.del_modal_loading = true;
                 this.uploadList.splice(this.del_index, 1);
                 this.uploadNameList.splice(this.del_index, 1);
-                this.del_modal_loading=false;
-                this.delModal=false;
+                this.del_modal_loading = false;
+                this.delModal = false;
+            },
+            uploaded_handleRemove(){
+                this.uploaded_del_modal_loading = true;
+                let obj=this.cardtype.clauseList[this.del_index];
+
+                this.$store.dispatch('cardtype_del_file',{fileId:obj.id}).then((res)=>{
+                    if (res && res == 'success') {
+                        this.cardtype.clauseList.splice(this.del_index, 1);
+                    }
+                })
+                this.uploaded_del_modal_loading = false;
+                this.uploaded_delModal = false;
             },
             typeChange(value){
                 console.info(value)
-                for (let t of this.cttList){
-                    if(t.id==value){
-                        if(t.text=='driverInsurance'){
-                            this.driverType=true;
-                        }else{
-                            this.driverType=false;
+                for (let t of this.cttList) {
+                    if (t.id == value) {
+                        if (t.text == 'driverInsurance') {
+                            this.driverType = true;
+                        } else {
+                            this.driverType = false;
                         }
                     }
                 }
@@ -352,18 +398,26 @@
         data () {
             return {
                 uploadList: [],
-                uploadNameList:[],
+                uploadNameList: [],
                 self: this,
                 cardtypeModal: false,
                 isAdd: true,
-                delModal:false,
-                del_index:'',
-                del_modal_loading:false,
+                delModal: false,//待上传
+                del_modal_loading: false,//待上传
+                uploaded_delModal:false,//已上传
+                uploaded_del_modal_loading: false,//已上传
+                del_index: '',
+
+                tinymceCfg: Object.assign(Config, {
+                    height: 200
+                }),
+                tinymceImgUploadUrl:consts.imgUploadUrl,
                 modalTitle: '新增卡类型',
                 modalLoading: false,
-                driverType:false,
-                actTabName:'baseInfo',
+                driverType: false,
+                actTabName: 'baseInfo',
                 statusList: consts.yon,
+
                 ruleValidate: {
                     code: [
                         {type: 'string', required: true, message: '编号不能为空', trigger: 'blur'},
@@ -394,7 +448,7 @@
             }
         },
         components: {
-            myTinymce
+            VueTinymce
         }
     }
 </script>

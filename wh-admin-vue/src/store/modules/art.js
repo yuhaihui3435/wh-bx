@@ -49,7 +49,7 @@ const art = {
         art_save: function ({commit, state}, param) {
             let vm = this._vm;
             let p = kit.clone(state.art);
-            p['text'] = param.text
+            //p['text'] = param.text
             p['tax'] = param.tax
             p['thumbnailBase64'] = param.thumbnailBase64
             return new Promise(function (resolve, reject) {

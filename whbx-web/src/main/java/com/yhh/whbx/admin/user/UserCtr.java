@@ -30,8 +30,10 @@ public class UserCtr extends CoreController {
         StringBuffer where = new StringBuffer("from s_user userinfo where 1=1 and d_at is null  ");
         if (!isParaBlank("search")) {
             where.append(" and (instr(userinfo.email,?)>0 or instr(userinfo.phone,?)>0 or instr(userinfo.nickname,?)>0 or instr(userinfo.loginname,?)>0)");
+            where.append(" ORDER BY userinfo.c_at");
             page = User.dao.paginate(getPN(), getPS(), "select * ", where.toString(), serach, serach, serach, serach);
         } else {
+            where.append(" ORDER BY userinfo.c_at");
             page = User.dao.paginate(getPN(), getPS(), "select * ", where.toString());
         }
         renderJson(page);
