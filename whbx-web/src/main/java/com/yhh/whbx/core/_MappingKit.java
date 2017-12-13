@@ -2,6 +2,8 @@ package com.yhh.whbx.core;
 
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.yhh.whbx.admin.model.*;
+import com.yhh.whbx.card.model.Cardapply;
+import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.sale.model.Salesmen;
 
@@ -32,6 +34,8 @@ public class _MappingKit {
 		arp.addMapping("b_salesmen", Salesmen.class);
 		arp.addMapping("b_cardType", Cardtype.class);
 		arp.addMapping("s_attachment", Attachment.class);
+		arp.addMapping("b_cards", Cards.class);
+		arp.addMapping("b_cardapply", Cardapply.class);
 
 	}
 }

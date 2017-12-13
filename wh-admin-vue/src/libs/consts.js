@@ -58,6 +58,7 @@ consts.delBtn=(vm,h,param)=>{
     }, '删除')]);
 };
 
+
 consts.stopBtn=(vm,h,param)=>{
     return h('Poptip', {
         props: {
@@ -103,5 +104,6 @@ consts.actBtn=(vm,h,param)=>{
 
 consts.status=[{value:'0',label:'正常'},{value:'1',label:'禁用'}]
 consts.yon=[{value:'0',label:'是'},{value:'1',label:'否'}]
+consts.checkStatus=[{value:'00',label:'审核通过'},{value:'01',label:'等待审核'},{value:'02',label:'审核未通过'}]
 
 export default consts

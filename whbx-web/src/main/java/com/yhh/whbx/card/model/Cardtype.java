@@ -34,5 +34,9 @@ public class Cardtype extends BaseCardtype<Cardtype> {
 		return Attachment.dao.findByObjId(getId().intValue());
 	}
 
+	public List<Cardtype> findEnableList(){
+		return dao.find("select * from "+getTableName()+" where dAt is null and status=?", Consts.STATUS.enable.getVal());
+	}
+
 
 }

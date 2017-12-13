@@ -18,6 +18,8 @@ import com.yhh.whbx.admin.param.ParamCtr;
 import com.yhh.whbx.admin.role.RoleCtr;
 import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
+import com.yhh.whbx.card.apply.CardapplyCtr;
+import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.ResKit;
@@ -73,6 +75,7 @@ public class CoreConfig extends JFinalConfig{
             @Override
             public void config() {
                 add("/c00", CardTypeCtr.class);
+                add("/c01", CardapplyCtr.class);
             }
         });
     }

@@ -4,3 +4,6 @@
 #namespace("cardType")
   #include("cardType.sql")
 #end
+#namespace("cardapply")
+  #include("cardapply.sql")
+#end
