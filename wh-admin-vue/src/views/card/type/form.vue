@@ -17,7 +17,7 @@
                     <Tabs v-model="actTabName">
                         <TabPane label="基本信息" icon="home" name="baseInfo">
 
-                            <Form :label-width="80" :model="cardtype" ref="formValidate" :rules="ruleValidate">
+                            <Form :label-width="150" :model="cardtype" ref="formValidate" :rules="ruleValidate">
 
                                 <Card>
 
@@ -65,7 +65,7 @@
                                     </Row>
                                     <Row v-show="!driverType">
                                         <Col span="12">
-                                        <FormItem label="被投保人年龄上限" prop="phAgeToplmt">
+                                        <FormItem label="被投保人年龄上限" prop="ipAgeToplmt">
                                             <InputNumber :max="99" :min="0" :step="1"
                                                          v-model="cardtype.ipAgeToplmt"></InputNumber>
                                             年
@@ -88,8 +88,8 @@
                                         <Col span="12">
                                         <FormItem label="是否多人" prop="manyPeople">
                                             <Select v-model="cardtype.manyPeople" clearable>
-                                                <Option v-for="item in statusList" :value="item.value+''"
-                                                        :key="item.value+''">{{item.label}}
+                                                <Option v-for="item in statusList" :value="item.value"
+                                                        :key="item.value">{{item.label}}
                                                 </Option>
                                             </Select>
                                         </FormItem>
@@ -269,7 +269,7 @@
     import consts from '../../../libs/consts'
     import {VueTinymce, Config} from '../../my-components/text-editor/'
 
-
+    let vm=null;
     export default {
         computed: {
             ...mapState({
@@ -393,7 +393,7 @@
 
         },
         mounted () {
-
+            vm=this;
         },
         data () {
             return {
@@ -437,6 +437,55 @@
                     type: [
                         {required: true, message: '类型必选', trigger: 'change'},
                     ],
+                    phAgeToplmt:[
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            value=value==undefined?1:parseInt(value);
+                            let phAgeLowerlmt=vm.cardtype.phAgeLowerlmt;
+                            phAgeLowerlmt=phAgeLowerlmt==undefined?1:parseInt(phAgeLowerlmt);
+                            if(phAgeLowerlmt<value){
+                                errors.push("投保人上限不能大于下限");
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    phAgeLowerlmt:[
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            value=value==undefined?1:parseInt(value);
+                            let phAgeToplmt=vm.cardtype.phAgeToplmt;
+                            phAgeToplmt=phAgeToplmt==undefined?1:parseInt(phAgeToplmt);
+                            if(phAgeToplmt>value){
+                                errors.push("投保人下限不能小于上限");
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    ipAgeToplmt:[
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            value=value==undefined?1:parseInt(value);
+                            let ipAgeLowerlmt=vm.cardtype.ipAgeLowerlmt;
+                            ipAgeLowerlmt=ipAgeLowerlmt==undefined?1:parseInt(ipAgeLowerlmt);
+                            if(ipAgeLowerlmt<value){
+                                errors.push("被投保人上限不能大于下限");
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    ipAgeLowerlmt:[
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            value=value==undefined?1:parseInt(value);
+                            let ipAgeToplmt=vm.cardtype.ipAgeToplmt;
+                            ipAgeToplmt=ipAgeToplmt==undefined?1:parseInt(ipAgeToplmt);
+                            if(ipAgeToplmt>value){
+                                errors.push("被投保人下限不能小于上限");
+                            }
+                            callback(errors);
+                        }}
+                    ]
+
 
                 },
             }

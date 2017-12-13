@@ -42,7 +42,7 @@ public class CardTypeCtr extends CoreController {
         if (!isParaBlank("type"))
             kv.put("type=", getParaToLong("type"));
 
-        if (!isParaBlank("level") )
+        if (!isParaBlank("category") )
             kv.put("category=", getParaToLong("category"));
 
         if (!isParaBlank("status") )

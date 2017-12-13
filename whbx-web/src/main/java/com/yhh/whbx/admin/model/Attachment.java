@@ -1,6 +1,8 @@
 package com.yhh.whbx.admin.model;
 
 
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.base.BaseAttachment;
 
 import java.util.List;
@@ -19,5 +21,9 @@ public class Attachment extends BaseAttachment<Attachment> {
 
 	public List<Attachment> findByObjId(Integer objId){
 		return  dao.find("select * from "+getTableName()+" where objId=? and dAt is null",objId);
+	}
+
+	public String getAccessUrl(){
+		return CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url")+getPath();
 	}
 }

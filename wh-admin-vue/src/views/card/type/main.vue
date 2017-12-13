@@ -59,12 +59,14 @@
             </Col>
         </Row>
         <cardtypeForm ref="ctf"></cardtypeForm>
+        <cardtypeView ref="ctv"></cardtypeView>
     </div>
 
 </template>
 <script>
     import {mapState} from 'vuex'
     import cardtypeForm from './form.vue'
+    import cardtypeView from './view.vue'
     import consts from '../../../libs/consts'
 
     export default {
@@ -98,6 +100,11 @@
             add(){
                 this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！',manyPeople:'1',ipAgeToplmt:0})
                 this.$refs.ctf.open('新增卡类型', true)
+            },
+            view(id){
+                this.$store.dispatch('cardtype_get', {id: id}).then(() => {
+                    this.$refs.ctv.open();
+                })
             },
             search(){
                 let param={type:this.type,category:this.category,status:this.status,name:this.name,code:this.code}
@@ -135,7 +142,7 @@
         },
 
         components: {
-            cardtypeForm,
+            cardtypeForm,cardtypeView
         },
 
         data () {

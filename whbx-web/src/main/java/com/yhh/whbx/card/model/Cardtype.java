@@ -34,4 +34,5 @@ public class Cardtype extends BaseCardtype<Cardtype> {
 		return Attachment.dao.findByObjId(getId().intValue());
 	}
 
+
 }

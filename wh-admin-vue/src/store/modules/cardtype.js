@@ -108,13 +108,13 @@ const cardtype = {
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c00/get', param).then((res) => {
                     res.type = res.type + '';
-                    res.category = res.category + '';
+                    res.category = res.category==undefined?'':res.category + '';
                     res.phAgeToplmt=parseInt(res.phAgeToplmt);
                     res.phAgeLowerlmt=parseInt(res.phAgeLowerlmt);
                     res.ipAgeToplmt=parseInt(res.ipAgeToplmt);
                     res.ipAgeLowerlmt=parseInt(res.ipAgeLowerlmt);
                     res.ipAgeToplmtDay=parseInt(res.ipAgeToplmtDay);
-                    res.manyPeople=parseInt(res.manyPeople);
+                    res.manyPeople=res.manyPeople;
                     res.peopleCount=parseInt(res.peopleCount);
                     res.finiteEffect=parseInt(res.finiteEffect);
                     res.actCount=parseInt(res.actCount);

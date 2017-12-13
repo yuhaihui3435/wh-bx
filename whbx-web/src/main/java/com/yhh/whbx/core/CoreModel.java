@@ -7,7 +7,6 @@ import org.jsoup.Jsoup;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/11/30.
@@ -70,4 +69,5 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
     }
 
     public abstract String getTableName();
+
 }
