@@ -1,7 +1,12 @@
 package com.yhh.whbx.card.model;
 
 
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.model.base.BaseCardapply;
+import com.yhh.whbx.kits.DateKit;
 
 import java.util.List;
 
@@ -27,5 +32,20 @@ public class Cardapply extends BaseCardapply<Cardapply> {
 
 	public List<Cardapply> findByBatchAndCardtypeAndNEId(Integer ct,String batch,Long id){
 		return dao.find("select * from "+getTableName()+" where batch=? and cardtypeId=? and id <>?",batch,ct,id);
+	}
+
+	public String getCardtypeTxt(){
+		return Cardtype.dao.findById(getCardtypeId()).getName();
+	}
+
+	public String getMediaTxt(){
+		Taxonomy taxonomy=null;
+		if(getMedia()!=null)
+		 taxonomy=(Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getMedia().toString());
+		return getMedia()==null?"":taxonomy!=null?taxonomy.getTitle():"";
+	}
+
+	public String getCAtTxt(){
+		return getCAt()==null?"": DateKit.dateToStr(getCAt(),DateKit.STR_DATEFORMATE);
 	}
 }

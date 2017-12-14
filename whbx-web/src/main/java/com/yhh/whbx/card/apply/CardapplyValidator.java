@@ -37,10 +37,10 @@ public class CardapplyValidator extends CoreValidator {
                 addError(Consts.REQ_JSON_CODE.fail.name(),BATCH_EXIST);
                 return ;
             }
-        }else  if(ak.equals("/c01/upadte")){
+        }else  if(ak.equals("/c01/update")){
             Cardapply ca=Cardapply.dao.findById(cardapply.getId());
             String exe=controller.getPara("exe");
-            if(exe.equals("upadte")) {
+            if(exe.equals("update")) {
                 if ( ca.getDAt()!=null||!ca.getCheckStatus().equals(Consts.CHECK_STATUS.waitingCheck.getVal())||!ca.getExeCard().equals(Consts.YORN_STR.no.getVal())){
                     addError(Consts.REQ_JSON_CODE.fail.name(),DATA_STATUS_ERROR);
                     return ;

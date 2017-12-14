@@ -15,8 +15,8 @@
                     <Col span="16" offset="0" align="right">
                     <Form inline>
                         <FormItem>
-                            <Select v-model="cardapplyId" placeholder="卡类型" clearable style="width:100px" align="left">
-                                <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">{{ item.name }}
+                            <Select v-model="cardtypeId" placeholder="卡类型" clearable style="width:100px" align="left">
+                                <Option v-for="item in cardtypeList" :value="item.id" :key="item.id">{{ item.name }}
                                 </Option>
                             </Select>
                         </FormItem>
@@ -79,6 +79,9 @@
     import cardapplyView from './view.vue'
     import cardapplyCheckForm from './checkForm.vue'
     import consts from '../../../libs/consts'
+
+    const moment = require('moment');
+
     let delBtn = (vm, h, param) => {
         return h('Poptip', {
             props: {
@@ -90,7 +93,7 @@
             },
             on: {
                 'on-ok': () => {
-                    vm.del(param.row.id)
+                    vm.del(param.row)
                 }
             }
         }, [h('Button', {
@@ -111,7 +114,7 @@
             },
             on: {
                 'on-ok': () => {
-                    vm.stop(param.row.id)
+                    vm.stop(param.row)
                 }
             }
         }, [h('Button', {
@@ -132,7 +135,7 @@
             },
             on: {
                 'on-ok': () => {
-                    vm.active(param.row.id)
+                    vm.active(param.row)
                 }
             }
         }, [h('Button', {
@@ -157,7 +160,7 @@
         },
         methods: {
             del(row){
-                row[dAt] = Date();
+                row['dAt'] = moment().format('YYYY-MM-DD HH:mm:ss');
                 row['exe'] = 'del'
                 this.$store.dispatch('cardapply_del', row).then((res) => {
                     if (res && res == 'success') {
@@ -169,7 +172,7 @@
                 let vm = this;
                 this.$store.dispatch('cardapply_get', {id: cardapply.id}).then(() => {
                     if (vm.cardapply.status == '0' && vm.cardapply.checkStatus == '01' && vm.cardapply.exeCard == '1' && (vm.cardapply.dAt == undefined))
-                        this.$refs.caf.open('编辑卡类型', false);
+                        this.$refs.caf.open('编辑申请', false);
                     else
                         this.$Message.error("数据状态不正确，无法完成该操作，请刷新数据查看最新的数据状态");
                 })
@@ -186,7 +189,7 @@
             },
             search(){
                 let param = {
-                    cardapplyId: this.cardapplyId,
+                    cardtypeId: this.cardtypeId,
                     media: this.media,
                     status: this.status,
                     checkStatus: this.checkStatus,
@@ -196,7 +199,7 @@
             },
             changePage(pn){
                 let param = {
-                    cardapplyId: this.cardapplyId,
+                    cardtypeId: this.cardtypeId,
                     media: this.media,
                     status: this.status,
                     checkStatus: this.checkStatus,
@@ -207,7 +210,7 @@
             },
             refresh(){
                 let param = {
-                    cardapplyId: this.cardapplyId,
+                    cardtypeId: this.cardtypeId,
                     media: this.media,
                     status: this.status,
                     checkStatus: this.checkStatus,
@@ -229,7 +232,7 @@
             active(row){
                 row['status'] = '0';
                 row['exe'] = 'active';
-                this.$store.dispatch('cardapply_update', {id: id, status: '0'}).then((res) => {
+                this.$store.dispatch('cardapply_update', row).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardapply_page')
                     }
@@ -252,23 +255,24 @@
         },
 
         components: {
-            cardapplyForm, cardapplyViewm,cardapplyCheckForm
+            cardapplyForm, cardapplyView,cardapplyCheckForm
         },
 
         data () {
             return {
-                cardapplyId: '',//卡类型
+                cardtypeId: '',//卡类型
                 media: '',//职级 查询条件
                 status: '',//状态 查询条件
                 checkStatus: '',
                 exeCard: '',
+                self:this,
                 statusList: consts.status,
                 checkStatusList: consts.checkStatus,
                 yonList: consts.yon,
                 tableColums: [
                     {
                         title: '卡类型',
-                        key: 'cardtypeName',
+                        key: 'cardtypeTxt',
                     },
 
                     {
@@ -332,7 +336,7 @@
                         width: 150,
                         render: (h, param) => {
                             let color = (param.row.exeCard == '0') ? 'green' : 'red'
-                            let txt = (param.row.exeCard == '0') ? '正常' : '禁用'
+                            let txt = (param.row.exeCard == '0') ? '是' : '否'
                             return h('Tag', {
                                 props: {
                                     type: 'dot',

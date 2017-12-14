@@ -22,6 +22,7 @@ import com.yhh.whbx.card.apply.CardapplyCtr;
 import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
+import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.ResKit;
 import com.yhh.whbx.sale.salesmen.SalesmenCtr;
 
@@ -40,6 +41,8 @@ public class CoreConfig extends JFinalConfig{
         constants.setEncoding("UTF-8");
         constants.setJsonFactory(new FastJsonFactory());
         constants.setLogFactory(new Log4jLogFactory());
+        constants.setJsonDatePattern(DateKit.STR_DATEFORMATE);
+
     }
 
     @Override

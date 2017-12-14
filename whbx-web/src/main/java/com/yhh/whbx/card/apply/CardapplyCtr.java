@@ -78,18 +78,21 @@ public class CardapplyCtr extends CoreController {
         switch (exe){
             case "update":
                 msg="修改操作成功。";
+                break;
             case "stop":
                 msg="停用操作成功。";
+                break;
             case "active":
                 msg="激活操作成功。";
+                break;
             case "del":
                 msg="删除操作成功。";
+                break;
             case "check":
                 msg=cardapply.getCheckStatus().equals(Consts.CHECK_STATUS.normal)?"审核通过。":"审核未通过";
-            default:
-                renderSuccessJSON(msg);
-                return;
+                break;
         }
+        renderSuccessJSON(msg);
 
     }
 

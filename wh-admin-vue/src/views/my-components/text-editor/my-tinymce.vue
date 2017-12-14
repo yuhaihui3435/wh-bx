@@ -132,6 +132,7 @@
 
         },
         beforeDestroy: function(){
+            if(this.editor!=null)
             this.editor.remove();
         }
     }
