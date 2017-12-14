@@ -12,35 +12,36 @@
                     <Button type="primary" icon="android-add" @click="add">新增申请</Button>
                     <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
                     </Col>
-                    <Col span="16"  offset="0"  align="right">
+                    <Col span="16" offset="0" align="right">
                     <Form inline>
-                        <FormItem >
+                        <FormItem>
                             <Select v-model="cardapplyId" placeholder="卡类型" clearable style="width:100px" align="left">
                                 <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">{{ item.name }}
                                 </Option>
                             </Select>
                         </FormItem>
-                        <FormItem >
+                        <FormItem>
                             <Select v-model="media" placeholder="介质" clearable style="width:100px" align="left">
                                 <Option v-for="item in mediaList" :value="item.id" :key="item.id">{{ item.title }}
                                 </Option>
                             </Select>
                         </FormItem>
-                        <FormItem >
+                        <FormItem>
                             <Select v-model="status" placeholder="状态" clearable style="width:100px" align="left">
                                 <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label
                                     }}
                                 </Option>
                             </Select>
                         </FormItem>
-                        <FormItem >
+                        <FormItem>
                             <Select v-model="checkStatus" placeholder="审核状态" clearable style="width:100px" align="left">
-                                <Option v-for="item in checkStatusList" :value="item.value" :key="item.value">{{ item.label
+                                <Option v-for="item in checkStatusList" :value="item.value" :key="item.value">{{
+                                    item.label
                                     }}
                                 </Option>
                             </Select>
                         </FormItem>
-                        <FormItem >
+                        <FormItem>
                             <Select v-model="exeCard" placeholder="是否制卡" clearable style="width:100px" align="left">
                                 <Option v-for="item in yonList" :value="item.value" :key="item.value">{{ item.label
                                     }}
@@ -68,6 +69,7 @@
         </Row>
         <cardapplyForm ref="caf"></cardapplyForm>
         <cardapplyView ref="cav"></cardapplyView>
+        <cardapplyCheckForm ref="cacf"></cardapplyCheckForm>
     </div>
 
 </template>
@@ -75,8 +77,71 @@
     import {mapState} from 'vuex'
     import cardapplyForm from './form.vue'
     import cardapplyView from './view.vue'
+    import cardapplyCheckForm from './checkForm.vue'
     import consts from '../../../libs/consts'
-
+    let delBtn = (vm, h, param) => {
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要删除这条数据吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.del(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '删除')]);
+    };
+    let stopBtn = (vm, h, param) => {
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要禁用这条数据吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.stop(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '禁用')]);
+    }
+    let actBtn = (vm, h, param) => {
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要激活这条数据吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.active(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'success',
+                size: 'small'
+            }
+        }, '激活')]);
+    }
     export default {
 
         computed: {
@@ -92,8 +157,8 @@
         },
         methods: {
             del(row){
-                row[dAt]=Date();
-                row['exe']='del'
+                row[dAt] = Date();
+                row['exe'] = 'del'
                 this.$store.dispatch('cardapply_del', row).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardapply_page')
@@ -101,9 +166,9 @@
                 });
             },
             edit(cardapply){
-                let vm=this;
+                let vm = this;
                 this.$store.dispatch('cardapply_get', {id: cardapply.id}).then(() => {
-                    if(vm.cardapply.status=='0'&&vm.cardapply.checkStatus=='01'&&vm.cardapply.exeCard=='1'&&(vm.cardapply.dAt==undefined))
+                    if (vm.cardapply.status == '0' && vm.cardapply.checkStatus == '01' && vm.cardapply.exeCard == '1' && (vm.cardapply.dAt == undefined))
                         this.$refs.caf.open('编辑卡类型', false);
                     else
                         this.$Message.error("数据状态不正确，无法完成该操作，请刷新数据查看最新的数据状态");
@@ -111,7 +176,7 @@
 
             },
             add(){
-                this.$store.commit('set_cardapply',{})
+                this.$store.commit('set_cardapply', {})
                 this.$refs.caf.open('新增申请', true)
             },
             view(id){
@@ -120,22 +185,41 @@
                 })
             },
             search(){
-                let param={cardapplyId:this.cardapplyId,media:this.media,status:this.status,checkStatus:this.checkStatus,exeCard:this.exeCard}
+                let param = {
+                    cardapplyId: this.cardapplyId,
+                    media: this.media,
+                    status: this.status,
+                    checkStatus: this.checkStatus,
+                    exeCard: this.exeCard
+                }
                 this.$store.dispatch('cardapply_page', param)
             },
             changePage(pn){
-                let param={cardapplyId:this.cardapplyId,media:this.media,status:this.status,checkStatus:this.checkStatus,exeCard:this.exeCard,pn:pn}
+                let param = {
+                    cardapplyId: this.cardapplyId,
+                    media: this.media,
+                    status: this.status,
+                    checkStatus: this.checkStatus,
+                    exeCard: this.exeCard,
+                    pn: pn
+                }
                 this.$store.dispatch('cardapply_page', param)
             },
             refresh(){
-                let param={cardapplyId:this.cardapplyId,media:this.media,status:this.status,checkStatus:this.checkStatus,exeCard:this.exeCard}
+                let param = {
+                    cardapplyId: this.cardapplyId,
+                    media: this.media,
+                    status: this.status,
+                    checkStatus: this.checkStatus,
+                    exeCard: this.exeCard
+                }
                 this.$store.dispatch('cardapply_page')
             },
 
             stop(row){
-                row['status']='1';
-                row['exe']='stop';
-                this.$store.dispatch('cardapply_update',row).then((res) => {
+                row['status'] = '1';
+                row['exe'] = 'stop';
+                this.$store.dispatch('cardapply_update', row).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardapply_page')
                     }
@@ -143,13 +227,22 @@
             },
 
             active(row){
-                row['status']='0';
-                row['exe']='active';
-                this.$store.dispatch('cardapply_update',{id:id,status:'0'}).then((res) => {
+                row['status'] = '0';
+                row['exe'] = 'active';
+                this.$store.dispatch('cardapply_update', {id: id, status: '0'}).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardapply_page')
                     }
                 });
+            }
+            , createCard(row){
+
+            },
+            exportToExcel(row){
+
+            },
+            check(row){
+
             }
 
         },
@@ -159,7 +252,7 @@
         },
 
         components: {
-            cardapplyForm,cardapplyView
+            cardapplyForm, cardapplyViewm,cardapplyCheckForm
         },
 
         data () {
@@ -167,8 +260,8 @@
                 cardapplyId: '',//卡类型
                 media: '',//职级 查询条件
                 status: '',//状态 查询条件
-                checkStatus:'',
-                exeCard:'',
+                checkStatus: '',
+                exeCard: '',
                 statusList: consts.status,
                 checkStatusList: consts.checkStatus,
                 yonList: consts.yon,
@@ -206,7 +299,7 @@
                     {
                         title: '状态',
                         key: 'status',
-                        width:150,
+                        width: 150,
                         render: (h, param) => {
                             let color = (param.row.status == '0') ? 'green' : 'red'
                             let txt = (param.row.status == '0') ? '正常' : '禁用'
@@ -221,10 +314,10 @@
                     {
                         title: '审核状态',
                         key: 'checkStatus',
-                        width:150,
+                        width: 150,
                         render: (h, param) => {
-                            let color = (param.row.checkStatus == '01') ? 'blue' :(param.row.checkStatus == '00')?'green':'red'
-                            let txt = (param.row.checkStatus == '01') ? '等待审核' :(param.row.checkStatus == '00')? '审核通过':'审核未通过'
+                            let color = (param.row.checkStatus == '01') ? 'blue' : (param.row.checkStatus == '00') ? 'green' : 'red'
+                            let txt = (param.row.checkStatus == '01') ? '等待审核' : (param.row.checkStatus == '00') ? '审核通过' : '审核未通过'
                             return h('Tag', {
                                 props: {
                                     type: 'dot',
@@ -236,7 +329,7 @@
                     {
                         title: '制卡状态',
                         key: 'exeCard',
-                        width:150,
+                        width: 150,
                         render: (h, param) => {
                             let color = (param.row.exeCard == '0') ? 'green' : 'red'
                             let txt = (param.row.exeCard == '0') ? '正常' : '禁用'
@@ -256,20 +349,64 @@
                         align: 'center',
                         render: (h, param) => {
                             let btns = new Array;
-                            let row=param.row;
+                            let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
-                            if(row.checkStatus=='01'&&row.dAt==undefined&&row.exeCard=='1'){
+                            if (row.checkStatus == '01' && row.dAt == undefined && row.exeCard == '1') {
                                 btns.push(consts.editBtn(this, h, param))
-                                btns.push(consts.delBtn(this, h, param))
+                                btns.push(delBtn(this, h, param))
                             }
 
-                            if (param.row.status == '0'&&row.dAt==undefined)
-                                btns.push(consts.stopBtn(this, h, param))
-                            else if(param.row.status == '1'&&row.dAt==undefined)
-                                btns.push(consts.actBtn(this, h, param))
-
-                            if (param.row.status == '0'&&row.dAt==undefined&&row.checkStatus=='01'&&row.exeCard=='1'){
-                                btns.push(consts.actBtn(this, h, param))
+                            if (param.row.status == '0' && row.dAt == undefined)
+                                btns.push(stopBtn(this, h, param))
+                            else if (param.row.status == '1' && row.dAt == undefined)
+                                btns.push(actBtn(this, h, param))
+                            if (param.row.status == '0' && row.dAt == undefined && row.checkStatus == '01' && row.exeCard == '1') {
+                                btns.push(h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            vm.check(param.row)
+                                        }
+                                    }
+                                }, '审核'))
+                            }
+                            if (param.row.status == '0' && row.dAt == undefined && row.checkStatus == '00' && row.exeCard == '1') {
+                                btns.push(h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            vm.createCard(param.row)
+                                        }
+                                    }
+                                }, '制卡'))
+                            }
+                            if (param.row.status == '0' && row.dAt == undefined && row.checkStatus == '00' && row.exeCard == '0') {
+                                btns.push(h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            vm.exportToExcel(param.row)
+                                        }
+                                    }
+                                }, 'EXCEL导出'))
                             }
                             return h('div', btns)
                         }
