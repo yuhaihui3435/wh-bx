@@ -1,6 +1,5 @@
 package com.yhh.whbx.card.model.base;
 
-import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.IBean;
 import com.yhh.whbx.core.CoreModel;
 
@@ -128,6 +127,13 @@ public abstract class BaseCardapply<M extends BaseCardapply<M>> extends CoreMode
 
 	public java.lang.Integer getCheckOper() {
 		return getInt("checkOper");
+	}
+	public void setSkey(java.lang.String skey) {
+		set("skey", skey);
+	}
+
+	public java.lang.String getSkey() {
+		return getStr("skey");
 	}
 
 }

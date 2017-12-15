@@ -1,5 +1,9 @@
 package com.yhh.whbx.kits;
 
+import com.xiaoleilu.hutool.crypto.SecureUtil;
+import com.xiaoleilu.hutool.crypto.symmetric.AES;
+import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
@@ -51,6 +55,14 @@ public class _StrKit {
 
 
     public static void main(String[] args) throws IOException {
+        String a=SymmetricAlgorithm.AES.getValue();
+        System.out.printf(a);
+        byte[] key= SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+        System.out.printf(new String(key));
+        AES aes=SecureUtil.aes(key);
+        String s=aes.encryptHex("111111");
+        System.out.printf(s);
+        System.out.printf(aes.decryptStr(s));
 
     }
 

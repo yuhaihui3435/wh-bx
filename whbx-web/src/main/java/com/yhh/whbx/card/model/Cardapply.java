@@ -5,6 +5,7 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Taxonomy;
+import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.card.model.base.BaseCardapply;
 import com.yhh.whbx.kits.DateKit;
 
@@ -44,6 +45,27 @@ public class Cardapply extends BaseCardapply<Cardapply> {
 		 taxonomy=(Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getMedia().toString());
 		return getMedia()==null?"":taxonomy!=null?taxonomy.getTitle():"";
 	}
+
+	public String getCheckStatusTxt(){
+		return StrUtil.isNotBlank(getCheckStatus())?getCheckStatus().equals(Consts.CHECK_STATUS.normal.getVal())? Consts.CHECK_STATUS.normal.getValTxt():getCheckStatus().equals(Consts.CHECK_STATUS.revokeCheck.getVal())? Consts.CHECK_STATUS.revokeCheck.getValTxt(): Consts.CHECK_STATUS.waitingCheck.getValTxt():"";
+	}
+
+	public String getStatusTxt(){
+		return StrUtil.isNotBlank(getStatus())? Consts.STATUS.enable.getVal().equals(getStatus())? Consts.STATUS.enable.getValTxt(): Consts.STATUS.forbidden.getValTxt():"";
+	}
+
+	public String exeCardTxt(){
+		return StrUtil.isNotBlank(getExeCard())?Consts.YORN_STR.yes.getVal().equals(getExeCard())? Consts.YORN_STR.yes.getLabel(): Consts.YORN_STR.no.getLabel():"";
+	}
+
+	public String operTxt(){
+		return getOper()!=null?User.dao.findById(getOper()).getNickname():"";
+	}
+
+	public String checkOperTxt(){
+		return getCheckOper()!=null?User.dao.findById(getCheckOper()).getNickname():"";
+	}
+
 
 	public String getCAtTxt(){
 		return getCAt()==null?"": DateKit.dateToStr(getCAt(),DateKit.STR_DATEFORMATE);

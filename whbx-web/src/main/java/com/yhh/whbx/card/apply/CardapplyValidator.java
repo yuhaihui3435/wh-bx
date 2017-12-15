@@ -73,6 +73,18 @@ public class CardapplyValidator extends CoreValidator {
                 }
             }
 
+        }else  if(ak.equals("/c01/createCard")){
+            Cardapply ca=Cardapply.dao.findById(cardapply.getId());
+            if(ca.getStatus().equals(Consts.STATUS.forbidden.getVal())){
+                addError(Consts.REQ_JSON_CODE.fail.name(),"卡申请被禁用，无法完成制卡操作");
+                return ;
+            }else if(!ca.getStatus().equals(Consts.CHECK_STATUS.normal.getVal())){
+                addError(Consts.REQ_JSON_CODE.fail.name(),"卡申请未通过审核，无法完成制卡操作");
+                return ;
+            }else if(ca.getDAt()!=null){
+                addError(Consts.REQ_JSON_CODE.fail.name(),"卡申请数据被删除，无法完成制卡操作");
+                return ;
+            }
         }
     }
 

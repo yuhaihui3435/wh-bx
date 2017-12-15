@@ -147,7 +147,7 @@
                         {type: 'string', message: '批次长度不能超过四位', max: 4, trigger: 'blur'}
                     ],
                     num: [
-                        {required: true,type: 'number', message: '数量不能为空', trigger: 'blur'},
+                        {required: true,type: 'number', message: '数量不能为空', trigger: 'blur',transform: value => +value},
                         {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},
                     ],
                 },

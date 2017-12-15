@@ -56,6 +56,14 @@ const cardapply = {
                 });
             });
         },
+        cardapply_create: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c01/createCard', param).then((res) => {
+                    resolve(res.resCode);
+                });
+            });
+        },
 
         cardapply_updateStatus: function ({commit, state}, param) {
             let vm = this._vm;

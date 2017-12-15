@@ -209,9 +209,7 @@
 
             handleView(index){
                 let obj=this.cardtype.clauseList[index];
-                console.info(obj)
-                let url=this.cardtype.accessUrl;
-
+                let url=obj.accessUrl;
                 window.open(url,'_blank');
             },
         },

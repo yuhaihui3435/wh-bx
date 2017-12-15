@@ -239,13 +239,20 @@
                 });
             }
             , createCard(row){
-
+                this.$store.dispatch('cardapply_create', row).then((res) => {
+                    if (res && res == 'success') {
+                        this.$store.dispatch('cardapply_page')
+                    }
+                });
             },
             exportToExcel(row){
-
+                let env=consts.env;
+                window.open(env+"/c01/exportCardsExcel?applyId="+row.id,'_blank');
             },
             check(row){
-
+                this.$store.dispatch('cardapply_get', {id: row.id}).then(() => {
+                    this.$refs.cacf.open();
+                })
             }
 
         },
@@ -303,7 +310,7 @@
                     {
                         title: '状态',
                         key: 'status',
-                        width: 150,
+                        width: 120,
                         render: (h, param) => {
                             let color = (param.row.status == '0') ? 'green' : 'red'
                             let txt = (param.row.status == '0') ? '正常' : '禁用'
@@ -333,7 +340,7 @@
                     {
                         title: '制卡状态',
                         key: 'exeCard',
-                        width: 150,
+                        width: 120,
                         render: (h, param) => {
                             let color = (param.row.exeCard == '0') ? 'green' : 'red'
                             let txt = (param.row.exeCard == '0') ? '是' : '否'
@@ -352,6 +359,7 @@
                         width: 250,
                         align: 'center',
                         render: (h, param) => {
+                            let vm=this;
                             let btns = new Array;
                             let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
@@ -381,20 +389,25 @@
                                 }, '审核'))
                             }
                             if (param.row.status == '0' && row.dAt == undefined && row.checkStatus == '00' && row.exeCard == '1') {
-                                btns.push(h('Button', {
+                                btns.push(h('Poptip', {
                                     props: {
-                                        type: 'primary',
-                                        size: 'small'
+                                        confirm: '',
+                                        title: '您确定要开始制卡吗？'
                                     },
                                     style: {
                                         marginRight: '5px'
                                     },
                                     on: {
-                                        click: () => {
+                                        'on-ok': () => {
                                             vm.createCard(param.row)
                                         }
                                     }
-                                }, '制卡'))
+                                }, [h('Button', {
+                                    props: {
+                                        type: 'success',
+                                        size: 'small'
+                                    }
+                                }, '制卡')]))
                             }
                             if (param.row.status == '0' && row.dAt == undefined && row.checkStatus == '00' && row.exeCard == '0') {
                                 btns.push(h('Button', {

@@ -97,6 +97,9 @@
                             <FormItem label="图片上传最大值">
                                 <Input v-model="param.pic_maxSize" placeholder="请输入..." style="width: 300px"></Input>
                             </FormItem>
+                            <FormItem label="单笔卡申请最大制卡数量">
+                                <Input v-model="param.createCardMaxCount" placeholder="请输入..." style="width: 300px"></Input>
+                            </FormItem>
 
                         </Tab-pane>
                     </Tabs>
