@@ -11,6 +11,7 @@ import tax from './modules/tax';
 import salesmen from './modules/salesmen';
 import cardtype from './modules/cardtype';
 import cardapply from './modules/cardapply';
+import depot from './modules/depot';
 
 Vue.use(Vuex);
 
@@ -44,7 +45,8 @@ const store = new Vuex.Store({
         tax,
         salesmen,
         cardtype,
-        cardapply
+        cardapply,
+        depot
     }
 });
 

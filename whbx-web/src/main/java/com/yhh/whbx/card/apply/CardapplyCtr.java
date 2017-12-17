@@ -51,7 +51,6 @@ public class CardapplyCtr extends CoreController {
         Kv kv = Kv.create();
         if (!isParaBlank("cardtypeId"))
             kv.put("cardtypeId=", getParaToLong("cardtypeId"));
-
         if (!isParaBlank("batch"))
             kv.put("batch=", getParaToLong("batch"));
         if (!isParaBlank("media"))
@@ -157,6 +156,7 @@ public class CardapplyCtr extends CoreController {
             card.setApplyId(cardapply.getId().intValue());
             card.setCode(cardCode);
             card.setPwd(SecureUtil.aes(key).encryptHex(pwd));
+            card.setSeq(seq.intValue());
             card.save();
         }
         cardapply.setExeCard(Consts.YORN_STR.yes.getVal());
@@ -219,6 +219,19 @@ public class CardapplyCtr extends CoreController {
         public void setPwd(String pwd) {
             this.pwd = pwd;
         }
+    }
+
+    public void listByCardtypeId(){
+        Integer cardtypeId=getParaToInt("ctId");
+        String batch=getPara("bacth");
+        renderJson(Cardapply.dao.findByCardtypeIdAndBatch( cardtypeId,batch));
+    }
+
+    public void recommendNum(){
+        Integer id=getParaToInt("applyId");
+        Cardapply cardapply=Cardapply.dao.findById(id);
+
+
     }
 
 }

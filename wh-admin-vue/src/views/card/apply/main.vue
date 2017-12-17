@@ -301,7 +301,7 @@
                     },
                     {
                         title: '下载时间',
-                        key: 'downloadAtTxt',
+                        key: 'downloadAt',
                     },
                     {
                         title: '操作员',

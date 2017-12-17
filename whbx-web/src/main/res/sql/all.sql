@@ -7,3 +7,6 @@
 #namespace("cardapply")
   #include("cardapply.sql")
 #end
+#namespace("depot")
+  #include("depot.sql")
+#end

@@ -3,6 +3,9 @@ package com.yhh.whbx.card.model;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.base.BaseCards;
 
 import java.util.List;
@@ -24,11 +27,46 @@ public class Cards extends BaseCards<Cards> {
 		return record.getLong("num");
 	}
 
+
+
 	public List<Cards> findByCardapplyId(Integer applyId){
 		return dao.find("select *  from "+getTableName()+" where applyId=?",applyId);
 	}
 
 	public void updateStatusByCardapplyId(Integer applyId){
 		Db.batchUpdate(findByCardapplyId(applyId),50);
+	}
+	//统计未出库数量
+	public Long countByCardapplyIdAndInDepot(Integer applyId){
+		Record record=Db.findFirst("select count(*) as num from "+getTableName()+" where applyId=?  and depotId is null",applyId);
+		return record.getLong("num");
+	}
+
+	public void updateDepotStatusByCardapplyIdAndBnumAndEnum(Integer applyId,int bNum,int eNum,Integer depotId){
+		List<Cards> list=findByCardapplyId(applyId);
+		Cardapply cardapply=Cardapply.dao.findById(applyId);
+		Cardtype cardtype=Cardtype.dao.findById(cardapply.getCardtypeId());
+		Integer maxCardcount = CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "createCardMaxCount") != null ? Integer.parseInt((String) CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "createCardMaxCount")) : null;
+		maxCardcount = maxCardcount == null ? 99999 : maxCardcount;
+		int y = (maxCardcount + "").length();
+		String code=null;
+		Cards cards=null;
+		for (int i=bNum;i<=eNum;i++){
+			code=cardtype.getCode() + cardapply.getBatch() + StrUtil.fillBefore(i + "", '0', y);
+			cards=findByCode(code);
+			if(cards==null)
+				continue;
+			cards.setDepotId(depotId);
+			cards.update();
+		}
+	}
+
+	public Cards findByCode(String code){
+		return dao.findFirst("select * from "+getTableName()+" where code=?",code);
+	}
+
+	public Long findLastCardCodeByCardapplyId(Integer cardapplyId){
+		Cards.dao.findFirst("select max(code) from "+getTableName()+" where applyId=? ");
+		return 0L;
 	}
 }

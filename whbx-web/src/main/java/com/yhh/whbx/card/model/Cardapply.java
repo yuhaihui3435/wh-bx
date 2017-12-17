@@ -1,6 +1,9 @@
 package com.yhh.whbx.card.model;
 
 
+import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
@@ -69,5 +72,14 @@ public class Cardapply extends BaseCardapply<Cardapply> {
 
 	public String getCAtTxt(){
 		return getCAt()==null?"": DateKit.dateToStr(getCAt(),DateKit.STR_DATEFORMATE);
+	}
+
+	public List<Cardapply> findByCardtypeIdAndBatch(Integer cardtypeId,String batch){
+		Kv kv=Kv.by("cardtypeId=",cardtypeId);
+		if(StrUtil.isNotBlank(batch)){
+			kv.put("batch like",batch);
+		}
+		SqlPara sqlPara = Db.getSqlPara("cardapply.findEnableList", Kv.by("cond", kv));
+		return Cardapply.dao.find( sqlPara);
 	}
 }

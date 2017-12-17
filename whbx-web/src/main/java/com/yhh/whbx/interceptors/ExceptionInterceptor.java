@@ -46,9 +46,9 @@ public class ExceptionInterceptor implements Interceptor {
                  *
                  */
                 if(e instanceof CoreException){
-                    controller.render("/common/999.html");
+                    controller.render("/WEB-INF/template/common/999.html");
                 }else {
-                    controller.render("/common/500.html");
+                    controller.render("/WEB-INF/template/common/500.html");
                 }
             }
         }

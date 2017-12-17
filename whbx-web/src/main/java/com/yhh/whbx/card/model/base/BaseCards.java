@@ -1,5 +1,6 @@
 package com.yhh.whbx.card.model.base;
 
+import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.IBean;
 import com.yhh.whbx.core.CoreModel;
 
@@ -65,20 +66,36 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return getInt("applyId");
 	}
 
-	public void setUsed(java.lang.String used) {
-		set("used", used);
+	public void setLock(String lock) {
+		set("lock", lock);
 	}
 
-	public java.lang.String getUsed() {
-		return getStr("used");
+	public String getLock() {
+		return getStr("lock");
 	}
 
-	public void setSalesmenId(java.lang.Integer salesmenId) {
-		set("salesmenId", salesmenId);
+	public void setUnlockId(Integer unlockId) {
+		set("unlockId", unlockId);
 	}
 
-	public java.lang.Integer getSalesmenId() {
-		return getInt("salesmenId");
+	public Integer getUnlockId() {
+		return getInt("unlockId");
+	}
+
+	public void setDepotId(Integer depotId) {
+		set("depotId", depotId);
+	}
+
+	public Integer getDepotId() {
+		return getInt("depotId");
+	}
+
+	public void setSeq(java.lang.Integer seq) {
+		set("seq", seq);
+	}
+
+	public java.lang.Integer getSeq() {
+		return getInt("seq");
 	}
 
 }
