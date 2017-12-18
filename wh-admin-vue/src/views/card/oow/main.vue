@@ -21,7 +21,7 @@
                             </Select>
                         </FormItem>
                         <FormItem>
-                            <Select v-model="cardapplyId" placeholder="批次" clearable style="width:100px" align="left" v-show="cardapplyList.length>0">
+                            <Select v-model="cardapplyId"  placeholder="批次" clearable style="width:100px" align="left" v-show="cardapplyList.length>0">
                                 <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">{{ item.batch }}
                                 </Option>
                             </Select>
@@ -47,7 +47,7 @@
                             </Select>
                         </FormItem>
                         <FormItem>
-                            <DatePicker type="datetimerange"  placement="bottom-end" placeholder="选择查询时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
+                            <DatePicker type="datetimerange"   placement="bottom-end" placeholder="出库时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
                             <span @click="search" style="margin: 0 10px;"><Button type="primary"
@@ -163,7 +163,7 @@
             del(row){
                 row['dAt'] = moment().format('YYYY-MM-DD HH:mm:ss');
                 row['exe'] = 'del'
-                this.$store.dispatch('depot_del', row).then((res) => {
+                this.$store.dispatch('depot_update', row).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('depot_page')
                     }
@@ -173,7 +173,7 @@
                 let vm = this;
                 this.$store.dispatch('depot_get', {id: depot.id}).then(() => {
                     if (vm.depot.status == '0' && (vm.depot.dAt == undefined)&&vm.depot.outStatus!='0')
-                        this.$refs.caf.open('编辑出库信息', false);
+                        this.$refs.df.open('编辑出库信息', false);
                     else
                         this.$Message.error("数据状态不正确，无法完成该操作，请刷新数据查看最新的数据状态");
                 })
@@ -250,7 +250,14 @@
                 });
             },
             outDepot(row){
-
+                row['outStatus'] = '0';
+                row['exe'] = 'out';
+                row['outTime'] = moment().format('YYYY-MM-DD HH:mm:ss');
+                this.$store.dispatch('depot_update', row).then((res) => {
+                    if (res && res == 'success') {
+                    this.$store.dispatch('depot_page')
+                }
+            });
             },
             actCard(row){
 
@@ -262,9 +269,12 @@
                     this.$store.commit('set_depot_cardapply_list',[]);
             },
             dateTimeChange(val){
+                if(val[0]!='')
+                    this.outTime=val[0]+' - '+val[1];
+                else
+                    this.outTime='';
+            },
 
-                this.outTime=val[0]+' - '+val[1];
-            }
 
 
         },
@@ -317,7 +327,7 @@
                     },
                     {
                         title: '出库状态',
-                        key: 'outStatusTxt',
+                        key: 'outstatusTxt',
                     },
                     {
                         title: '销售员',
@@ -362,17 +372,25 @@
                             else if (param.row.status == '1' && row.dAt == undefined)
                                 btns.push(actBtn(this, h, param))
                             if (param.row.status == '0' && row.dAt == undefined && row.outStatus == '1' ) {
-                                btns.push(h('Button', {
+                                btns.push(h('Poptip', {
+                                    props: {
+                                        confirm: '',
+                                        title: '您确定要删除这条数据吗？'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        'on-ok': () => {
+                                        vm.outDepot(param.row)
+                                    }
+                                }
+                            }, [h('Button', {
                                     props: {
                                         type: 'success',
                                         size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            vm.outDepot(param.row)
-                                        }
                                     }
-                                }, '出库'))
+                                }, '出库')]))
                             }
                             if (param.row.status == '0' && row.dAt == undefined && row.outStatus == '0' && row.salesmenId!=undefined) {
                                 btns.push(h('Button', {

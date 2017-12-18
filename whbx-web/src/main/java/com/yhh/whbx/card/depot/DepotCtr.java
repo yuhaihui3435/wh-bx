@@ -12,6 +12,7 @@ import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.card.model.Depot;
+import com.yhh.whbx.card.model.Unlock;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.sale.model.Salesmen;
 
@@ -73,7 +74,7 @@ public class DepotCtr extends CoreController {
         depot.setStatus(Consts.STATUS.enable.getVal());
         depot.setOper(currUser() == null ? null : Integer.parseInt(currUser().getId()));
         depot.setOutStatus(Consts.YORN_STR.no.getVal());
-        String str=service.checkCount(depot.getBNum(),depot.getENum(),depot.getCardtypeId());
+        String str=service.checkCount(depot.getBNum(),depot.getENum(),depot.getCardapplyId());
         if(str.equals(Consts.YORN_STR.yes.getVal()))depot.save();
         else {renderFailJSON("出库数量超出范围");return;}
         renderSuccessJSON("新增操作成功。");
@@ -119,6 +120,11 @@ public class DepotCtr extends CoreController {
         map.put("salesmenList", Salesmen.dao.findAll());
         map.put("cardtypeList", Cardtype.dao.findEnableList());
         renderJson(map);
+    }
+
+    public void actRecord(){
+        Integer depotId=getParaToInt("depotId");
+        renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=?",depotId));
     }
 
 

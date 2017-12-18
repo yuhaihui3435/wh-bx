@@ -9,70 +9,67 @@
         >
             <p slot="header">
                 <Icon type="information-circled"></Icon>
-                <span>{{modalTitle}}</span>
+                <span>卡激活</span>
             </p>
             <Row>
-                <Col span="24">
+                <Col span="12">
+                <Row class="margin-top-10">
+                    <Table :context="self" border :data="actRecordList" :columns="tableColums" stripe></Table></Row>
+                <div style="margin: 10px;overflow: hidden">
+                    <div style="float: right;">
+                        <Page :total="total" :current="pageNumber" @on-change="changePage" show-total :pageSize="15"
+                              show-elevator></Page>
+                    </div>
+                </div>
+                </Col>
+                <Col span="12">
                 <Form :label-width="150" :model="depot" ref="formValidate" :rules="ruleValidate">
                     <Card>
                         <Row>
                             <Col span="12">
-                            <FormItem label="卡类型" prop="cardtypeId">
-                                <Select v-model="depot.cardtypeId" clearable v-show="isAdd" @on-change="cardtypeChange">
-                                    <Option v-for="item in cardtypeList" :value="item.id" :key="item.id">
-                                        {{item.name}}
-                                    </Option>
-                                </Select>
-                                <span v-show="!isAdd">{{depot.cardtypeTxt}}</span>
+                            <FormItem label="卡类型">
+                                <span >{{depot.cardtypeTxt}}</span>
                             </FormItem>
                             </Col>
                             <Col span="12" >
-                            <FormItem label="批次" prop="cardapplyId"  v-show="(depot.cardapplyId!=undefined&&depot.cardapplyId!='')||cardapplyList.length>0">
-                                <Select v-model="depot.cardapplyId" @on-change="batchChange" clearable v-show="isAdd" >
-                                    <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">
-                                        {{item.batch}}
-                                    </Option>
-                                </Select>
-                                <span v-show="!isAdd">{{depot.batch}}</span>
+                            <FormItem label="批次">
+                                <span >{{depot.batch}}</span>
                             </FormItem>
                             </Col>
                         </Row>
                         <Row>
                             <Col span="12">
-                            <FormItem label="出库编号" prop="code">
-                                <Input v-model="depot.code"></Input>
+                            <FormItem label="出库编号" >
+                                <span>{{depot.code}}</span>
                             </FormItem>
                             </Col>
                             <Col span="12">
-                            <FormItem label="销售员" prop="salesmenId">
-                                <Select v-model="depot.salesmenId" placeholder="业务员" clearable style="width:100px" align="left">
-                                    <Option v-for="item in salesmenList" :value="item.id" :key="item.id">{{ item.name}}
-                                    </Option>
-                                </Select>
+                            <FormItem label="销售员" >
+                                <span>{{depot.salesmenTxt}}</span>
                             </FormItem>
                             </Col>
                         </Row>
-                        <Row v-show="recommendNum.bNum!=undefined">
+                        <Row>
                             <Col span="12">
-                            <FormItem label="可用的最小起始编号" >
-                                <span>{{recommendNum.bNum}}</span>
+                            <FormItem label="起始号" >
+                                <span>{{depot.bNum}}</span>
                             </FormItem>
                             </Col>
                             <Col span="12">
-                            <FormItem label="可出库的卡数量" >
-                                <span>{{recommendNum.eNum}}</span>
+                            <FormItem label="结束号" >
+                                <span>{{depot.eNum}}</span>
                             </FormItem>
                             </Col>
                         </Row>
                         <Row>
                             <Col span="12">
                             <FormItem label="起始号" prop="bNum">
-                                <Input v-model="depot.bNum"></Input>
+                                <Input v-model="bNum"></Input>
                             </FormItem>
                             </Col>
                             <Col span="12">
                             <FormItem label="结束号" prop="eNum">
-                                <Input v-model="depot.eNum"></Input>
+                                <Input v-model="eNum"></Input>
                             </FormItem>
                             </Col>
                         </Row>
@@ -95,9 +92,10 @@
         computed: {
             ...mapState({
                 'depot': state => state.depot.depot,
-                'cardtypeList': state => state.depot.cardtypeList,
-                'salesmenList': state => state.depot.salesmenList,
-                'recommendNum': state => state.depot.recommendNum,
+                'totalPage': state => state.depot.totalPage,
+                'total': state => state.depot.totalRow,
+                'pageNumber': state => state.depot.pageNumber,
+                'actRecordList': state => state.depot.actRecordList,
             })
         },
         methods: {
@@ -108,31 +106,18 @@
                     this.modalLoading = false;
                 }
             },
-            open(title, isAdd){
-                this.modalTitle = title;
-                this.isAdd = isAdd;
+            open(){
                 this.depotModal = true;
                 this.modalLoading = false;
-                if (isAdd) {
-                    this.$store.commit('set_depot',{bNum:'',eNum:''})
-                } else {
-                }
             },
             save(){
                 let vm = this;
                 this.modalLoading = true;
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
-                        let action='save';
                         let param= {};
-
-                        if (!vm.isAdd){
-                            action='update'
-                            param['exe']='update'
-
-                        }
                         param=Object.assign(param,this.depot)
-                        this.$store.dispatch('depot_'+action, param).then((res) => {
+                        this.$store.dispatch('depot_', param).then((res) => {
                             if (res && res == 'success') {
                                 vm.depotModal = false;
                                 this.$store.dispatch('depot_page')
@@ -141,25 +126,18 @@
                             }
                         })
 
-
                     } else {
                         this.modalLoading = false;
                     }
                 })
             },
-            cardtypeChange(val){
-                this.depot.cardapplyId='';
-                if(val!='')
-                    this.$store.dispatch('depot_cardapply_list1',{ctId:val}).then((list)=>{
-                        this.cardapplyList=list;
-                    });
-                else
-                    this.cardapplyList=[];
+            changePage(pn){
+                let param = {
+                    depotId: this.depot.id,
+                    pn: pn
+                }
+                this.$store.dispatch('depot_actRecord', param)
             },
-            batchChange(val){
-                if(val!='')
-                this.$store.dispatch('depot_recommendNum',{applyId:val})
-            }
         },
         mounted () {
             vm=this;
@@ -167,23 +145,19 @@
         data () {
             return {
                 depotModal: false,
-                isAdd: true,
-                modalTitle: '新增卡出库',
                 modalLoading: false,
-                cardapplyList:[],
+                bNum:'',
+                eNum:'',
+                tableColums: [
+                    {
+                        title: '起始号',
+                        key: 'cardtypeTxt',
+                    },
+                    {
+                        title: '终止号',
+                        key: 'batch',
+                    },],
                 ruleValidate: {
-                    cardtypeId: [
-                        {type: 'number', required: true, message: '请选择卡类型', trigger: 'change'},
-                    ],
-                    cardapplyId: [
-                        {type: 'number', required: true, message: '请选择批次', trigger: 'change'},
-                    ],
-                    code: [
-                        {required: true, message: '出库编号不能为空', trigger: 'blur'},
-                    ],
-                    salesmenId: [
-                        {type: 'number', required: true, message: '请选择销售员', trigger: 'change'},
-                    ],
                     bNum: [
                         {required: true,type: 'number', message: '数量不能为空',min:1, trigger: 'blur',transform: value => +value},
                         {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},

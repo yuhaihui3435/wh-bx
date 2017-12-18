@@ -66,7 +66,12 @@ public class Cards extends BaseCards<Cards> {
 	}
 
 	public Long findLastCardCodeByCardapplyId(Integer cardapplyId){
-		Cards.dao.findFirst("select max(code) from "+getTableName()+" where applyId=? ");
-		return 0L;
+		Record record=Db.findFirst("select min(seq) as seq from "+getTableName()+" where applyId=? and depotId is null ",cardapplyId);
+		return record.getLong("seq")==null?0L:record.getLong("seq");
+	}
+
+	public Long findEnableCardCount(Integer cardapplyId){
+		Record record=Db.findFirst("select count(id) as num from "+getTableName()+" where applyId=? and depotId is null",cardapplyId);
+		return record.getLong("num")==null?0L:record.getLong("num");
 	}
 }

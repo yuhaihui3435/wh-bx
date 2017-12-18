@@ -12,6 +12,8 @@ const depot = {
         salesmenList: [],
         cardtypeList: [],
         cardapplyList:[],
+        recommendNum:{},
+        actRecordList:[]
     },
     mutations: {
         set_depot_page(state, page){
@@ -33,7 +35,19 @@ const depot = {
         },
         set_depot_cardapply_list(state,list){
             state.cardapplyList=list
+        },
+        set_depot_recommendNum(state,obj){
+            Object.assign(state.recommendNum,obj)
+            Object.assign(state.depot,{bNum:obj.bNum});
+        },
+        set_depot_actRecordList(state,list){
+            state.actRecordList=Object.assign({},list);
+            state.totalPage = page.totalPage
+            state.pageNumber = page.pageNumber
+            state.totalRow = page.totalRow
         }
+
+
     },
     actions: {
         depot_page: function ({commit, state}, param) {
@@ -107,6 +121,23 @@ const depot = {
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c02/dataReady').then((res) => {
                     commit('set_depot_dataReady', res)
+                });
+            });
+        },
+        depot_actRecord: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c02/actRecord').then((res) => {
+                    commit('set_depot_actRecordList', res)
+                });
+            });
+        },
+
+        depot_recommendNum: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c01/recommendNum',param).then((res) => {
+                    commit('set_depot_recommendNum', res)
                 });
             });
         },

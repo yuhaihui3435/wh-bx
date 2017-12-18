@@ -26,11 +26,14 @@ public class Depot extends BaseDepot<Depot> {
 
 
 	public String getCardtypeTxt(){
-		return Cardtype.dao.findById(getCardtypeId()).getName();
+
+		Cardtype cardtype=Cardtype.dao.findById(getCardtypeId());
+		return cardtype!=null?cardtype.getName():"";
 	}
 
 	public String getBatch(){
-		return Cardapply.dao.findById(getCardapplyId()).getBatch();
+		Cardapply cardapply=Cardapply.dao.findById(getCardapplyId());
+		return cardapply==null?"":cardapply.getBatch();
 	}
 
 	public String getSalesmenTxt(){

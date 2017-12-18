@@ -13,5 +13,11 @@
     ORDER BY cAt DESC
 #end
 
+#sql("checkNumWithoutId")
+  select * from b_depot where dAt is null and cardapplyId=#para(cardapplyId) and id<>#para(id)
+    and ((#para(bNum) between bNum and eNum ) or (#para(eNum) between bNum and eNum) or (#para(bNum)<=bNum and #para(eNum)>=eNum))
+    ORDER BY cAt DESC
+#end
+
 
 

@@ -229,9 +229,12 @@ public class CardapplyCtr extends CoreController {
 
     public void recommendNum(){
         Integer id=getParaToInt("applyId");
-        Cardapply cardapply=Cardapply.dao.findById(id);
-
-
+        Long lastSeq=Cards.dao.findLastCardCodeByCardapplyId(id);
+        Long enableCount=Cards.dao.findEnableCardCount(id);
+        Map<String,Long> map=new HashMap<>();
+        map.put("bNum",lastSeq);
+        map.put("eNum",enableCount);
+        renderJson(map);
     }
 
 }

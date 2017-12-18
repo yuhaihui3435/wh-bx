@@ -3,9 +3,7 @@ package com.yhh.whbx.card.depot;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.SqlPara;
-import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.card.model.Depot;
 
@@ -48,8 +46,19 @@ public class DepotService {
         return list.size()>0? Consts.YORN_STR.no.getVal(): Consts.YORN_STR.yes.getVal();
     }
 
+    public String checkNumWithoutId(int bNum,int eNum,Integer cardapplyId,Long id){
+        Kv kv=Kv.by("bNum",bNum);
+        kv.put("eNum",eNum);
+        kv.put("cardapplyId",cardapplyId);
+        kv.put("id",id);
+        SqlPara sqlPara = Db.getSqlPara("depot.checkNumWithoutId",  kv);
+        List<Depot> list=dao.find( sqlPara);
+
+        return list.size()>0? Consts.YORN_STR.no.getVal(): Consts.YORN_STR.yes.getVal();
+    }
+
     public String checkCount(int bNum,int eNum,Integer cardapplyId){
-        int len=eNum-bNum;
+        int len=eNum-bNum+1;
         Long remainder= Cards.dao.countByCardapplyIdAndInDepot(cardapplyId);
         return len>remainder? Consts.YORN_STR.no.getVal(): Consts.YORN_STR.yes.getVal();
     }

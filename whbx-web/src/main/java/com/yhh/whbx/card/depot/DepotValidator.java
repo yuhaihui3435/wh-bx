@@ -35,7 +35,7 @@ public class DepotValidator extends CoreValidator {
             }
             String str=DepotService.service.checkNum(depot.getBNum(),depot.getENum(),depot.getCardapplyId());
             if(str.equals(Consts.YORN_STR.no.getVal())){
-                addError(Consts.REQ_JSON_CODE.fail.name(),"出库的卡号范围重叠");
+                addError(Consts.REQ_JSON_CODE.fail.name(),"卡号范围重叠");
                 return ;
             }
 
@@ -45,9 +45,9 @@ public class DepotValidator extends CoreValidator {
                 addError(Consts.REQ_JSON_CODE.fail.name(),"编号已经存在");
                 return ;
             }
-            String str=DepotService.service.checkNum(depot.getBNum(),depot.getENum(),depot.getCardapplyId());
+            String str=DepotService.service.checkNumWithoutId(depot.getBNum(),depot.getENum(),depot.getCardapplyId(),depot.getId());
             if(str.equals(Consts.YORN_STR.no.getVal())){
-                addError(Consts.REQ_JSON_CODE.fail.name(),"出库的卡号范围重叠");
+                addError(Consts.REQ_JSON_CODE.fail.name(),"卡号范围重叠");
                 return ;
             }
         }
