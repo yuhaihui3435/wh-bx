@@ -13,7 +13,7 @@ const depot = {
         cardtypeList: [],
         cardapplyList:[],
         recommendNum:{},
-        actRecordList:[]
+        unlockRecordList:[]
     },
     mutations: {
         set_depot_page(state, page){
@@ -37,11 +37,11 @@ const depot = {
             state.cardapplyList=list
         },
         set_depot_recommendNum(state,obj){
-            Object.assign(state.recommendNum,obj)
+            state.recommendNum= Object.assign({},obj)
             Object.assign(state.depot,{bNum:obj.bNum});
         },
-        set_depot_actRecordList(state,list){
-            state.actRecordList=Object.assign({},list);
+        set_depot_unlockRecordList(state,page){
+            state.unlockRecordList=page.list;
             state.totalPage = page.totalPage
             state.pageNumber = page.pageNumber
             state.totalRow = page.totalRow
@@ -124,11 +124,12 @@ const depot = {
                 });
             });
         },
-        depot_actRecord: function ({commit, state}, param) {
+        depot_unlockRecord_list: function ({commit, state}, param) {
             let vm = this._vm;
             return new Promise(function (resolve, reject) {
-                vm.$axios.post('/c02/actRecord').then((res) => {
-                    commit('set_depot_actRecordList', res)
+                vm.$axios.post('/c02/unlockRecord',param).then((res) => {
+                    commit('set_depot_unlockRecordList', res)
+                    resolve()
                 });
             });
         },
@@ -138,6 +139,15 @@ const depot = {
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c01/recommendNum',param).then((res) => {
                     commit('set_depot_recommendNum', res)
+                });
+            });
+        },
+        depot_unlockRecord_save: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c02/saveUnlockRecord',param).then((res) => {
+                    commit('set_depot_unlockRecordList', res)
+                    resolve()
                 });
             });
         },

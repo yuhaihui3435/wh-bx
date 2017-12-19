@@ -9,22 +9,33 @@
         >
             <p slot="header">
                 <Icon type="information-circled"></Icon>
-                <span>卡激活</span>
+                <span>卡解锁</span>
             </p>
             <Row>
-                <Col span="12">
+                <Col span="12" >
+                <Card>
+                    <p slot="title">
+                        <Icon type="ios-list"></Icon>
+                        已经解锁号段
+                    </p>
                 <Row class="margin-top-10">
-                    <Table :context="self" border :data="actRecordList" :columns="tableColums" stripe></Table></Row>
+                    <Table :context="self" border :data="unlockRecordList" :columns="tableColums" stripe></Table></Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
                         <Page :total="total" :current="pageNumber" @on-change="changePage" show-total :pageSize="15"
                               show-elevator></Page>
                     </div>
                 </div>
+                </Card>
                 </Col>
-                <Col span="12">
+
+                <Col span="12" class="padding-left-10">
                 <Form :label-width="150" :model="depot" ref="formValidate" :rules="ruleValidate">
                     <Card>
+                        <p slot="title">
+                            <Icon type="paper-airplane"></Icon>
+                            号段解锁
+                        </p>
                         <Row>
                             <Col span="12">
                             <FormItem label="卡类型">
@@ -63,13 +74,13 @@
                         </Row>
                         <Row>
                             <Col span="12">
-                            <FormItem label="起始号" prop="bNum">
-                                <Input v-model="bNum"></Input>
+                            <FormItem label="起始号" prop="jsBNum">
+                                <Input v-model="depot.jsBNum"></Input>
                             </FormItem>
                             </Col>
                             <Col span="12">
-                            <FormItem label="结束号" prop="eNum">
-                                <Input v-model="eNum"></Input>
+                            <FormItem label="结束号" prop="jsENum">
+                                <Input v-model="depot.jsENum"></Input>
                             </FormItem>
                             </Col>
                         </Row>
@@ -95,7 +106,7 @@
                 'totalPage': state => state.depot.totalPage,
                 'total': state => state.depot.totalRow,
                 'pageNumber': state => state.depot.pageNumber,
-                'actRecordList': state => state.depot.actRecordList,
+                'unlockRecordList': state => state.depot.unlockRecordList,
             })
         },
         methods: {
@@ -107,6 +118,7 @@
                 }
             },
             open(){
+                this.$refs['formValidate'].resetFields()
                 this.depotModal = true;
                 this.modalLoading = false;
             },
@@ -115,12 +127,14 @@
                 this.modalLoading = true;
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
-                        let param= {};
-                        param=Object.assign(param,this.depot)
-                        this.$store.dispatch('depot_', param).then((res) => {
+                        let param= {bNum:vm.depot.jsBNum,eNum:vm.depot.jsENum};
+                        param=Object.assign(param,{depotId:vm.depot.id})
+                        this.$store.dispatch('depot_unlockRecord_save', param).then((res) => {
                             if (res && res == 'success') {
                                 vm.depotModal = false;
-                                this.$store.dispatch('depot_page')
+                                this.$store.dispatch('depot_unlockRecord_list').then(()=>{
+                                    this.$store.dispatch('depot_list')
+                                })
                             } else {
                                 this.modalLoading = false;
                             }
@@ -136,7 +150,7 @@
                     depotId: this.depot.id,
                     pn: pn
                 }
-                this.$store.dispatch('depot_actRecord', param)
+                this.$store.dispatch('depot_unlockRecord_list', param)
             },
         },
         mounted () {
@@ -146,44 +160,57 @@
             return {
                 depotModal: false,
                 modalLoading: false,
-                bNum:'',
-                eNum:'',
+                self:this,
                 tableColums: [
                     {
                         title: '起始号',
-                        key: 'cardtypeTxt',
+                        key: 'bNum',
                     },
                     {
                         title: '终止号',
-                        key: 'batch',
+                        key: 'eNum',
                     },],
                 ruleValidate: {
-                    bNum: [
-                        {required: true,type: 'number', message: '数量不能为空',min:1, trigger: 'blur',transform: value => +value},
-                        {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},
+                    jsBNum: [
+                        {required: true, message: '起始号不能为空', trigger: 'blur'},
+                        {type: 'number', message: '起始号必须为数字',min:1, trigger: 'blur', transform: value => +value},
                         {validator(rule, value, callback, source, options) {
-                            console.info(vm)
+
                             var errors = [];
                             value=value==undefined?-1:parseInt(value);
-                            let eNum=vm.depot.eNum;
-                            eNum=eNum==undefined?-1:parseInt(eNum);
-                            if(value>=eNum&&eNum>-1){
+                            let jsENum=vm.depot.jsENum;
+                            jsENum=jsENum==undefined?-1:parseInt(jsENum);
+                            if(value>=jsENum&&jsENum>-1){
                                 errors.push("起始号不能大于结束号");
                             }
+
+
+                            let bNum=vm.depot.bNum;
+                            if(value<bNum){
+                                errors.push("解锁起始号不能小于起始号")
+                            }
+
                             callback(errors);
                         }}
                     ],
-                    eNum: [
-                        {required: true,type: 'number', message: '数量不能为空',min:1, trigger: 'blur',transform: value => +value},
-                        {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},
+                    jsENum: [
+                        {required: true, message: '结束号不能为空', trigger: 'blur'},
+                        {type: 'number', message: '结束号必须为数字',min:1, trigger: 'blur', transform: value => +value},
                         {validator(rule, value, callback, source, options) {
                             var errors = [];
                             value=value==undefined?-1:parseInt(value);
-                            let bNum=vm.depot.bNum;
-                            bNum=bNum==undefined?-1:parseInt(bNum);
-                            if(value<=bNum&&bNum>-1){
+                            let jsBNum=vm.depot.jsBNum;
+                            jsBNum=jsBNum==undefined?-1:parseInt(jsBNum);
+                            if(value<=jsBNum&&jsBNum>-1){
                                 errors.push("结束号不能小于起始号");
                             }
+
+                            let eNum=vm.depot.eNum;
+                            if(value>eNum){
+                                errors.push("解锁结束号不能大于结束号")
+                            }
+
+
                             callback(errors);
                         }}
                     ],

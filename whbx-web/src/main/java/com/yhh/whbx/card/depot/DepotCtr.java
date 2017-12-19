@@ -122,9 +122,25 @@ public class DepotCtr extends CoreController {
         renderJson(map);
     }
 
-    public void actRecord(){
+    public void unlockRecord(){
         Integer depotId=getParaToInt("depotId");
-        renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=?",depotId));
+        renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=? order by cAt",depotId));
+    }
+    @Before({UnlockValidator.class,Tx.class})
+    public void saveUnlockRecord(){
+        Unlock unlock=getModel(Unlock.class,"",true);
+        unlock.setCAt(new Date());
+        unlock.setOper(currUser() == null ? null : Integer.parseInt(currUser().getId()));
+        unlock.save();
+
+        int b=unlock.getBNum();
+        int e=unlock.getENum();
+
+        for(int i=b;b<=e;b++){
+            Cards.dao.updateByDepotIdAndSeq(unlock.getDepotId().intValue(),b,unlock.getId().intValue());
+        }
+
+        renderSuccessJSON("卡解锁成功");
     }
 
 

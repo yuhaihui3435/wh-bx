@@ -155,6 +155,7 @@ public class CardapplyCtr extends CoreController {
             card.setAct(Consts.YORN_STR.no.getVal());
             card.setApplyId(cardapply.getId().intValue());
             card.setCode(cardCode);
+            card.setIsLocked(Consts.YORN_STR.no.getVal());
             card.setPwd(SecureUtil.aes(key).encryptHex(pwd));
             card.setSeq(seq.intValue());
             card.save();

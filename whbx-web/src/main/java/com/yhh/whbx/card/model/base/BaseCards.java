@@ -1,6 +1,5 @@
 package com.yhh.whbx.card.model.base;
 
-import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.IBean;
 import com.yhh.whbx.core.CoreModel;
 
@@ -66,12 +65,12 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return getInt("applyId");
 	}
 
-	public void setLock(String lock) {
-		set("lock", lock);
+	public void setIsLocked(java.lang.String isLocked) {
+		set("isLocked", isLocked);
 	}
 
-	public String getLock() {
-		return getStr("lock");
+	public java.lang.String getIsLocked() {
+		return getStr("isLocked");
 	}
 
 	public void setUnlockId(Integer unlockId) {

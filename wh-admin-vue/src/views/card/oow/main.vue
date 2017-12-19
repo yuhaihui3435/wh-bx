@@ -69,7 +69,7 @@
             </Col>
         </Row>
         <depotForm ref="df"></depotForm>
-        <!--<depotView ref="cav"></depotView>-->
+        <unlockForm ref="uf"></unlockForm>
         <!--<depotCheckForm ref="cacf"></depotCheckForm>-->
     </div>
 
@@ -78,6 +78,7 @@
     import {mapState} from 'vuex'
     import depotForm from './form.vue'
     import depotView from './view.vue'
+    import unlockForm from './unlockForm.vue'
     import consts from '../../../libs/consts'
 
     const moment = require('moment');
@@ -171,6 +172,7 @@
             },
             edit(depot){
                 let vm = this;
+                console.info(depot)
                 this.$store.dispatch('depot_get', {id: depot.id}).then(() => {
                     if (vm.depot.status == '0' && (vm.depot.dAt == undefined)&&vm.depot.outStatus!='0')
                         this.$refs.df.open('编辑出库信息', false);
@@ -181,6 +183,7 @@
             },
             add(){
                 this.$store.commit('set_depot', {})
+                this.$store.commit('set_depot_recommendNum',{})
                 this.$refs.df.open('新增卡出库', true)
             },
             view(id){
@@ -259,8 +262,12 @@
                 }
             });
             },
-            actCard(row){
-
+            unlockCard(row){
+                let vm=this;
+                this.$store.commit('set_depot',row);
+                this.$store.dispatch('depot_unlockRecord_list',{depotId:row.id}).then(()=>{
+                    vm.$refs.uf.open();
+                });
             },
             cardtypeChange(val){
                 if(val!='')
@@ -284,7 +291,7 @@
         },
 
         components: {
-            depotForm, depotView
+            depotForm, depotView,unlockForm
         },
 
         data () {
@@ -361,6 +368,7 @@
                             let vm=this;
                             let btns = new Array;
                             let row = param.row;
+
 //                            btns.push(consts.viewBtn(this, h, param));
                             if (row.dAt == undefined && row.outStatus == '1') {
                                 btns.push(consts.editBtn(this, h, param))
@@ -403,10 +411,10 @@
                                     },
                                     on: {
                                         click: () => {
-                                            vm.actCard(param.row)
+                                            vm.unlockCard(param.row)
                                         }
                                     }
-                                }, '卡激活'))
+                                }, '解锁'))
                             }
                             return h('div', btns)
                         }

@@ -109,6 +109,7 @@
                 }
             },
             open(title, isAdd){
+                //this.$refs['formValidate'].resetFields()
                 this.modalTitle = title;
                 this.isAdd = isAdd;
                 this.depotModal = true;
@@ -116,6 +117,8 @@
                 if (isAdd) {
                     this.$store.commit('set_depot',{bNum:'',eNum:''})
                 } else {
+
+
                 }
             },
             save(){
@@ -148,6 +151,7 @@
                 })
             },
             cardtypeChange(val){
+                if(!(this.isAdd))return;
                 this.depot.cardapplyId='';
                 if(val!='')
                     this.$store.dispatch('depot_cardapply_list1',{ctId:val}).then((list)=>{
@@ -163,6 +167,7 @@
         },
         mounted () {
             vm=this;
+
         },
         data () {
             return {
@@ -185,11 +190,23 @@
                         {type: 'number', required: true, message: '请选择销售员', trigger: 'change'},
                     ],
                     bNum: [
-                        {required: true,type: 'number', message: '数量不能为空',min:1, trigger: 'blur',transform: value => +value},
-                        {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},
+//                        {required: true, message: '起始号不能为空', trigger: 'blur'},
+//                        {type: 'number', message: '起始号必须为数字',min:1, trigger: 'blur', transform: value => +value},
                         {validator(rule, value, callback, source, options) {
-                            console.info(vm)
                             var errors = [];
+                            if(value==''){
+                                errors.push("起始号不能为空");
+                                callback(errors)
+                                return ;
+                            }
+
+                            if (!(/(^[1-9]\d*$)/.test(value))) {
+                                errors.push("起始号必须为正整数")
+                                callback(errors)
+                                return ;
+                            }
+
+
                             value=value==undefined?-1:parseInt(value);
                             let eNum=vm.depot.eNum;
                             eNum=eNum==undefined?-1:parseInt(eNum);
@@ -200,10 +217,21 @@
                         }}
                     ],
                     eNum: [
-                        {required: true,type: 'number', message: '数量不能为空',min:1, trigger: 'blur',transform: value => +value},
-                        {type: 'number', message: '数量必须为数字', trigger: 'blur', transform: value => +value},
+//                        {required: true, message: '结束号不能为空', trigger: 'blur'},
+//                        {type: 'number', message: '结束号必须为数字', trigger: 'blur',min:1, transform: value => +value},
                         {validator(rule, value, callback, source, options) {
                             var errors = [];
+                            if(value==''){
+                                errors.push("结束号不能为空");
+                                callback(errors)
+                                return ;
+                            }
+
+                            if (!(/(^[1-9]\d*$)/.test(value))) {
+                                errors.push("结束号必须为正整数")
+                                callback(errors)
+                                return ;
+                            }
                             value=value==undefined?-1:parseInt(value);
                             let bNum=vm.depot.bNum;
                             bNum=bNum==undefined?-1:parseInt(bNum);
@@ -215,7 +243,12 @@
                     ],
                 },
             }
-        }, watch: {}, components: {}
+        }, watch: {
+                depot(curVal,oldVal){
+                    console.info(curVal,oldVal)
+                }
+
+        }, components: {}
     }
 </script>
 <style lang="less">

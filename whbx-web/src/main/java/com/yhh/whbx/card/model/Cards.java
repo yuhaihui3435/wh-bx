@@ -74,4 +74,8 @@ public class Cards extends BaseCards<Cards> {
 		Record record=Db.findFirst("select count(id) as num from "+getTableName()+" where applyId=? and depotId is null",cardapplyId);
 		return record.getLong("num")==null?0L:record.getLong("num");
 	}
+
+	public void updateByDepotIdAndSeq(Integer depotId,int seq,Integer unlockId){
+		Db.update("update "+getTableName()+" set unlockId=?,isLocked='0' where depotId=? and seq=?",unlockId,depotId,seq);
+	}
 }
