@@ -11,7 +11,11 @@
                 <Icon type="information-circled"></Icon>
                 <span>卡解锁</span>
             </p>
+
             <Row>
+                <Col span="24" v-show="depot.allLockStatus=='0'">
+                    <Alert type="success" show-icon>出库申请中的卡片已经全部解锁</Alert>
+                </Col>
                 <Col span="12" >
                 <Card>
                     <p slot="title">
@@ -72,7 +76,7 @@
                             </FormItem>
                             </Col>
                         </Row>
-                        <Row>
+                        <Row v-show="depot.allLockStatus=='1'">
                             <Col span="12">
                             <FormItem label="起始号" prop="jsBNum">
                                 <Input v-model="depot.jsBNum"></Input>
@@ -89,7 +93,7 @@
                 </Col>
             </Row>
             <div slot="footer">
-                <Button type="success" :loading="modalLoading" @click="save">保存</Button>
+                <Button type="success" :loading="modalLoading" @click="save" v-show="depot.allLockStatus=='1'">保存</Button>
                 <Button type="error" @click="depotModal=false">关闭</Button>
             </div>
         </Modal>
@@ -121,6 +125,12 @@
                 this.$refs['formValidate'].resetFields()
                 this.depotModal = true;
                 this.modalLoading = false;
+//                if(this.depot.allLockStatus=='0'){
+//                    this.$Notice.info({
+//                        title: '通知',
+//                        desc: '出库申请中的卡片已经全部被解锁'
+//                    });
+//                }
             },
             save(){
                 let vm = this;
@@ -169,6 +179,10 @@
                     {
                         title: '终止号',
                         key: 'eNum',
+                    },
+                    {
+                        title: '解锁时间',
+                        key: 'cAt',
                     },],
                 ruleValidate: {
                     jsBNum: [

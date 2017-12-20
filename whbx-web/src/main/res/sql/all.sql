@@ -10,3 +10,6 @@
 #namespace("depot")
   #include("depot.sql")
 #end
+#namespace("cards")
+  #include("cards.sql")
+#end

@@ -89,13 +89,18 @@
             },
             edit(salesmen){
                 this.$store.dispatch('salesmen_get', {id: salesmen.id}).then(() => {
-                    this.$refs.sf.open('编辑销售人员', false);
+                    this.$store.dispatch('salesmen_list').then(()=>{
+                        this.$refs.sf.open('编辑销售人员', false);
+                    });
                 })
 
             },
             add(){
-                this.$store.commit('set_salesmen',{})
-                this.$refs.sf.open('新增销售人员', true)
+                this.$store.dispatch('salesmen_list').then(()=>{
+                    this.$store.commit('set_salesmen',{})
+                    this.$refs.sf.open('新增销售人员', true)
+                });
+
             },
             search(){
                 let param={type:this.st,level:this.sl,status:this.status,search:this.searchKey}
@@ -177,7 +182,7 @@
                     },
                     {
                         title: '上级',
-                        key: 'parentTxt',
+                        key: 'parentName',
                     },
                     {
                         title: '职级',

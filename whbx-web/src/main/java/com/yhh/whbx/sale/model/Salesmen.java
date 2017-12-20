@@ -2,11 +2,11 @@ package com.yhh.whbx.sale.model;
 
 
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.sale.model.base.BaseSalesmen;
-import net.sf.ehcache.store.CacheKeySet;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class Salesmen extends BaseSalesmen<Salesmen> {
 			Salesmen salesmen=Salesmen.dao.findById(getPId());
 			pname=salesmen.getName();
 		}
-		return pname;
+		return StrUtil.isNotBlank(pname)?pname:"无";
 	}
 
 	@Override

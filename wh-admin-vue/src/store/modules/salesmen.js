@@ -22,6 +22,7 @@ const  salesmen={
         },
         set_salesmen_list(state,list){
             state.salesmenList=list
+            state.allSalesmenList=list;
         },
         set_salesmen(state,obj){
             if(obj !=undefined)
@@ -68,6 +69,7 @@ const  salesmen={
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/sl00/list', param).then((res) => {
                     commit('set_salesmen_list',res)
+                    resolve();
                 });
             });
         },

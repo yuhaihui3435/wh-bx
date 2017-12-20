@@ -51,7 +51,7 @@
 
                         <FormItem label="上级" prop="pId">
                             <Select v-model="salesmen.pId" clearable style="width:100px">
-                                <Option v-for="item in allSalesmenList" :value="item.id+''" :key="item.id">{{ item.name }}
+                                <Option v-for="item in allSalesmenList" v-if="isAdd || (!isAdd && item.id!=salesmen.id)" :value="item.id+''" :key="item.id">{{ item.name }}
                                 </Option>
                             </Select>
                         </FormItem>

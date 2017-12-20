@@ -52,5 +52,11 @@ public class Depot extends BaseDepot<Depot> {
 		return getOper()!=null? User.dao.findById(getOper()).getNickname():"无";
 	}
 
+	public String getAllLockStatus(){
+		int unlockCount=Cards.dao.countUnlockByDepotId(getId().intValue());
+		int count=getENum()-getBNum()+1;
+		return unlockCount==count? Consts.YORN_STR.yes.getVal(): Consts.YORN_STR.no.getVal();
+	}
+
 
 }

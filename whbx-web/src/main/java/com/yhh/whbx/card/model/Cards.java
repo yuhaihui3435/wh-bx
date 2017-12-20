@@ -78,4 +78,8 @@ public class Cards extends BaseCards<Cards> {
 	public void updateByDepotIdAndSeq(Integer depotId,int seq,Integer unlockId){
 		Db.update("update "+getTableName()+" set unlockId=?,isLocked='0' where depotId=? and seq=?",unlockId,depotId,seq);
 	}
+
+	public int countUnlockByDepotId(Integer depotId){
+		return dao.find("select * from "+getTableName()+" where depotId=? and unlockId is not null and isLocked='0'",depotId).size();
+	}
 }

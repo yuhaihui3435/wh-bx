@@ -124,7 +124,7 @@ public class DepotCtr extends CoreController {
 
     public void unlockRecord(){
         Integer depotId=getParaToInt("depotId");
-        renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=? order by cAt",depotId));
+        renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=? order by cAt desc",depotId));
     }
     @Before({UnlockValidator.class,Tx.class})
     public void saveUnlockRecord(){

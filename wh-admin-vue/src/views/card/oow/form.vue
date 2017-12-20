@@ -18,7 +18,7 @@
                         <Row>
                             <Col span="12">
                             <FormItem label="卡类型" prop="cardtypeId">
-                                <Select v-model="depot.cardtypeId" clearable v-show="isAdd" @on-change="cardtypeChange">
+                                <Select v-model="depot.cardtypeId" clearable v-if="isAdd" @on-change="cardtypeChange">
                                     <Option v-for="item in cardtypeList" :value="item.id" :key="item.id">
                                         {{item.name}}
                                     </Option>
@@ -28,7 +28,7 @@
                             </Col>
                             <Col span="12" >
                             <FormItem label="批次" prop="cardapplyId"  v-show="(depot.cardapplyId!=undefined&&depot.cardapplyId!='')||cardapplyList.length>0">
-                                <Select v-model="depot.cardapplyId" @on-change="batchChange" clearable v-show="isAdd" >
+                                <Select v-model="depot.cardapplyId" @on-change="batchChange" clearable v-if="isAdd" >
                                     <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">
                                         {{item.batch}}
                                     </Option>
@@ -245,7 +245,7 @@
             }
         }, watch: {
                 depot(curVal,oldVal){
-                    console.info(curVal,oldVal)
+                    //console.info(curVal,oldVal)
                 }
 
         }, components: {}

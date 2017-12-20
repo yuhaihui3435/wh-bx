@@ -20,7 +20,7 @@ import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
 import com.yhh.whbx.card.apply.CardapplyCtr;
 import com.yhh.whbx.card.depot.DepotCtr;
-import com.yhh.whbx.card.model.Cardapply;
+import com.yhh.whbx.card.query.CardsCtr;
 import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.kits.DateKit;
@@ -81,6 +81,7 @@ public class CoreConfig extends JFinalConfig{
                 add("/c00", CardTypeCtr.class);
                 add("/c01", CardapplyCtr.class);
                 add("/c02", DepotCtr.class);
+                add("/c03", CardsCtr.class);
             }
         });
     }
