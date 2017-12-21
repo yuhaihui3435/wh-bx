@@ -256,7 +256,10 @@
         },
         methods: {
             add(){
-                this.$refs.ap.open('新增文章', true);
+                this.$store.dispatch('art_tax_jsonArray').then(()=>{
+                    this.$refs.ap.open('新增文章', true);
+                })
+
             },
             refresh(){
                 this.$store.dispatch('art_list', {search: this.searchKey});

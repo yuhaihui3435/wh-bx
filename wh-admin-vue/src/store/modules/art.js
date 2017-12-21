@@ -79,6 +79,7 @@ const art = {
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/ad05/treeJsonArray', {'module': 'art'}).then((res) => {
                     commit('set_art_taxJsonarray', res)
+                    resolve()
                 });
             });
         },

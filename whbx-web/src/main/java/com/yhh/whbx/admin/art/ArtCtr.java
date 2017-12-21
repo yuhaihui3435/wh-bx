@@ -19,9 +19,7 @@ import com.yhh.whbx.kits._StrKit;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 简介
@@ -152,10 +150,10 @@ public class ArtCtr extends CoreController {
             }
             all.get(0).getChildren().addAll(own);
         }
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put("art", Content.dao.findById(id));
-        jsonObject.put("artTaxList",all);
-        renderJson(jsonObject);
+        Map<String,Object> map=new HashMap<>();
+        map.put("art", Content.dao.findById(id));
+        map.put("artTaxList",all);
+        renderJson(map);
     }
 
 
