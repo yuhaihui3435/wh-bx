@@ -28,7 +28,9 @@ const cards = {
         set_cards_dataReady(state, obj){
             state.cardtypeList = obj.cardtypeList;
             state.salesmenList = obj.salesmenList;
-            state.cardapplyList = obj.cardapplyList;
+        },
+        set_cards_cardapply_list(state,list){
+            state.cardapplyList=list
         },
 
     },
@@ -52,6 +54,14 @@ const cards = {
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c03/dataReady').then((res) => {
                     commit('set_cards_dataReady', res)
+                });
+            });
+        },
+        cards_cardapply_list:function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c01/listByCardtypeId', param).then((res) => {
+                    commit('set_cards_cardapply_list', res)
                 });
             });
         },

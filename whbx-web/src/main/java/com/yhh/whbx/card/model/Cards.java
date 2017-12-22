@@ -82,4 +82,44 @@ public class Cards extends BaseCards<Cards> {
 	public int countUnlockByDepotId(Integer depotId){
 		return dao.find("select * from "+getTableName()+" where depotId=? and unlockId is not null and isLocked='0'",depotId).size();
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public String getCardtypeName() {
+		return this.get("cardtypeName","");
+	}
+
+	public String getBatch(){
+		return this.get("batch","");
+	}
+
+	public String getSalesmenName(){
+		return this.get("salesmenName","");
+	}
+
+	public String getFaceVal(){
+		return this.getBigDecimal("faceVal")==null?"":this.getBigDecimal("faceVal").toPlainString();
+	}
+
+	public String getOutStatus(){
+		return this.get("outStatus","");
+	}
+
 }

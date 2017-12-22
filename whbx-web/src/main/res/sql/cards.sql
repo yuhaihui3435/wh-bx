@@ -1,7 +1,7 @@
 #sql("findPage")
-  select c.* from b_cards c LEFT JOIN b_depot d on c.depotId=d.id LEFT JOIN b_cardapply ca on c.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id where 1=1 AND
+  select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus  from b_cards c LEFT JOIN b_depot d on c.depotId=d.id LEFT JOIN b_cardapply ca on c.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id LEFT JOIN b_salesmen sm on d.salesmenId=sm.id where 1=1
     #for(x : cond)
       and #(x.key) #para(x.value)
     #end
-    ORDER BY cAt DESC
+    ORDER BY c.actAt,c.id DESC
 #end

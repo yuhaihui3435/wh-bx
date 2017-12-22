@@ -97,6 +97,49 @@
 
     const moment = require('moment');
 
+    let lockBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要锁定这张卡吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.lock(param.row)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '锁定')]);
+    }
+    let unLockBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要解锁这张卡吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.unlock(param.row)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'success',
+                size: 'small'
+            }
+        }, '解锁')]);
+    }
+
     export default {
 
         computed: {
@@ -138,11 +181,15 @@
                     this.actTime='';
             },
             cardtypeChange(val){
-
-            }
+                if(val!='')
+                    this.$store.dispatch('cards_cardapply_list',{ctId:val});
+                else
+                    this.$store.commit('set_cards_cardapply_list',[]);
+            },
         },
         mounted () {
             this.$store.dispatch('cards_page')
+            this.$store.commit('set_cards_cardapply_list',[]);
             this.$store.dispatch('cards_dataReady')
         },
         components: {
@@ -168,11 +215,12 @@
                     {
                         title: '卡号',
                         key: 'code',
+                        width: 100,
                     },
 
                     {
                         title: '卡类型',
-                        key: 'cardtypeTxt',
+                        key: 'cardtypeName',
                     },
                     {
                         title: '批次',
@@ -180,34 +228,73 @@
                     },
                     {
                         title: '销售员',
-                        key: 'salesmenTxt',
+                        key: 'salesmenName',
                     },
+
+
 
                     {
-                        title: '激活状态',
-                        key: 'actTxt',
+                        title: '卡面值',
+                        key: 'faceVal',
                     },
-
                     {
                         title: '激活时间',
                         key: 'actTime',
-                    },
-                    {
-                        title: '解锁状态',
-                        key: 'lockStatus',
                     },
                     {
                         title: '激活姓名',
                         key: 'actName',
                     },
                     {
-                        title: '卡面值',
-                        key: 'faceVal',
+                        title: '激活状态',
+                        key: 'act',
+                        width: 120,
+                        render: (h, param) => {
+                            let color = (param.row.act == '0') ? 'green' : 'red'
+                            let txt = (param.row.act == '0') ? '激活' : '未激活'
+                            return h('Tag', {
+                                props: {
+                                    type: 'dot',
+                                    color: color
+                                }
+                            }, txt)
+                        }
                     },
                     {
-                        title: '卡余额',
-                        key: 'faceBalance',
+                        title: '出库状态',
+                        key: 'outStatus',
+                        width: 120,
+                        render: (h, param) => {
+                            let color = (param.row.outStatus == '0') ? 'green' : 'red'
+                            let txt = (param.row.outStatus == '0') ? '已出库' : '未出库'
+                            return h('Tag', {
+                                props: {
+                                    type: 'dot',
+                                    color: color
+                                }
+                            }, txt)
+                        }
                     },
+                    {
+                        title: '解锁状态',
+                        key: 'isLocked',
+                        width: 120,
+                        render: (h, param) => {
+                            let color = (param.row.isLocked == '0') ? 'green' : 'red'
+                            let txt = (param.row.isLocked == '0') ? '已解锁' : '未解锁'
+                            return h('Tag', {
+                                props: {
+                                    type: 'dot',
+                                    color: color
+                                }
+                            }, txt)
+                        }
+                    },
+
+//                    {
+//                        title: '卡余额',
+//                        key: 'faceBalance',
+//                    },
                     {
                         title: '状态',
                         key: 'status',
@@ -226,13 +313,20 @@
                     {
                         title: '操作',
                         key: 'action',
-                        width: 250,
+                        width: 200,
                         align: 'center',
                         render: (h, param) => {
                             let vm=this;
                             let btns = new Array;
                             let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
+                            if(row.act=='1'&&row.isLocked=='0'){
+                                btns.push(lockBtn(this,h,param))
+                            }else  if(row.act=='1'&&(row.isLocked=='1' || row.isLocked==undefined)){
+                                btns.push(unLockBtn(this,h,param))
+                            }
+
+
                             return h('div', btns)
                         }
                     }
