@@ -120,7 +120,7 @@
 <script>
     import {mapState} from 'vuex'
     export default {
-        name:'param',
+        name:'adminParam',
         data () {
             return {
                 buttonLoading: false,
