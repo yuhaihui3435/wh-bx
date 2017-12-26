@@ -1,0 +1,19 @@
+#define layout()
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="language" content="en-us" />
+    <meta name="description" content="#(siteDescription)">
+    <title>#(siteTitle)</title>
+    #include("/WEB-INF/template/www/css.html")
+</head>
+
+<body class="#(indexCss)">
+#include("/WEB-INF/template/www/header.html")
+#@content()
+#include("/WEB-INF/template/www/footer.html")
+#include("/WEB-INF/template/www/js.html")
+</body>
+</html>
+#end

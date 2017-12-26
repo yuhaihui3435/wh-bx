@@ -121,5 +121,8 @@ public class Cards extends BaseCards<Cards> {
 	public String getOutStatus(){
 		return this.get("outStatus","");
 	}
+	public String getCardtype(){
+		return this.get("cardtype","");
+	}
 
 }

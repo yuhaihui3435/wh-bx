@@ -23,9 +23,11 @@ import com.yhh.whbx.card.depot.DepotCtr;
 import com.yhh.whbx.card.query.CardsCtr;
 import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
+import com.yhh.whbx.interceptors.WwwInterceptor;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.ResKit;
 import com.yhh.whbx.sale.salesmen.SalesmenCtr;
+import com.yhh.whbx.www.IndexCtr;
 
 /**
  * Created by yuhaihui8913 on 2017/11/14.
@@ -84,15 +86,26 @@ public class CoreConfig extends JFinalConfig{
                 add("/c03", CardsCtr.class);
             }
         });
+
+        routes.add(new Routes() {
+            @Override
+            public void config() {
+                setBaseViewPath("/WEB-INF/template/www/");
+                addInterceptor(new WwwInterceptor());
+                add("/", IndexCtr.class);
+
+            }
+        });
+
     }
 
     @Override
     public void configEngine(Engine engine) {
         engine.addSharedObject("ctx", JFinal.me().getContextPath());
-        engine.setDevMode(ResKit.getConfigBoolean("devMode", false));
+        engine.setDevMode(ResKit.getConfigBoolean("devMode", true));
         //使用JF模板渲染通用页面
-        engine.addSharedFunction("/WEB-INF/template/common/css.html");
-        engine.addSharedFunction("/WEB-INF/template/common/js.html");
+//        engine.addSharedFunction("/WEB-INF/template/www/css.html");
+//        engine.addSharedFunction("/WEB-INF/template/www/js.html");
         engine.addSharedFunction("/WEB-INF/template/admin/_layout.html");
         engine.addSharedFunction("/WEB-INF/template/www/_layout.html");
     }

@@ -1,0 +1,23 @@
+<script src="#(ctx)/static/common/js/jquery.min.js"></script>
+<script src="#(ctx)/static/common/js/jquery-migrate.min.js"></script>
+<script src="#(ctx)/static/common/js/bootstrap.min.js"></script>
+<script src="#(ctx)/static/www/js/createjs.min.js"></script>
+<script src="#(ctx)/static/www/js/owl.carousel.min.js"></script>
+<script src="#(ctx)/static/www/js/main.js"></script>
+<script>
+    $(document).ready(function () {
+        //client carousel
+        var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            autowidth: true,
+            autoplay: true,
+            autoplayTimeout: 2000,
+            center: true,
+            loop: true,
+            margin: 10,
+            items: 1,
+            singleItem: true
+        });
+    });
+
+</script>
