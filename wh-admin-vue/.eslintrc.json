@@ -1,6 +1,6 @@
 {
     "extends": "standard",
-    "installedESLint": true,
+//    "installedESLint": true,
     "root": true,
     "parserOptions": {
         "ecmaVersion": 6,

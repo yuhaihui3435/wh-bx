@@ -228,10 +228,10 @@
                 let ary=name.split(".");
                 let format=['jpg', 'png', 'jpeg', 'gif', 'bmp', 'svg'];
                 let fileSize=file.size;
-                if(format.indexOf(ary[1])==-1){
+                if(format.indexOf(ary[1].toLowerCase())==-1){
                     this.$Notice.warning({
                         title: '文件格式不正确',
-                        desc: '文件 >>' + file.name + '<< 格式不正确，请选择doc,docx,xls,xlsx,pdf,txt文件。'
+                        desc: '文件 >>' + file.name + '<< 格式不正确，请选择jpg,png,jpeg,gif,bmp,svg文件。'
                     });
                     return false;
                 }

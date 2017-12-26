@@ -25,7 +25,7 @@ const ajaxUrl = env === 'development'
 
 util.inOf = function (arr, targetArr) {
     let res = true;
-    arr.map(item => {
+    arr.forEach(item => {
         if (targetArr.indexOf(item) < 0) {
             res = false;
         }
