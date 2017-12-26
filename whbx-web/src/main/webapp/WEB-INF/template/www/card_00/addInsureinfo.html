@@ -1,0 +1,236 @@
+<div class="well well-sm" id="contactWell" style="background-color: white;">
+    <form class="form-horizontal" id="cardInfoForm" method="post">
+        <input type="hidden" id="cardId" name="cardId" value="#(card.id??'')">
+        <fieldset>
+            <legend class="text-center header">投保人信息</legend>
+
+            <div class="success text-center"
+                 style="display: none;color: black !important;font-size: 18px;font-family: 'nowaybold';"></div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>投保人姓名</label>
+                    <input id="phName" name="phName" type="text"
+                           class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label>性别</label>
+                    <div class="col-md-12">
+                        <label class="radio-inline">
+                            <input type="radio" name="phSex" id="ph-sex-boy" value="1" checked> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="phSex" id="ph-sex-gril" value="2"> 女
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>证件类型</label>
+                    <select class="form-control" name="phCertType" id="phCertType">
+                        #for(x : certTypeList )
+                        <option value="#(x.id)">#(x.title)</option>
+                        #end
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label>证件号</label>
+                    <input id="phIdcard" name="phIdcard" type="text"
+                           class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>手机号</label>
+                    <input id="phTel" name="phTel" type="tel" class="form-control"
+                           required>
+                </div>
+                <div class="col-md-6">
+                    <label>EMAIL</label>
+                    <input id="phEmail" name="phEmail" type="email" placeholder="EMAIl"
+                           class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>生日</label>
+                    <input id="phBirthday" name="phBirthday" type="date"
+                           class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>地址</label>
+                    <textarea class="form-control" id="phAddress" name="phAddress"
+                              rows="5"></textarea>
+                </div>
+            </div>
+
+
+        </fieldset>
+        #if(card.manyPeople??"1"=="0")
+        #for(i=0;i
+        <card.peopleCount
+        ??1;i++)
+        <fieldset>
+            <legend class="text-center header">被投保人信息#(i)</legend>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>与投保人关系</label>
+                    <select id="relationship-#(i)" name="relationship" class="form-control" required>
+                        <option value="">请选择与投保人关系</option>
+                        <option value="00">父亲</option>
+                        <option value="01">母亲</option>
+                        <option value="02">儿子</option>
+                        <option value="03">女儿</option>
+                        <option value="04">配偶</option>
+                        <option value="05">本人</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>被投保人姓名</label>
+                    <input id="ipName-#(i)" name="ipName" type="text"
+                           class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label>性别</label>
+                    <div class="col-md-12">
+                        <label class="radio-inline">
+                            <input type="radio" name="ipSex-#(i)" id="ip-sex-boy-#(i)" value="1" checked> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ipSex-#(i)" id="ip-sex-gril-#(i)" value="2"> 女
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>证件类型</label>
+                    <select class="form-control" name="ipCertType" id="ipCertType-#(i)">
+                        #for(x : certTypeList )
+                        <option value="#(x.id)">#(x.title)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>证件号</label>
+                    <input id="ipIdcard-#(i)" name="ipIdcard" type="text"
+                           class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>手机号</label>
+                    <input id="ipTel-#(i)" name="phTel" type="tel"
+                           class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>生日</label>
+                    <input id="ipBirthday-#(i)" name="phBirthday" type="date"
+                           class="form-control" required>
+                </div>
+            </div>
+
+        </fieldset>
+        #end
+        #else
+        <fieldset>
+            <legend class="text-center header">被投保人信息</legend>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>与投保人关系</label>
+                    <select id="relationship" name="relationship" class="form-control" required>
+                        <option value="">请选择与投保人关系</option>
+                        <option value="00">父亲</option>
+                        <option value="01">母亲</option>
+                        <option value="02">儿子</option>
+                        <option value="03">女儿</option>
+                        <option value="04">配偶</option>
+                        <option value="05">本人</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>被投保人姓名</label>
+                    <input id="ipName" name="ipName" type="text"
+                           class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label>性别</label>
+                    <div class="col-md-12">
+                        <label class="radio-inline">
+                            <input type="radio" name="ipSex" id="ip-sex-boy" value="1" checked> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ipSex" id="ip-sex-gril" value="2"> 女
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>证件类型</label>
+                    <select class="form-control" name="ipCertType" id="ipCertType">
+                        #for(x : certTypeList )
+                        <option value="#(x.id)">#(x.title)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>证件号</label>
+                    <input id="ipIdcard" name="ipIdcard" type="text"
+                           class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>手机号</label>
+                    <input id="ipTel" name="phTel" type="tel" class="form-control"
+                           required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>生日</label>
+                    <input id="ipBirthday" name="phBirthday" type="date"
+                           class="form-control" required>
+                </div>
+            </div>
+        </fieldset>
+        #end
+        <fieldset>
+            <legend class="text-center header">其他</legend>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="ipBeneficiary">受益人：</label>
+                    <input id="ipBeneficiary" name="ipBeneficiary" type="text" value="法定受益人"
+                           class="form-control" disabled>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend class="text-center header"></legend>
+            <div class="form-group">
+
+                <div class="col-md-12 text-center">
+                    <button type="button" class="btn btn-primary btn-lg" id="submitBtn"
+                            style="background-color: #19abf6;">提交
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

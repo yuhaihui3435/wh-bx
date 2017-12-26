@@ -1,8 +1,10 @@
 #define layout()
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="language" content="en-us" />
     <meta name="description" content="#(siteDescription)">
     <title>#(siteTitle)</title>
@@ -11,9 +13,10 @@
 
 <body class="#(indexCss)">
 #include("/WEB-INF/template/www/header.html")
+#include("/WEB-INF/template/www/js.html")
 #@content()
 #include("/WEB-INF/template/www/footer.html")
-#include("/WEB-INF/template/www/js.html")
+
 </body>
 </html>
 #end

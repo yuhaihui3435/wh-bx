@@ -84,22 +84,12 @@ public class Cards extends BaseCards<Cards> {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 *
+	 *
+	 * 关联查询其他表的字段
+	 *
+	 */
 
 
 	public String getCardtypeName() {
@@ -124,5 +114,18 @@ public class Cards extends BaseCards<Cards> {
 	public String getCardtype(){
 		return this.get("cardtype","");
 	}
+	public String getProtocol(){
+		return this.get("protocol","");
+	}
+	public String getPeopleCount(){
+		return this.get("peopleCount","1");
+	}
+	public String getManyPeople(){
+		return this.get("manyPeople","1");
+	}
+
+
+
+
 
 }
