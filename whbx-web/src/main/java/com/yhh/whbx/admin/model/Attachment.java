@@ -19,8 +19,8 @@ public class Attachment extends BaseAttachment<Attachment> {
 		return "s_attachment";
 	}
 
-	public List<Attachment> findByObjId(Integer objId){
-		return  dao.find("select * from "+getTableName()+" where objId=? and dAt is null",objId);
+	public List<Attachment> findByObjIdAndModule(Integer objId,String module){
+		return  dao.find("select * from "+getTableName()+" where objId=? and module =? and dAt is null",objId,module);
 	}
 
 	public String getAccessUrl(){

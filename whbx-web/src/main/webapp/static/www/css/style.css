@@ -356,10 +356,10 @@ margin-top: -28px;
 .domain-search-holder input::placeholder{
     color:#aeabab;
 }
-.domain-search-holder input[type="submit"]{
+.domain-search-holder input[type="button"]{
     border: 0;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     padding: 20px 10px 15px;
@@ -370,7 +370,7 @@ margin-top: -28px;
     outline: 0;
     font-weight: bold;
 }
-.domain-search-holder input[type="submit"]:hover,.domain-search-holder input[type="submit"]:focus{
+.domain-search-holder input[type="button"]:hover,.domain-search-holder input[type="button"]:focus{
     background-color: rgba(133, 39, 226, 0.726);
 }
 .text-search-holder{
@@ -386,7 +386,7 @@ margin-top: -28px;
     min-width: 300px;
     outline: 0;
 }
-.text-search-holder input[type="submit"]{
+.text-search-holder input[type="button"]{
     border: 0;
     border-radius: 0;
     border-top-right-radius: 8px;
@@ -400,7 +400,7 @@ margin-top: -28px;
     margin-left: -4px;
     outline: 0;
 }
-.domain-search-holder input[type="submit"]:hover,.domain-search-holder input[type="submit"]:focus{
+.domain-search-holder input[type="button"]:hover,.domain-search-holder input[type="button"]:focus{
     background-color: rgba(133, 39, 226, 0.726);
 }
 .animation{

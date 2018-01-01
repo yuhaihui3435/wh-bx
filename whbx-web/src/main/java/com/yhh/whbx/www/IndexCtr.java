@@ -1,21 +1,23 @@
 package com.yhh.whbx.www;
 
-import com.xiaoleilu.hutool.crypto.SecureUtil;
-import com.xiaoleilu.hutool.lang.Base64;
-import com.xiaoleilu.hutool.util.StrUtil;
+import com.jfinal.aop.Duang;
+import com.jfinal.aop.Enhancer;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.card.model.Cardapply;
-import com.yhh.whbx.card.model.Cards;
+import com.yhh.whbx.admin.model.Attachment;
+import com.yhh.whbx.card.CardsService;
+import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.core.CoreException;
 
-import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by yuhaihui8913 on 2017/12/26.
  */
 public class IndexCtr extends CoreController
 {
+    private final  static  CardsService cardsService= Duang.duang(CardsService.class);
 
     public void index(){
         ;render("index.html");
@@ -24,54 +26,15 @@ public class IndexCtr extends CoreController
     public void actCard(){
         String code=getPara("code");
         String pwd=getPara("pwd");
-        if(StrUtil.isBlank(code)){
-            renderFailJSON("卡编号不能为空");
-            return;
-        }
-        if(StrUtil.isBlank(pwd)){
-            renderFailJSON("卡密码不能为空");
-            return;
-        }
-
-        Cards cards=Cards.dao.findByCode(code);
-        if(cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
-            renderSuccessJSON("此卡片已经被激活,可以进行保单查询");
-            return;
-        }
-
-        if(cards==null){
-            renderFailJSON("卡号不存在");
-            return;
-        }
-        if(cards.getStatus()!=null&&cards.getStatus().equals(Consts.YORN_STR.no.getVal())){
-            renderFailJSON("此卡状态异常，请联系销售人员");
-            return;
-        }
-        if(cards.getDepotId()==null){
-            renderFailJSON("此卡未出库，请联系销售人员");
-            return;
-        }
-
-        if(cards.getIsLocked().equals(Consts.YORN_STR.no.getVal())){
-            renderFailJSON("此卡被锁定，请联系销售人员");
-            return;
-        }
-
-
-        Integer applyId=cards.getApplyId();
-        Cardapply cardapply=Cardapply.dao.findById(new Long(applyId));
-        String key=cardapply.getSkey();
-        byte[] key_array= Base64.decode(key, Charset.forName("UTF-8"));
-        pwd=SecureUtil.aes(key_array).encryptHex(pwd);
-
-        if(cards.getPwd().equals(pwd)){
+        try {
+            Cards cards = cardsService.checkCard(code, pwd);
             cards.setAct(Consts.YORN_STR.yes.getVal());
             cards.setActAt(new Date());
             cards.update();
             renderSuccessJSON("卡激活成功,请补充详细信息");
             return;
-        }else {
-            renderFailJSON("卡密码不正确");
+        }catch (CoreException e){
+            renderFailJSON(e.getMsg());
             return;
         }
     }
@@ -103,8 +66,42 @@ public class IndexCtr extends CoreController
     }
 
 
+    public void viewDetail(){
+        String code=getPara("code");
+        String pwd=getPara("pwd");
+        Integer cardsId=null;
+        Cards cards=null;
+        try {
+            cards=cardsService.checkCard(code,pwd);
+            cardsId=cards.getId().intValue();
+        }catch (CoreException e){
+            setAttr(ERROR_MSG,e.getMsg());
+            render("card_00/cardQuery.html");
+            return;
+        }
 
+        List<Attachment> attachments=null;
+        if(cards.getCardtype().equals("accidentInsurance")) {
+            CardsPh cardsPh = CardsPh.dao.findByPropEQ("cardsId", cardsId).get(0);
+            List<CardsIp> cardsIpList = CardsIp.dao.findByPropEQ("cardsId", cardsId);
+            attachments=Attachment.dao.findByObjIdAndModule(cardsId,"accidentInsurance");
+            setAttr("cardsPh",cardsPh);
+            setAttr("cardsIpList",cardsIpList);
+            setAttr("electronicPolicy",attachments);
+            setAttr("card",cards);
+            render("card_00/view.html");
+        }else if (cards.getCardtype().equals("driverInsurance")) {
+            CardsCarPh cardsCarPh = CardsCarPh.dao.findByPropEQ("cardsId", cardsId).get(0);
+            CardsCarIp cardsCarIp = CardsCarIp.dao.findByPropEQ("cardsId", cardsId).get(0);
+            attachments=Attachment.dao.findByObjIdAndModule(cardsId,"driverInsurance");
+            setAttr("cardsCarPh",cardsCarPh);
+            setAttr("cardsCarIp",cardsCarIp);
+            setAttr("electronicPolicy",attachments);
+            setAttr("card",cards);
+            render("card_01/view.html");
+        }
 
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.yhh.whbx.card.model;
 
 
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.model.base.BaseCardsIp;
 
 /**
@@ -13,5 +14,13 @@ public class CardsIp extends BaseCardsIp<CardsIp> {
 	@Override
 	public String getTableName() {
 		return "b_cards_ip";
+	}
+
+	public String getSexTxt(){
+		return getSex().equals("1")?"男":"女";
+	}
+
+	public String getCertTypeTxt(){
+		return Taxonomy.dao.findById(getCertTypeId()).getTitle();
 	}
 }

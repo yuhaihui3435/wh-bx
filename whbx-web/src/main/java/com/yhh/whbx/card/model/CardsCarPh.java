@@ -14,4 +14,6 @@ public class CardsCarPh extends BaseCardsCarPh<CardsCarPh> {
 	public String getTableName() {
 		return "b_cards_car_ph";
 	}
+
+
 }
