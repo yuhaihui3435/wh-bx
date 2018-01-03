@@ -74,7 +74,7 @@
                     if($('#cb').is(':checked')){
                         return true;
                     }else{
-                        new $.flavr('请阅读协议后，勾选已阅读');
+                        new $.flavr({buttons:{OK:{text:'确定'}},content:'请阅读协议后，勾选已阅读'});
                         return false;
                     }
                 }
