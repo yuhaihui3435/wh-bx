@@ -1,8 +1,10 @@
 package com.yhh.whbx.card.model;
 
 
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
@@ -62,7 +64,8 @@ public class Cards extends BaseCards<Cards> {
 	}
 
 	public Cards findByCode(String code){
-		return dao.findFirst("select * from "+getTableName()+" where code=?",code);
+		SqlPara sqlPara=Db.getSqlPara("cards.findByCode", Kv.by("code",code));
+		return dao.findFirst(sqlPara);
 	}
 
 	public Long findLastCardCodeByCardapplyId(Integer cardapplyId){
@@ -111,6 +114,9 @@ public class Cards extends BaseCards<Cards> {
 	public String getOutStatus(){
 		return this.get("outStatus","");
 	}
+	public Integer getCtId(){
+		return this.getInt("ctId");
+	}
 	public String getCardtype(){
 		return this.get("cardtype","");
 	}
@@ -123,6 +129,7 @@ public class Cards extends BaseCards<Cards> {
 	public String getManyPeople(){
 		return this.get("manyPeople","1");
 	}
+
 
 
 

@@ -71,6 +71,7 @@
 
             $('#rootwizard').on('leaveStep',function (e, anchorObject, stepNumber, stepDirection) {
                 if(stepNumber==0&&stepDirection=="forward"){
+
                     if($('#cb').is(':checked')){
                         return true;
                     }else{

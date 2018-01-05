@@ -30,6 +30,9 @@ public class Cardtype extends BaseCardtype<Cardtype> {
 	public String getCategoryTxt(){
 		return getCategory()!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString()))!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString())).getTitle():"":"";
 	}
+	public String getCategoryCode(){
+		return getCategory()!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString()))!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString())).getText():"":"";
+	}
 	public List<Attachment> getClauseList(){
 		return Attachment.dao.findByObjIdAndModule(getId().intValue(),"cardtype");
 	}

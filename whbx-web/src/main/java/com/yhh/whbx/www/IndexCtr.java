@@ -1,7 +1,6 @@
 package com.yhh.whbx.www;
 
 import com.jfinal.aop.Duang;
-import com.jfinal.aop.Enhancer;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.CardsService;
@@ -41,28 +40,35 @@ public class IndexCtr extends CoreController
 
 
     public void enterDetail(){
-        render("card_00/main.html");
-        return;
-//        String code=getPara("code");
-//        Cards cards=Cards.dao.findByCode(code);
-//        if(cards==null){
-//            setAttr(ERROR_MSG,"卡信息不存在");
-//            renderError(404);
-//            return;
-//        }
-//        setSessionAttr("card",cards);
-//        //意外险
-//        if(cards.getCardtype().equals("accidentInsurance")){
-//
-//        }
-//        //车险
-//        else if(cards.getCardtype().equals("driverInsurance")){
-//
-//        }else{
-//            setAttr(ERROR_MSG,"卡信息错误，请联系销售人员");
-//            renderError(500);
-//            return;
-//        }
+
+
+        String code=getPara("code");
+        code="010100201";
+        Cards cards=Cards.dao.findByCode(code);
+        if(cards==null){
+            throw new CoreException("卡信息不存在");
+        }
+        setAttr("card",cards);
+        Integer cardtypeId=cards.getCtId();
+        Cardtype cardtype=Cardtype.dao.findById(cardtypeId);
+        if(cardtype!=null&&cardtype.getCategory()!=null){
+            setAttr("cardtype",cardtype);
+            setAttr("ioList",InsuranceOcc.dao.findFirstLevel(cardtype.getCategoryCode()));
+        }
+        //意外险
+        if(cards.getCardtype().equals("accidentInsurance")){
+            render("card_00/main.html");
+        }
+        //车险
+        else if(cards.getCardtype().equals("driverInsurance")){
+            render("card_00/main.html");
+        }else{
+            setAttr(ERROR_MSG,"卡信息错误，请联系销售人员");
+            renderError(500);
+            return;
+        }
+
+
     }
 
 
@@ -103,6 +109,22 @@ public class IndexCtr extends CoreController
 
     }
 
+
+    public void occQuery(){
+        String insurance=getPara("insurance");
+        List<InsuranceOcc> list=null;
+        if(isParaExists("occ_0")){
+            String occ_0_code=getPara("occ_0");
+            list=InsuranceOcc.dao.findSecLevel(occ_0_code,insurance);
+            renderJson(list);
+            return;
+        }else if(isParaExists("occ_1")){
+            String occ_1_code=getPara("occ_1");
+            list=InsuranceOcc.dao.findThirdLevel(occ_1_code,insurance);
+            renderJson(list);
+            return;
+        }
+    }
 
 
 

@@ -36,6 +36,7 @@ public class _MappingKit {
 		arp.addMapping("b_cardapply", Cardapply.class);
 		arp.addMapping("b_depot", Depot.class);
 		arp.addMapping("b_unlock", Unlock.class);
+		arp.addMapping("b_insurance_occ", InsuranceOcc.class);
 
 	}
 }
