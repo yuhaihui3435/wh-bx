@@ -256,8 +256,6 @@
         function occ_0_handle() {
 
             let occ_0=$('#occ_0').val();
-
-            console.info(occ_0);
             if(occ_0!=''){
                 $.ajax({
                     type:'post',
@@ -278,7 +276,10 @@
                         $.each(data,function (index,obj) {
                             occ_1_obj.append("<option value='"+obj.code+"' title='"+obj.name+"'>"+obj.name+"</option>");
                         })
-                    }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        new $.flavr({buttons:{OK:{text:'确定'}},content:'网络错误，请稍后重试'});
+                    },
                 });
             }
         }
@@ -300,7 +301,10 @@
                         $.each(data,function (index,obj) {
                             occ_code_obj.append("<option value='"+obj.code+"'>"+obj.name+"</option>");
                         })
-                    }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        new $.flavr({buttons:{OK:{text:'确定'}},content:'网络错误，请稍后重试'});
+                    },
                 });
             }
         }

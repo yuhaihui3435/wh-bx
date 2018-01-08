@@ -60,16 +60,16 @@
                     <p class="overlay-subtitle">
                         请在这里输入您的卡号与密码，开始进行卡激活操作。
                     </p>
-                    <div class="domain-search-holder">
+                    <div class="domain-search-holder" id="domain-search-holder">
                         <div class="success" style="display: none;color: #fff !important;font-size: 18px;font-family: 'nowaybold';"></div>
-                        <form id="domain-search" class="form-horizontal">
+                        <form id="domain-search" class="form-horizontal" >
                             <div class="overlay-form-body">
                                 <input id="domain-code" type="text" name="code" placeholder="请输入卡号" required/>
-                                <input  id="domain-pwd" type="text" name="pwd" placeholder="请输入密码" required/>
+                                <input  id="domain-pwd" type="password" name="pwd" placeholder="请输入密码" required/>
                             </div>
                             <div class="row" style="padding: 10px">
                                 <div class="col-lg-6">
-                                <input class=" btn   btn-danger btn-block btn-lg" style="display: inline" id="act-btn" type="button"  value="激活" /></div>
+                                <input class=" btn   btn-danger btn-block btn-lg" style="display: inline" id="act-btn" type="button" onclick="act()"  value="激活" /></div>
                                 <div class="col-lg-6"><input class=" btn  btn-info btn-block btn-lg" style="display: inline" id="query-btn" type="button"  value="查询" /></div>
                             </div>
                         </form>
@@ -90,11 +90,63 @@
                 </div><br>
                 <div class="row-subtitle">
                     Over the years market has evolved from product centric to customer centric. And in this digital era the evolution is much more paced than 10 years back. Your business is having so many competitors with almost the same product or service that it is difficult to stand out. In such a scenario it is important to focus on the overall brand growth and you will be surprised by the sales that flow in.<br>
-                    <a href=""><button class="btn search-button" type="button" style="margin-top: 20px;">卡查看</button></a>
+                    <!--<a href=""><button class="btn search-button" type="button" style="margin-top: 20px;">卡查看</button></a>-->
                 </div>
             </div>
         </div>
 
     </div>
 </div>
+<script>
+    const ctx=$('#ctx').val();
+    function act() {
+        let code=$("#domain-code").val();
+        let pwd=$("#domain-pwd").val();
+        if(filedCheck(code,pwd)==1){
+            return ;
+        }
+        $.ajax({
+            type:'post',
+            url:ctx+'actCard',
+            data:{'code':code,'pwd':pwd},
+            cache:false,
+            dataType:'json',
+            success:function(data){
+                if(data.resCode=='success'){
+                    window.location.href=ctx+'enterDetail?code='+code;
+                }else if(data.resCode=='fail'){
+                    layer.alert(data.resMsg, {icon: 5});
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                layer.alert('网络错误，请稍后重试', {icon: 5});
+            },beforeSend(XHR){
+                layer.msg('数据处理中...',{shade: [0.8, '#393D49'],time:100000})
+            },complete(XHR, TS){
+                layer.closeAll('loading');
+            }
+        });
+    }
+    function view() {
+
+    }
+
+    function filedCheck(code,pwd) {
+        if (code.replace(/(^\s*)|(\s*$)/g, "").length ==0)
+        {
+            layer.alert('卡号不能为空', {icon: 5})
+            return 1;
+        }
+
+        if (pwd.replace(/(^\s*)|(\s*$)/g, "").length ==0)
+        {
+            layer.alert('密码不能为空', {icon: 5})
+            return 1;
+        }
+        return 0;
+    }
+
+
+</script>
+
 #end

@@ -343,7 +343,7 @@ margin-top: -28px;
 .domain-search-holder{
     margin-top: 20px;
 }
-.domain-search-holder input[type="text"]{
+.domain-search-holder input[type="text"],.domain-search-holder input[type="password"]{
     border-radius: 2px;
     border: 1px solid #fff;
     padding: 12px 10px;
@@ -1825,7 +1825,7 @@ a.lg-link:hover{
         font-size: 30px;
 
     }
-    .domain-search-holder input[type="text"], .domain-search-holder input[type="email"] {
+    .domain-search-holder input[type="text"],.domain-search-holder input[type="password"], .domain-search-holder input[type="email"] {
         min-width: 200px;
         margin-bottom: 15px;
         margin-left: 0px !important;
@@ -1870,7 +1870,7 @@ a.lg-link:hover{
     
 }
 @media (max-width: 480px) {
-    .domain-search-holder input[type="text"], .domain-search-holder input[type="email"],.domain-search-holder input[type="tel"] {
+    .domain-search-holder input[type="text"], .domain-search-holder input[type="email"],.domain-search-holder input[type="tel"],.domain-search-holder input[type="password"] {
         border-radius: 2px;
         text-align: center;
         min-width: inherit;

@@ -1,5 +1,6 @@
 package com.yhh.whbx.www;
 
+import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
@@ -7,6 +8,7 @@ import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
+import com.yhh.whbx.interceptors.CardStatusCheckInterceptor;
 
 import java.util.Date;
 import java.util.List;
@@ -19,9 +21,9 @@ public class IndexCtr extends CoreController
     private final  static  CardsService cardsService= Duang.duang(CardsService.class);
 
     public void index(){
-        ;render("index.html");
+        render("index.html");
     }
-
+    @Before({CardStatusCheckInterceptor.class})
     public void actCard(){
         String code=getPara("code");
         String pwd=getPara("pwd");
@@ -38,16 +40,11 @@ public class IndexCtr extends CoreController
         }
     }
 
-
+    @Before({CardStatusCheckInterceptor.class})
     public void enterDetail(){
-
-
         String code=getPara("code");
         code="010100201";
         Cards cards=Cards.dao.findByCode(code);
-        if(cards==null){
-            throw new CoreException("卡信息不存在");
-        }
         setAttr("card",cards);
         Integer cardtypeId=cards.getCtId();
         Cardtype cardtype=Cardtype.dao.findById(cardtypeId);
@@ -62,10 +59,9 @@ public class IndexCtr extends CoreController
         //车险
         else if(cards.getCardtype().equals("driverInsurance")){
             render("card_00/main.html");
-        }else{
-            setAttr(ERROR_MSG,"卡信息错误，请联系销售人员");
-            renderError(500);
-            return;
+        }
+        else{
+            throw new CoreException("卡信息错误，请联系业务员");
         }
 
 
@@ -85,7 +81,6 @@ public class IndexCtr extends CoreController
             render("card_00/cardQuery.html");
             return;
         }
-
         List<Attachment> attachments=null;
         if(cards.getCardtype().equals("accidentInsurance")) {
             CardsPh cardsPh = CardsPh.dao.findByPropEQ("cardsId", cardsId).get(0);
@@ -125,8 +120,4 @@ public class IndexCtr extends CoreController
             return;
         }
     }
-
-
-
-
 }
