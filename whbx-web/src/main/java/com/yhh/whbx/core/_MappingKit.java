@@ -37,6 +37,10 @@ public class _MappingKit {
 		arp.addMapping("b_depot", Depot.class);
 		arp.addMapping("b_unlock", Unlock.class);
 		arp.addMapping("b_insurance_occ", InsuranceOcc.class);
+		arp.addMapping("b_cards_ph", CardsPh.class);
+		arp.addMapping("b_cards_ip", CardsIp.class);
+		arp.addMapping("b_cards_car_ip", CardsCarIp.class);
+		arp.addMapping("b_cards_car_ph", CardsCarPh.class);
 
 	}
 }

@@ -8,6 +8,22 @@
                  style="display: none;color: black !important;font-size: 18px;font-family: 'nowaybold';"></div>
             <div class="form-group">
                 <div class="col-md-6">
+                    <label>证件类型</label>
+                    <select class="form-control" name="phCertType" id="phCertType">
+                        #for(x : certTypeList )
+                        <option value="#(x.id)">#(x.title)</option>
+                        #end
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label>证件号</label>
+                    <input id="phIdcard" name="phIdcard" type="text" onchange="checkBirth(this.value)"
+                           class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
                     <label>投保人姓名</label>
                     <input id="phName" name="phName" type="text"
                            class="form-control" required>
@@ -24,22 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>证件类型</label>
-                    <select class="form-control" name="phCertType" id="phCertType">
-                        #for(x : certTypeList )
-                        <option value="#(x.id)">#(x.title)</option>
-                        #end
-                    </select>
-                </div>
 
-                <div class="col-md-6">
-                    <label>证件号</label>
-                    <input id="phIdcard" name="phIdcard" type="text" onchange="checkBirth(this.value)"
-                           class="form-control" required>
-                </div>
-            </div>
 
             <div class="form-group">
                 <div class="col-md-6">
@@ -78,7 +79,7 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>与投保人关系</label>
-                    <select id="relationship-#(i+1)" name="relationship" class="form-control" required>
+                    <select id="relationship-#(i+1)" name="relationship" class="form-control" required onchange="relationChange(this.value)">
                         <option value="">请选择与投保人关系</option>
                         <option value="00">父亲</option>
                         <option value="01">母亲</option>
@@ -89,6 +90,21 @@
                     </select>
                 </div>
 
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>证件类型</label>
+                    <select class="form-control" name="ipCertType" id="ipCertType-#(i+1)">
+                        #for(x : certTypeList )
+                        <option value="#(x.id)">#(x.title)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>证件号</label>
+                    <input id="ipIdcard-#(i+1)" name="ipIdcard" type="text" onchange="checkIpBirth(this.value,'#(i+1)')"
+                           class="form-control" required>
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-md-6">
@@ -108,21 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>证件类型</label>
-                    <select class="form-control" name="ipCertType" id="ipCertType-#(i+1)">
-                        #for(x : certTypeList )
-                        <option value="#(x.id)">#(x.title)</option>
-                        #end
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label>证件号</label>
-                    <input id="ipIdcard-#(i+1)" name="ipIdcard" type="text" onchange="checkIpBirth(this.value,'#(i+1)')"
-                           class="form-control" required>
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="col-md-6">
                     <label>手机号</label>
@@ -156,7 +158,7 @@
                 </div>
                 <div class="col-md-4" style="display: none;">
                     <label>职业小类</label>
-                    <select id="occCode-#(i+1)" multiple="multiple" size="10" style="width: 100%">
+                    <select id="occCode-#(i+1)"  size="10" style="width: 100%">
 
                     </select>
                 </div>
@@ -182,6 +184,23 @@
         const idv = new IDValidator();
         const ctx = $('#ctx').val();
         const insurance = $('#insurance').val();
+        const cardCode='#(card.code)'
+        function relationChange(val) {
+            if(val=='05'){
+                $("#ipName-1").val($('#phName').val());
+                let sex=$("input[name='phSex'][checked]").val();
+                $("input[name='ipSex-1'][value=" + sex + "]").attr("checked", true);
+                $("#ipIdcard-1").val($('#phIdcard').val())
+                $("#ipTel-1").val($('#phTel').val())
+                $("#ipBirthday-1").val($('#phBirthday').val())
+            }else{
+                $("#ipName-1").val('');
+                $("input[name='ipSex-1'][value='2']").attr("checked", true);
+                $("#ipIdcard-1").val('')
+                $("#ipTel-1").val('')
+                $("#ipBirthday-1").val('')
+            }
+        }
         //        $('#phBirthday').datetimepicker({
         //            language:  'zh-CN',
         //            format: 'yyyy-mm-dd',
@@ -297,7 +316,6 @@
                     return ret;
                 } else {
                     let phIdInfo = idv.getInfo(phIdcard);
-                    console.info(phIdInfo)
                     $("input[name='phSex'][value=" + phIdInfo['sex'] + "]").attr("checked", true);
                 }
             }
@@ -332,14 +350,14 @@
                     layer.alert('被投保人' + (i + 1) + '与投保人关系必选', {icon: 5});
                     return ret;
                 }
-                temp['ip.relationShip'] = relationShip;
+                temp['ip'+(i)+'.relationship'] = relationShip;
 
                 let ipName = $("#ipName-" + (i + 1)).val();
                 if (Bee.StringUtils.isBlank(ipName)) {
                     layer.alert('被投保人姓名' + (i + 1) + '不能为空', {icon: 5});
                     return ret;
                 }
-                temp['ip.name'] = ipName
+                temp['ip'+(i)+'.name'] = ipName
 
                 let ipIdcard = $("#ipIdcard-" + (i + 1)).val();
                 if (Bee.StringUtils.isBlank(ipIdcard)) {
@@ -356,23 +374,23 @@
                         $("input[name='ipSex-" + (i + 1) + "'][value=" + ipIdInfo['sex'] + "]").attr("checked", true);
                     }
                 }
-                temp['ip.idcard'] = ipIdcard
+                temp['ip'+(i)+'.idCard'] = ipIdcard
                 let ipTel = $("#ipTel-" + (i + 1)).val();
                 if (Bee.StringUtils.isBlank(ipTel)) {
                     layer.alert('被投保人电话号' + (i + 1) + '不能为空', {icon: 5});
                     return ret;
                 }
-                temp['ip.tel'] = ipTel;
+                temp['ip'+(i)+'.tel'] = ipTel;
                 let ipBirthday = $("#ipBirthday-" + (i + 1)).val();
                 if (Bee.StringUtils.isBlank(ipBirthday)) {
                     layer.alert('被投保人' + (i + 1) + '生日不能为空', {icon: 5})
                     return ret;
                 }
 
+                let occ_0=$('#occ_0-'+(i+1));
+                let occCode=$('#occCode-'+(i+1)).val();
 
-                let occCodeObj=$('#occCode-'+(i+1));
-                let occCode=(occCodeObj!=undefined)?occCodeObj.val():undefined;
-                if(occCode!=undefined){
+                if(occ_0.length>0&&(occCode==null)){
                     if (Bee.StringUtils.isBlank(occCode)) {
                         layer.alert('被投保人' + (i + 1) + '职业不能为空', {icon: 5})
                         return ret;
@@ -380,25 +398,28 @@
                 }
 
 
-                temp['ip.birthday'] = ipBirthday
-                temp['ip.certType'] = $('#ipCertType-' + (i + 1)).val()
-                temp['ip.sex'] = $("input[name='ipSex-" + (i + 1) + "'][checked]").val()
-                temp['ip.beneficiary'] = $("#ipBeneficiary").val();
+                temp['ip'+(i)+'.birthDay'] = ipBirthday
+                temp['ip'+(i)+'.job'] = occCode
+                temp['ip'+(i)+'.cardsId'] = $('#cardId').val();
+                temp['ip'+(i)+'.certTypeId'] = $('#ipCertType-' + (i + 1)).val()
+                temp['ip'+(i)+'.sex'] = $("input[name='ipSex-" + (i + 1) + "'][checked]").val()
+                temp['ip'+(i)+'.beneficiary'] = $("#ipBeneficiary").val();
                 ips.push(temp)
             }
 
 
             ret = {};
             ret['ips'] = ips;
-            ret['ph.ame'] = phName;
+            ret['ph.name'] = phName;
+            ret['ph.cardsId'] = $('#cardId').val();
             ret['ph.sex'] = $("input[name='phSex'][checked]").val();
-            ret['ph.certType'] = $('#phCertType').val();
-            ret['ph.idcard'] = phIdcard;
+            ret['ph.certTypeId'] = $('#phCertType').val();
+            ret['ph.idCard'] = phIdcard;
             ret['ph.tel'] = phTel;
             ret['ph.email'] = $("#phEmail").val();
             ret['ph.address'] = $("#phAddress").val();
-            ret['ph.birthday'] = $("#phBirthday").val();
-
+            ret['ph.birthDay'] = $("#phBirthday").val();
+            ret['code']=cardCode;
 
 //            console.info(ret)
 

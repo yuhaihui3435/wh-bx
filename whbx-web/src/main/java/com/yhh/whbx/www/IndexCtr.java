@@ -2,6 +2,8 @@ package com.yhh.whbx.www;
 
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
@@ -12,6 +14,7 @@ import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.interceptors.CardStatusCheckInterceptor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,20 +54,40 @@ public class IndexCtr extends CoreController
     @Before({CardStatusCheckInterceptor.class})
     public void enterDetail(){
         String code=getPara("code");
+        String pwd=getPara("pwd");
+        Cards cards=null;
+        try {
+            cards = cardsService.checkCard(code, pwd);
+        }catch (CoreException e){
+            throw e;
+        }
         //code="010100201";
-        Cards cards=Cards.dao.findByCode(code);
+        cards=Cards.dao.findByCode(code);
+        if(cards.getAct()==null||!cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
+            renderFailJSON("卡片未被激活，请先激活卡片");
+            return;
+        }
+
+
         setAttr("card",cards);
         Integer cardtypeId=cards.getCtId();
-        Cardtype cardtype=Cardtype.dao.findById(cardtypeId);
-        if(cardtype!=null&&cardtype.getCategory()!=null){
-            setAttr("cardtype",cardtype);
-            setAttr("ioList",InsuranceOcc.dao.findFirstLevel(cardtype.getCategoryCode()));
-        }
-        setAttr("certTypeList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"certTypeList"));
 
         //意外险
-        if(cards.getCardtype().equals("accidentInsurance")){
-            render("card_00/main.html");
+        if(cards.getCardtype().equals("accidentInsurance")) {
+            List<CardsPh> cardsPhs = CardsPh.dao.findByPropEQ("cardsId", cards.getId());
+            if (cardsPhs.size() > 0) {
+                setAttr("cardsPh", cardsPhs.get(0));
+                setAttr("cardsIpList", CardsIp.dao.findByPropEQ("cardsId", cards.getId()));
+                render("card_00/view.html");
+            } else {
+                Cardtype cardtype=Cardtype.dao.findById(cardtypeId);
+                if(cardtype!=null&&cardtype.getCategory()!=null){
+                    setAttr("cardtype",cardtype);
+                    setAttr("ioList",InsuranceOcc.dao.findFirstLevel(cardtype.getCategoryCode()));
+                }
+                setAttr("certTypeList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"certTypeList"));
+                render("card_00/main.html");
+            }
         }
         //车险
         else if(cards.getCardtype().equals("driverInsurance")){
@@ -76,8 +99,33 @@ public class IndexCtr extends CoreController
 
 
     }
-
+    @Before({CardStatusCheckInterceptor.class,Tx.class})
     public void saveCardInfo(){
+        CardsPh cardsPh=getModel(CardsPh.class,"ph",true);
+        Cards cards=Cards.dao.findById(cardsPh.getCardsId());
+        List<CardsPh> cardsPhs=CardsPh.dao.findByPropEQ("cardsId",cards.getId());
+
+        if(cardsPhs.size()>0){
+            renderFailJSON("保单信息已经录入，如要修改请联系销售人员");
+            return;
+        }
+
+        if(cards.getAct()==null||cards.getAct().equals(Consts.YORN_STR.no.getVal())){
+            renderFailJSON("卡片未被激活，请先激活卡片");
+            return;
+        }
+
+        int ipLen=getParaToInt("ipLen",-1);
+        List<CardsIp> list=new ArrayList<>();
+        CardsIp cardsIp=null;
+        for(int i=0;i<ipLen;i++){
+            cardsIp=getModel(CardsIp.class,"ip"+i,true);
+            list.add(cardsIp);
+        }
+
+        cardsPh.save();
+        Db.batchSave(list,10);
+        renderSuccessJSON("保单信息录入完成，等待保单处理");
 
     }
 
@@ -95,10 +143,9 @@ public class IndexCtr extends CoreController
             cards=cardsService.checkCard(code,pwd);
             cardsId=cards.getId().intValue();
         }catch (CoreException e){
-            setAttr(ERROR_MSG,e.getMsg());
-            render("card_00/cardQuery.html");
-            return;
+            throw e;
         }
+        cards=Cards.dao.findByCode(code);
         List<Attachment> attachments=null;
         if(cards.getCardtype().equals("accidentInsurance")) {
             CardsPh cardsPh = CardsPh.dao.findByPropEQ("cardsId", cardsId).get(0);
