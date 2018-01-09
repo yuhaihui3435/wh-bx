@@ -2,6 +2,8 @@ package com.yhh.whbx.www;
 
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.CardsService;
@@ -29,6 +31,12 @@ public class IndexCtr extends CoreController
         String pwd=getPara("pwd");
         try {
             Cards cards = cardsService.checkCard(code, pwd);
+
+            if(StrUtil.isNotBlank(cards.getAct())&&cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
+                renderSuccessJSON("卡已经激活");
+                return;
+            }
+
             cards.setAct(Consts.YORN_STR.yes.getVal());
             cards.setActAt(new Date());
             cards.update();
@@ -43,7 +51,7 @@ public class IndexCtr extends CoreController
     @Before({CardStatusCheckInterceptor.class})
     public void enterDetail(){
         String code=getPara("code");
-        code="010100201";
+        //code="010100201";
         Cards cards=Cards.dao.findByCode(code);
         setAttr("card",cards);
         Integer cardtypeId=cards.getCtId();
@@ -52,6 +60,8 @@ public class IndexCtr extends CoreController
             setAttr("cardtype",cardtype);
             setAttr("ioList",InsuranceOcc.dao.findFirstLevel(cardtype.getCategoryCode()));
         }
+        setAttr("certTypeList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"certTypeList"));
+
         //意外险
         if(cards.getCardtype().equals("accidentInsurance")){
             render("card_00/main.html");
@@ -64,6 +74,14 @@ public class IndexCtr extends CoreController
             throw new CoreException("卡信息错误，请联系业务员");
         }
 
+
+    }
+
+    public void saveCardInfo(){
+
+    }
+
+    public void saveCardCarInfo(){
 
     }
 

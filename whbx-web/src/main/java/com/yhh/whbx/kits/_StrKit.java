@@ -1,10 +1,10 @@
 package com.yhh.whbx.kits;
 
 import com.xiaoleilu.hutool.crypto.SecureUtil;
-import com.xiaoleilu.hutool.crypto.symmetric.AES;
-import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
+import com.xiaoleilu.hutool.lang.Base64;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -55,14 +55,8 @@ public class _StrKit {
 
 
     public static void main(String[] args) throws IOException {
-        String a=SymmetricAlgorithm.AES.getValue();
-        System.out.printf(a);
-        byte[] key= SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
-        System.out.printf(new String(key));
-        AES aes=SecureUtil.aes(key);
-        String s=aes.encryptHex("111111");
-        System.out.printf(s);
-        System.out.printf(aes.decryptStr(s));
+        byte[] key_array= Base64.decode("a+Xdjd3GpAxKsL8zCjFf6w==", Charset.forName("UTF-8"));
+        System.out.println(SecureUtil.aes(key_array).decryptStr("5bb2daf4c03fda7212245ff9198e8823"));
 
     }
 

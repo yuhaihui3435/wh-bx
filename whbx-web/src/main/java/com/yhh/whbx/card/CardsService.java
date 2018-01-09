@@ -9,6 +9,7 @@ import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * 简介
@@ -36,15 +37,13 @@ public class CardsService {
             throw new CoreException("卡密码不能为空");
 
         }
-
-        Cards cards=dao.findByCode(code);
-        if(cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
-            throw new CoreException("此卡片已经被激活,可以进行保单查询");
-        }
+        List<Cards> list=dao.findByPropEQ("code",code);
+        Cards cards=list.isEmpty()?null:list.get(0);
 
         if(cards==null){
             throw new CoreException("卡号不存在");
         }
+
         if(cards.getStatus()!=null&&cards.getStatus().equals(Consts.YORN_STR.no.getVal())){
             throw new CoreException("此卡状态异常，请联系销售人员");
         }

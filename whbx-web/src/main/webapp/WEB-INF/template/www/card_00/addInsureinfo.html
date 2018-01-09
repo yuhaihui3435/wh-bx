@@ -16,10 +16,10 @@
                     <label>性别</label>
                     <div class="col-md-12">
                         <label class="radio-inline">
-                            <input type="radio" name="phSex" id="ph-sex-boy" value="1" checked> 男
+                            <input type="radio" name="phSex" id="ph-sex-boy" value="1"> 男
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="phSex" id="ph-sex-gril" value="2"> 女
+                            <input type="radio" name="phSex" id="ph-sex-gril" value="0" checked> 女
                         </label>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
 
                 <div class="col-md-6">
                     <label>证件号</label>
-                    <input id="phIdcard" name="phIdcard" type="text"
+                    <input id="phIdcard" name="phIdcard" type="text" onchange="checkBirth(this.value)"
                            class="form-control" required>
                 </div>
             </div>
@@ -44,21 +44,21 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>手机号</label>
-                    <input id="phTel" name="phTel" type="tel" class="form-control"
+                    <input id="phTel" name="phTel" type="text" class="form-control"
                            required>
                 </div>
                 <div class="col-md-6">
                     <label>EMAIL</label>
-                    <input id="phEmail" name="phEmail" type="email" placeholder="EMAIl"
+                    <input id="phEmail" name="phEmail" type="text"
                            class="form-control">
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-md-12">
+            <div class="form-group ">
+                <div class=" col-md-12">
                     <label>生日</label>
-                    <input id="phBirthday" name="phBirthday" type="date"
-                           class="form-control" required>
+                    <input class="form-control" size="16" type="text" value="" id="phBirthday" name="phBirthday"
+                           readonly required>
                 </div>
             </div>
 
@@ -72,15 +72,13 @@
 
 
         </fieldset>
-        #if(card.manyPeople??"1"=="0")
-        #for(i=0;i
-        <card.peopleCount??1;i++)
+        #for(i=0;i<card.peopleCount.toInt ();i++)
         <fieldset>
-            <legend class="text-center header">被投保人信息#(i)</legend>
+            <legend class="text-center header">被投保人信息#(i+1)</legend>
             <div class="form-group">
                 <div class="col-md-6">
                     <label>与投保人关系</label>
-                    <select id="relationship-#(i)" name="relationship" class="form-control" required>
+                    <select id="relationship-#(i+1)" name="relationship" class="form-control" required>
                         <option value="">请选择与投保人关系</option>
                         <option value="00">父亲</option>
                         <option value="01">母亲</option>
@@ -95,17 +93,17 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>被投保人姓名</label>
-                    <input id="ipName-#(i)" name="ipName" type="text"
+                    <input id="ipName-#(i+1)" name="ipName" type="text"
                            class="form-control" required>
                 </div>
                 <div class="col-md-6">
                     <label>性别</label>
                     <div class="col-md-12">
                         <label class="radio-inline">
-                            <input type="radio" name="ipSex-#(i)" id="ip-sex-boy-#(i)" value="1" checked> 男
+                            <input type="radio" name="ipSex-#(i+1)" id="ip-sex-boy-#(i+1)" value="1"> 男
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="ipSex-#(i)" id="ip-sex-gril-#(i)" value="2"> 女
+                            <input type="radio" name="ipSex-#(i+1)" id="ip-sex-gril-#(i+1)" value="0" checked> 女
                         </label>
                     </div>
                 </div>
@@ -113,7 +111,7 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>证件类型</label>
-                    <select class="form-control" name="ipCertType" id="ipCertType-#(i)">
+                    <select class="form-control" name="ipCertType" id="ipCertType-#(i+1)">
                         #for(x : certTypeList )
                         <option value="#(x.id)">#(x.title)</option>
                         #end
@@ -121,118 +119,48 @@
                 </div>
                 <div class="col-md-6">
                     <label>证件号</label>
-                    <input id="ipIdcard-#(i)" name="ipIdcard" type="text"
+                    <input id="ipIdcard-#(i+1)" name="ipIdcard" type="text" onchange="checkIpBirth(this.value,'#(i+1)')"
                            class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-6">
                     <label>手机号</label>
-                    <input id="ipTel-#(i)" name="phTel" type="tel"
+                    <input id="ipTel-#(i+1)" name="ipTel" type="text"
                            class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-12">
                     <label>生日</label>
-                    <input id="ipBirthday-#(i)" name="phBirthday" type="date"
-                           class="form-control" required>
+                    <input id="ipBirthday-#(i+1)" name="ipBirthday" type="text"
+                           class="form-control" required readonly>
                 </div>
             </div>
-
-        </fieldset>
-        #end
-        #else
-        <fieldset>
-            <legend class="text-center header">被投保人信息</legend>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>与投保人关系</label>
-                    <select id="relationship" name="relationship" class="form-control" required>
-                        <option value="">请选择与投保人关系</option>
-                        <option value="00">父亲</option>
-                        <option value="01">母亲</option>
-                        <option value="02">儿子</option>
-                        <option value="03">女儿</option>
-                        <option value="04">配偶</option>
-                        <option value="05">本人</option>
-                    </select>
-                </div>
-
-            </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>被投保人姓名</label>
-                    <input id="ipName" name="ipName" type="text"
-                           class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label>性别</label>
-                    <div class="col-md-12">
-                        <label class="radio-inline">
-                            <input type="radio" name="ipSex" id="ip-sex-boy" value="1" checked> 男
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="ipSex" id="ip-sex-gril" value="2"> 女
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>证件类型</label>
-                    <select class="form-control" name="ipCertType" id="ipCertType">
-                        #for(x : certTypeList )
-                        <option value="#(x.id)">#(x.title)</option>
-                        #end
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label>证件号</label>
-                    <input id="ipIdcard" name="ipIdcard" type="text"
-                           class="form-control" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>手机号</label>
-                    <input id="ipTel" name="phTel" type="tel" class="form-control"
-                           required>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-12">
-                    <label>生日</label>
-                    <input id="ipBirthday" name="phBirthday" type="date"
-                           class="form-control" required>
-                </div>
-            </div>
-
             <input type="hidden" id="insurance" value="#(cardtype.categoryCode??'')">
             <div class="form-group">
                 <div class="col-md-4">
                     <label>职业大类</label>
-                    <select onchange="occ_0_handle()" id="occ_0"  size="10" style="width: 100%">
+                    <select onchange="occ_0_handle('#(i+1)')" id="occ_0-#(i+1)" size="10" style="width: 100%">
                         #for (x:ioList)
-                            <option value="#(x.code)">#(x.name)</option>
+                        <option value="#(x.code)">#(x.name)</option>
                         #end
                     </select>
                 </div>
                 <div class="col-md-4" style="display: none">
                     <label>职业种类</label>
 
-                    <select onchange="occ_1_handle()" id="occ_1"  size="10" style="width: 100%">
+                    <select onchange="occ_1_handle('#(i+1)')" id="occ_1-#(i+1)" size="10" style="width: 100%">
 
                     </select>
                 </div>
                 <div class="col-md-4" style="display: none;">
                     <label>职业小类</label>
-                    <select id="occCode" multiple="multiple" size="10" style="width: 100%">
+                    <select id="occCode-#(i+1)" multiple="multiple" size="10" style="width: 100%">
 
                     </select>
                 </div>
             </div>
-
         </fieldset>
         #end
         <fieldset>
@@ -249,65 +177,260 @@
 
     </form>
     <script>
-        const ctx=$('#ctx').val();
-        const insurance=$('#insurance').val();
+
+        let pc =#(card.peopleCount)
+        const idv = new IDValidator();
+        const ctx = $('#ctx').val();
+        const insurance = $('#insurance').val();
+        //        $('#phBirthday').datetimepicker({
+        //            language:  'zh-CN',
+        //            format: 'yyyy-mm-dd',
+        //            minView:2,
+        //            autoclose:true,
+        //            todayBtn:true,
+        //            todayHighlight:true,
+        //        });
+        //
+        //        for(let i=0;i<pc;i++){
+        //            $('#ipBirthday-'+(i+1)).datetimepicker({
+        //                language:  'zh-CN',
+        //                format: 'yyyy-mm-dd',
+        //                minView:2,
+        //                autoclose:true,
+        //                todayBtn:true,
+        //                todayHighlight:true,
+        //            });
+        //        }
 
 
-        function occ_0_handle() {
-
-            let occ_0=$('#occ_0').val();
-            if(occ_0!=''){
+        function occ_0_handle(index) {
+            $('#occCode-' + index).val('');
+            let occ_0 = $('#occ_0-' + index).val();
+            if (occ_0 != '') {
                 $.ajax({
-                    type:'post',
-                    url:ctx+'occQuery',
-                    data:{'occ_0':occ_0,'insurance':insurance},
-                    cache:false,
-                    dataType:'json',
-                    success:function(data){
-                        let occ_code_obj=$('#occCode');
+                    type: 'post',
+                    url: ctx + 'occQuery',
+                    data: {'occ_0': occ_0, 'insurance': insurance},
+                    cache: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        let occ_code_obj = $('#occCode-' + index);
+
                         occ_code_obj.empty();
-                        let occ_code_obj_p=occ_code_obj.parent();
+                        let occ_code_obj_p = occ_code_obj.parent();
                         occ_code_obj_p.hide();
-                        let occ_1_obj=$('#occ_1');
-                        let occ_1_obj_p=occ_1_obj.parent();
+                        let occ_1_obj = $('#occ_1-' + index);
+                        let occ_1_obj_p = occ_1_obj.parent();
 
                         occ_1_obj_p.show();
                         occ_1_obj.empty();
-                        $.each(data,function (index,obj) {
-                            occ_1_obj.append("<option value='"+obj.code+"' title='"+obj.name+"'>"+obj.name+"</option>");
+                        $.each(data, function (index, obj) {
+                            occ_1_obj.append("<option value='" + obj.code + "' title='" + obj.name + "'>" + obj.name + "</option>");
                         })
+                    }, beforeSend(XHR){
+                        layer.msg('数据处理中...', {shade: [0.8, '#393D49'], time: 100000})
+                    }, complete(XHR, TS){
+                        layer.closeAll();
                     },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        new $.flavr({buttons:{OK:{text:'确定'}},content:'网络错误，请稍后重试'});
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.alert('网络错误，请稍后重试', {icon: 5})
                     },
                 });
             }
         }
-        function occ_1_handle() {
-            let occ_1=$('#occ_1').val();
-
-            if(occ_1!=''){
+        function occ_1_handle(index) {
+            let occ_1 = $('#occ_1-'+index).val();
+            $('#occCode-' + index).val('');
+            if (occ_1 != '') {
                 $.ajax({
-                    type:'post',
-                    url:ctx+'occQuery',
-                    data:{'occ_1':occ_1,'insurance':insurance},
-                    cache:false,
-                    dataType:'json',
-                    success:function(data){
-                        let occ_code_obj=$('#occCode');
-                        let occ_code_obj_p=occ_code_obj.parent();
+                    type: 'post',
+                    url: ctx + 'occQuery',
+                    data: {'occ_1': occ_1, 'insurance': insurance},
+                    cache: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        let occ_code_obj = $('#occCode-'+index);
+                        let occ_code_obj_p = occ_code_obj.parent();
                         occ_code_obj_p.show();
                         occ_code_obj.empty();
-                        $.each(data,function (index,obj) {
-                            occ_code_obj.append("<option value='"+obj.code+"'>"+obj.name+"</option>");
+                        $.each(data, function (index, obj) {
+                            occ_code_obj.append("<option value='" + obj.code + "'>" + obj.name + "</option>");
                         })
+                    }
+                    , beforeSend(XHR){
+                        layer.msg('数据处理中...', {shade: [0.8, '#393D49'], time: 100000})
+                    }, complete(XHR, TS){
+                        layer.closeAll();
                     },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        new $.flavr({buttons:{OK:{text:'确定'}},content:'网络错误，请稍后重试'});
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.alert('网络错误，请稍后重试', {icon: 5})
                     },
                 });
             }
         }
+
+        function formCheck() {
+
+            let ret = undefined;
+
+
+            let phName = $("#phName").val();
+            let phIdcard = $("#phIdcard").val();
+            let phBirthday = $("#phBirthday").val();
+            let phTel = $("#phTel").val();
+            let phSex = $("input[name='phSex'][checked]").val();
+            let phEmail = $("#phEmail").val();
+
+
+            if (Bee.StringUtils.isBlank(phName)) {
+                layer.alert('投保人姓名不能为空', {icon: 5})
+                return ret;
+            }
+            if (Bee.StringUtils.isBlank(phIdcard)) {
+                layer.alert('投保人证件号不能为空', {icon: 5})
+                return ret;
+            } else {
+
+                let r = idv.isValid(phIdcard);
+                if (!r) {
+                    layer.alert('投保人证件号不正确', {icon: 5})
+                    return ret;
+                } else {
+                    let phIdInfo = idv.getInfo(phIdcard);
+                    console.info(phIdInfo)
+                    $("input[name='phSex'][value=" + phIdInfo['sex'] + "]").attr("checked", true);
+                }
+            }
+            if (Bee.StringUtils.isBlank(phTel)) {
+                layer.alert('投保人联系电话不能为空', {icon: 5})
+                return ret;
+            } else if (!Bee.PhoneUtils.isPhoneNum(phTel)) {
+                layer.alert('投保人手机号格式不正确', {icon: 5});
+                return ret;
+            }
+
+            if (Bee.StringUtils.isBlank(phBirthday)) {
+                layer.alert('投保人生日不能为空', {icon: 5})
+                return ret;
+            }
+
+            if (Bee.StringUtils.isNotBlank(phEmail)) {
+                if (!Bee.EmailUtils.isEmail(phEmail)) {
+                    layer.alert('投保人EMAIL格式不正确', {icon: 5})
+                    return ret;
+                }
+            }
+
+
+            let ips = new Array;
+            let temp = {};
+
+            for (var i = 0; i < pc; i++) {
+
+                let relationShip = $("#relationship-" + (i + 1)).val();
+                if (Bee.StringUtils.isBlank(relationShip)) {
+                    layer.alert('被投保人' + (i + 1) + '与投保人关系必选', {icon: 5});
+                    return ret;
+                }
+                temp['ip.relationShip'] = relationShip;
+
+                let ipName = $("#ipName-" + (i + 1)).val();
+                if (Bee.StringUtils.isBlank(ipName)) {
+                    layer.alert('被投保人姓名' + (i + 1) + '不能为空', {icon: 5});
+                    return ret;
+                }
+                temp['ip.name'] = ipName
+
+                let ipIdcard = $("#ipIdcard-" + (i + 1)).val();
+                if (Bee.StringUtils.isBlank(ipIdcard)) {
+                    layer.alert('被投保人证件号' + (i + 1) + '不能为空', {icon: 5});
+                    return ret;
+                } else {
+
+                    let r = idv.isValid(ipIdcard);
+                    if (!r) {
+                        layer.alert('被投保人证件号不正确', {icon: 5})
+                        return ret;
+                    } else {
+                        let ipIdInfo = idv.getInfo(ipIdcard);
+                        $("input[name='ipSex-" + (i + 1) + "'][value=" + ipIdInfo['sex'] + "]").attr("checked", true);
+                    }
+                }
+                temp['ip.idcard'] = ipIdcard
+                let ipTel = $("#ipTel-" + (i + 1)).val();
+                if (Bee.StringUtils.isBlank(ipTel)) {
+                    layer.alert('被投保人电话号' + (i + 1) + '不能为空', {icon: 5});
+                    return ret;
+                }
+                temp['ip.tel'] = ipTel;
+                let ipBirthday = $("#ipBirthday-" + (i + 1)).val();
+                if (Bee.StringUtils.isBlank(ipBirthday)) {
+                    layer.alert('被投保人' + (i + 1) + '生日不能为空', {icon: 5})
+                    return ret;
+                }
+
+
+                let occCodeObj=$('#occCode-'+(i+1));
+                let occCode=(occCodeObj!=undefined)?occCodeObj.val():undefined;
+                if(occCode!=undefined){
+                    if (Bee.StringUtils.isBlank(occCode)) {
+                        layer.alert('被投保人' + (i + 1) + '职业不能为空', {icon: 5})
+                        return ret;
+                    }
+                }
+
+
+                temp['ip.birthday'] = ipBirthday
+                temp['ip.certType'] = $('#ipCertType-' + (i + 1)).val()
+                temp['ip.sex'] = $("input[name='ipSex-" + (i + 1) + "'][checked]").val()
+                temp['ip.beneficiary'] = $("#ipBeneficiary").val();
+                ips.push(temp)
+            }
+
+
+            ret = {};
+            ret['ips'] = ips;
+            ret['ph.ame'] = phName;
+            ret['ph.sex'] = $("input[name='phSex'][checked]").val();
+            ret['ph.certType'] = $('#phCertType').val();
+            ret['ph.idcard'] = phIdcard;
+            ret['ph.tel'] = phTel;
+            ret['ph.email'] = $("#phEmail").val();
+            ret['ph.address'] = $("#phAddress").val();
+            ret['ph.birthday'] = $("#phBirthday").val();
+
+
+//            console.info(ret)
+
+            return ret;
+
+
+        }
+        function checkBirth(val) {
+            $('#phBirthday').val('')
+            let r = idv.isValid(val);
+            if (r) {
+                let idInfo = idv.getInfo(val);
+                $('#phBirthday').val(idInfo['birth'])
+                $("input[name='phSex'][value=" + idInfo['sex'] + "]").attr("checked", true);
+
+            } else {
+                layer.alert('投保人证件号不正确', {icon: 5});
+            }
+        }
+
+        function checkIpBirth(val, index) {
+            $('#ipBirthday-' + index).val('')
+            let r = idv.isValid(val);
+            if (r) {
+                let idInfo = idv.getInfo(val);
+                $('#ipBirthday-' + index).val(idInfo['birth'])
+                $("input[name='ipSex-" + index + "'][value=" + idInfo['sex'] + "]").attr("checked", true);
+            } else {
+                layer.alert('被投保人' + index + '证件号不正确', {icon: 5});
+            }
+        }
+
 
     </script>
 </div>
