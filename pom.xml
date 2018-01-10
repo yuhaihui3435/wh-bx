@@ -30,6 +30,7 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <jsoup.version>[1.10.1]</jsoup.version>
         <poi.version>3.17</poi.version>
+
     </properties>
 
     <!--集中声明依赖-->
@@ -114,6 +115,16 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
                 <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-core</artifactId>
+                <version>3.2.5</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

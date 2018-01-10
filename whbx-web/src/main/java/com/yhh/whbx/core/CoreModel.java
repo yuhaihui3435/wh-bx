@@ -60,6 +60,10 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
     public List<M> findByPropEQ(String name, Object val){
         return super.find("select * from "+getTableName()+" where "+name+"=?",val);
     }
+    public M findFristByPropEQ(String name,Object val){
+        return super.findFirst("select * from "+getTableName()+" where "+name+"=?",val);
+    }
+
     public List<M> findByPropLIKE(String name, String val){
         return super.find("select * from "+getTableName()+" where "+name+" like ?","%"+val+"%");
     }

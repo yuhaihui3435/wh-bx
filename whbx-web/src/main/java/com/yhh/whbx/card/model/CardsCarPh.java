@@ -1,6 +1,9 @@
 package com.yhh.whbx.card.model;
 
 
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.model.base.BaseCardsCarPh;
 
 /**
@@ -13,6 +16,15 @@ public class CardsCarPh extends BaseCardsCarPh<CardsCarPh> {
 	@Override
 	public String getTableName() {
 		return "b_cards_car_ph";
+	}
+
+	public String getCertTypeTxt(){
+		Taxonomy taxonomy=CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCertTypeId().toString());
+		return taxonomy==null?"":taxonomy.getTitle();
+	}
+
+	public String getTypeTxt(){
+		return getType()==null?"":getType().equals("1")?"个人":"企业";
 	}
 
 

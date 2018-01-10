@@ -28,7 +28,7 @@ public class DepotValidator extends CoreValidator {
         String ak=getActionKey();
         List<Depot> list=null;
         if(ak.equals("/c02/save")){
-            list=Depot.dao.findByPropEQ("code",depot.getCode());
+            list=Depot.dao.findByCodeAndApplyId(depot.getCode(),depot.getCardapplyId());
             if(!list.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),"编号已经存在");
                 return ;
@@ -40,7 +40,7 @@ public class DepotValidator extends CoreValidator {
             }
 
         }else  if(ak.equals("/c02/update")){
-            list=Depot.dao.findByCodeAndNeId(depot.getCode(),depot.getId());
+            list=Depot.dao.findByCodeAndApplyIdAndNeId(depot.getCode(),depot.getCardapplyId(),depot.getId());
             if(!list.isEmpty()){
                 addError(Consts.REQ_JSON_CODE.fail.name(),"编号已经存在");
                 return ;

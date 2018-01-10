@@ -55,7 +55,7 @@ public class Cards extends BaseCards<Cards> {
 		Cards cards=null;
 		for (int i=bNum;i<=eNum;i++){
 			code=cardtype.getCode() + cardapply.getBatch() + StrUtil.fillBefore(i + "", '0', y);
-			cards=findByCode(code);
+			cards=findFristByPropEQ("code",code);
 			if(cards==null)
 				continue;
 			cards.setDepotId(depotId);

@@ -39,23 +39,23 @@
                                  style="display: none;color: black !important;font-size: 18px;font-family: 'nowaybold';"></div>
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>证件类型:</label>
+                                    <label>证件类型：</label>
                                     #(cardsPh.certTypeTxt??"")
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>证件号:</label>
+                                    <label>证件号：</label>
 
                                     #(cardsPh.idCard??"")
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>投保人姓名:</label>
+                                    <label>投保人姓名：</label>
                                     #(cardsPh.name??"")
                                 </div>
                                 <div class="col-md-6">
-                                    <label>性别:</label>
+                                    <label>性别：</label>
 
                                         #(cardsPh.sexTxt??"")
 
@@ -65,29 +65,21 @@
 
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>手机号:</label>
+                                    <label>手机号：</label>
                                     #(cardsPh.tel??"")
                                 </div>
                                 <div class="col-md-6">
-                                    <label>EMAIL:</label>
+                                    <label>EMAIL：</label>
                                     #(cardsPh.email??"")
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <label>生日:</label>
-                                    #(cardsPh.birthDay??"")
+                                    <label>生日：</label>
+                                    #date(cardsPh.birthDay??"",'yyyy-MM-dd')
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label>地址:</label>
-                                    #(cardsPh.address??"")
-                                </div>
-                            </div>
-
 
                         </fieldset>
 
@@ -96,7 +88,7 @@
                             <legend class="text-center header">被投保人信息#(i)</legend>
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>与投保人关系:</label>
+                                    <label>与投保人关系：</label>
                                     #if(x.relationship=="00")
                                         父亲
                                     #elseif(x.relationship=="01")
@@ -115,7 +107,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>证件类型:</label>
+                                    <label>证件类型：</label>
                                     #(x.certTypeTxt)
                                 </div>
                                 <div class="col-md-6">
@@ -129,21 +121,21 @@
                                     #(x.name)
                                 </div>
                                 <div class="col-md-6">
-                                    <label>性别:</label>
+                                    <label>性别：</label>
                                     #(x.sexTxt)
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label>手机号:</label>
+                                    <label>手机号：</label>
                                     #(x.tel)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <label>生日:</label>
-                                    #(x.birthDay)
+                                    <label>生日：</label>
+                                    #date(x.birthDay,'yyyy-MM-dd')
                                 </div>
                             </div>
 

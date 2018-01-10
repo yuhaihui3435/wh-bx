@@ -25,12 +25,12 @@ public abstract class BaseCardsIp<M extends BaseCardsIp<M>> extends CoreModel<M>
 		return getStr("relationship");
 	}
 
-	public void setName(java.lang.Integer name) {
+	public void setName(java.lang.String name) {
 		set("name", name);
 	}
 
-	public java.lang.Integer getName() {
-		return getInt("name");
+	public java.lang.String getName() {
+		return getStr("name");
 	}
 
 	public void setCertTypeId(java.lang.Integer certTypeId) {

@@ -1,6 +1,9 @@
 package com.yhh.whbx.card.model;
 
 
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.model.base.BaseCardsCarIp;
 
 /**
@@ -13,5 +16,14 @@ public class CardsCarIp extends BaseCardsCarIp<CardsCarIp> {
 	@Override
 	public String getTableName() {
 		return "b_cards_car_ip";
+	}
+
+	public String getCarTypeTxt(){
+		Taxonomy taxonomy=CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString());
+		return taxonomy==null?"":taxonomy.getTitle();
+	}
+
+	public String getPropTxt(){
+		return getProp().equals("1")?"非营运":"营运";
 	}
 }

@@ -25,6 +25,14 @@ public class Depot extends BaseDepot<Depot> {
 	}
 
 
+	public List<Depot> findByCodeAndApplyId(String code,Integer applyId){
+		return dao.find("select * from "+getTableName()+" where code =? and cardtypeId=?",code,applyId);
+	}
+
+	public List<Depot> findByCodeAndApplyIdAndNeId(String code,Integer applyId,Long id){
+		return dao.find("select * from "+getTableName()+" where code =? and cardtypeId=? and id<>?",code,applyId,id);
+	}
+
 	public String getCardtypeTxt(){
 
 		Cardtype cardtype=Cardtype.dao.findById(getCardtypeId());

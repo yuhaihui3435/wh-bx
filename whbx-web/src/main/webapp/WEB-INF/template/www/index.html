@@ -105,37 +105,41 @@
         if(filedCheck(code,pwd)==1){
             return ;
         }
-        $.ajax({
-            type:'post',
-            url:ctx+'actCard',
-            data:{'code':code,'pwd':pwd},
-            cache:false,
-            dataType:'json',
-            success:function(data){
-                if(data.resCode=='success'){
-//                    window.location.href=ctx+'enterDetail?code='+code;
-                    let i=layer.confirm(data.resMsg+',是否要继续查看？', {
-                        btn: ['否','是'] //按钮
-                    }, function(){
-                        layer.close(i)
-                    }, function(){
-                        $('#domain-search').attr("action",ctx+'enterDetail')
-                        $('#domain-search').submit();
-                    });
 
+        $('#domain-search').attr("action",ctx+'enterDetail');
+        $('#domain-search').submit();
 
-                }else if(data.resCode=='fail'){
-                    layer.alert(data.resMsg, {icon: 5});
-                }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                layer.alert('网络错误，请稍后重试', {icon: 5});
-            },beforeSend(XHR){
-                layer.msg('数据处理中...',{shade: [0.8, '#393D49'],time:100000})
-            },complete(XHR, TS){
-                layer.closeAll('loading');
-            }
-        });
+//        $.ajax({
+//            type:'post',
+//            url:ctx+'actCard',
+//            data:{'code':code,'pwd':pwd},
+//            cache:false,
+//            dataType:'json',
+//            success:function(data){
+//                if(data.resCode=='success'){
+////                    window.location.href=ctx+'enterDetail?code='+code;
+//                    let i=layer.confirm(data.resMsg+',是否要继续查看？', {
+//                        btn: ['否','是'] //按钮
+//                    }, function(){
+//                        layer.close(i)
+//                    }, function(){
+//                        $('#domain-search').attr("action",ctx+'enterDetail')
+//                        $('#domain-search').submit();
+//                    });
+//
+//
+//                }else if(data.resCode=='fail'){
+//                    layer.alert(data.resMsg, {icon: 5});
+//                }
+//            },
+//            error: function(XMLHttpRequest, textStatus, errorThrown) {
+//                layer.alert('网络错误，请稍后重试', {icon: 5});
+//            },beforeSend(XHR){
+//                layer.msg('数据处理中...',{shade: [0.8, '#393D49'],time:100000})
+//            },complete(XHR, TS){
+//                layer.closeAll('loading');
+//            }
+//        });
     }
     function view() {
         let code=$("#domain-code").val();
