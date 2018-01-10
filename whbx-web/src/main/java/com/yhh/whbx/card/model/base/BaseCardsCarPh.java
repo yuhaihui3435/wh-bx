@@ -97,4 +97,28 @@ public abstract class BaseCardsCarPh<M extends BaseCardsCarPh<M>> extends CoreMo
 		return getStr("tel");
 	}
 
+	public void setProvince(java.lang.String province) {
+		set("province", province);
+	}
+
+	public java.lang.String getProvince() {
+		return getStr("province");
+	}
+
+	public void setCity(java.lang.String city) {
+		set("city", city);
+	}
+
+	public java.lang.String getCity() {
+		return getStr("city");
+	}
+
+	public void setDistrict(java.lang.String district) {
+		set("district", district);
+	}
+
+	public java.lang.String getDistrict() {
+		return getStr("district");
+	}
+
 }

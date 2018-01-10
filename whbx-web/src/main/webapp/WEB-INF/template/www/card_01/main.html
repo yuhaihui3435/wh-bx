@@ -85,12 +85,6 @@
                                 }, function(){
                                     layer.close(i)
                                 }, function(){
-                                    let ips=d.ips;
-                                    d.ipLen=ips.length;
-                                    $.each(ips,function (index,obj) {
-                                        Object.assign(d,obj)
-                                        d.ips=null;
-                                    })
                                     $.ajax({
                                         type:'post',
                                         url:ctx+'saveCardCarInfo',

@@ -8,7 +8,7 @@
             <div class="col-md-8 col-md-offset-2 ">
                 <ol class="breadcrumb">
                     <li><a href="#(ctx)/">首页</a></li>
-                    <li class="active">投保详细信息</li>
+                    <li class="active">保单详细信息</li>
                 </ol>
             </div>
         </div>
@@ -155,10 +155,22 @@
                             <legend class="text-center header">保单</legend>
                             <div class="form-group">
                                 <div class="col-md-12 text-center">
+                                    #if(!electronicPolicy.isEmpty())
                                     #for(y:electronicPolicy)
-                                        <a href="#(y.accessUrl)#(y.path)">#(y.name)</a>
+                                    <a href="#(y.accessUrl)#(y.path)">#(y.name)</a>
+                                    #end
+                                    #else
+                                    <div class="col-md-8 col-md-offset-2 alert alert-danger">
+                                        <strong>注意！</strong>电子保单尚未生成，请耐心等待。
+                                    </div>
                                     #end
                                 </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend class="text-center header"></legend>
+                            <div class="col-md-4 col-md-offset-4 text-center">
+                                <a class="btn btn-info btn-block btn-lg" href="#(ctx)/index">返回</a>
                             </div>
                         </fieldset>
                     </form>

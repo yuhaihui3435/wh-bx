@@ -55,12 +55,19 @@ public class IndexCtr extends CoreController {
     public void enterDetail() {
         String code = getPara("code");
         String pwd = getPara("pwd");
+        keepPara(code,pwd);
         Cards cards = null;
         try {
             cards = cardsService.checkCard(code, pwd);
         } catch (CoreException e) {
             throw e;
         }
+
+        if(cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
+            throw  new CoreException("卡片已经激活，请直接查询保单详细");
+
+        }
+
         //code="010100201";
         cards = Cards.dao.findByCode(code);
 //        if(cards.getAct()==null||!cards.getAct().equals(Consts.YORN_STR.yes.getVal())){
@@ -149,13 +156,40 @@ public class IndexCtr extends CoreController {
             LogKit.error("卡激活短信通知失败>>" + e.getMessage());
         }
 
-        renderSuccessJSON("保单信息录入完成，等待审核");
+        renderSuccessJSON(cardsService.getCardtypeByCardcode(cards.getCode()).getActMsg());
 
     }
 
     @Before({CardStatusCheckInterceptor.class, Tx.class})
     public void saveCardCarInfo() {
+        CardsCarPh cardsCarPh=getModel(CardsCarPh.class,"",true);
+        CardsCarIp cardsCarIp=getModel(CardsCarIp.class,"",true);
+        Integer cardsId=getParaToInt("cardsId");
+        Integer carType=getParaToInt("carType");
+        cardsCarIp.setType(carType);
+        String cardsCode=getPara("code");
+        cardsCarIp.setCardsId(cardsId);
+        cardsCarPh.setCardsId(cardsId);
+        Cards cards=Cards.dao.findFristByPropEQ("code",cardsCode);
+        cards.setAct(Consts.YORN_STR.yes.getVal());
+        cards.setActAt(new Date());
 
+        if(CardsCarIp.dao.findFristByPropEQ("cardsId",cardsId)!=null){
+            renderFailJSON("此卡疑似已经被激活");
+            return;
+        }
+
+        if(CardsCarPh.dao.findFristByPropEQ("cardsId",cardsId)!=null){
+            renderFailJSON("此卡疑似已经被激活");
+            return;
+        }
+
+        cards.update();
+        cardsCarIp.setCAt(new Date());
+        cardsCarPh.setCAt(new Date());
+        cardsCarIp.save();
+        cardsCarPh.save();
+        renderSuccessJSON(cardsService.getCardtypeByCardcode(cards.getCode()).getActMsg());
     }
 
 
@@ -172,8 +206,7 @@ public class IndexCtr extends CoreController {
         }
         cards = Cards.dao.findByCode(code);
         if (cards.getAct() == null || !cards.getAct().equals(Consts.YORN_STR.yes.getVal())) {
-            renderFailJSON("卡片未被激活，请先激活卡片");
-            return;
+            throw new CoreException("此卡未激活，请激活后进行查看");
         }
         List<Attachment> attachments = null;
         if (cards.getCardtype().equals("accidentInsurance")) {
@@ -214,4 +247,5 @@ public class IndexCtr extends CoreController {
             return;
         }
     }
+
 }

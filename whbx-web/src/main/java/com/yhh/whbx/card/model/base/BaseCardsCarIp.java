@@ -33,12 +33,12 @@ public abstract class BaseCardsCarIp<M extends BaseCardsCarIp<M>> extends CoreMo
 		return getStr("seatCount");
 	}
 
-	public void setType(java.lang.String type) {
+	public void setType(java.lang.Integer type) {
 		set("type", type);
 	}
 
-	public java.lang.String getType() {
-		return getStr("type");
+	public java.lang.Integer getType() {
+		return getInt("type");
 	}
 
 	public void setEngineNum(java.lang.String engineNum) {

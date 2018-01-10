@@ -53,7 +53,9 @@
                 <!-- /.carousel -->
             </div>
             <div class="col-md-4" id="overlay">
+
                 <div class="overlay-box">
+
                     <div class="overlay-title">
                         卡激活
                     </div>
@@ -61,16 +63,16 @@
                         请在这里输入您的卡号与密码，开始进行卡激活操作。
                     </p>
                     <div class="domain-search-holder" id="domain-search-holder">
-                        <div class="success" style="display: none;color: #fff !important;font-size: 18px;font-family: 'nowaybold';"></div>
+
                         <form id="domain-search" class="form-horizontal" method="post" >
                             <div class="overlay-form-body">
-                                <input id="domain-code" type="text" name="code" placeholder="请输入卡号" required/>
-                                <input  id="domain-pwd" type="password" name="pwd" placeholder="请输入密码" required/>
+                                <input id="domain-code" type="text" name="code" placeholder="请输入卡号" required value="#(code??'')"/>
+                                <input  id="domain-pwd" type="password" name="pwd" placeholder="请输入密码" required value="#(pwd??'')"/>
                             </div>
                             <div class="row" style="padding: 10px">
-                                <div class="col-lg-6">
-                                <input class=" btn   btn-danger btn-block btn-lg" style="display: inline" id="act-btn" type="button" onclick="act()"  value="激活" /></div>
-                                <div class="col-lg-6"><input class=" btn  btn-info btn-block btn-lg" style="display: inline" id="query-btn" type="button" onclick="view()"  value="查询" /></div>
+                                <div class="col-md-6">
+                                <input class=" btn   btn-danger btn-block  btn-lg"  id="act-btn" type="button" onclick="act()"  value="激活" /></div>
+                                <div class="col-md-6"><input class=" btn  btn-info btn-block  btn-lg"  id="query-btn" type="button" onclick="view()"  value="查询" /></div>
                             </div>
                         </form>
                     </div>

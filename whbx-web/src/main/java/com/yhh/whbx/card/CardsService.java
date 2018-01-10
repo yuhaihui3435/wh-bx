@@ -6,6 +6,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.model.Cards;
+import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
@@ -64,6 +65,13 @@ public class CardsService {
             throw new CoreException("卡密码不正确");
         }
         return cards;
+    }
+
+
+    public Cardtype getCardtypeByCardcode(String cardcode){
+        Cards cards=Cards.dao.findByCode(cardcode);
+        Integer ctId=cards.getCtId();
+        return Cardtype.dao.findById(ctId);
     }
 
 }

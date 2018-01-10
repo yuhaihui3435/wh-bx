@@ -25,7 +25,7 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>投保人姓名</label>
-                    <input id="phName" name="phName" type="text"
+                    <input id="phName" name="phName" type="text" maxlength="20"
                            class="form-control" required>
                 </div>
                 <div class="col-md-6">
@@ -45,12 +45,12 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>手机号</label>
-                    <input id="phTel" name="phTel" type="text" class="form-control"
+                    <input id="phTel" name="phTel" type="text" class="form-control" maxlength="11"
                            required>
                 </div>
                 <div class="col-md-6">
                     <label>EMAIL</label>
-                    <input id="phEmail" name="phEmail" type="text"
+                    <input id="phEmail" name="phEmail" type="text" maxlength="100"
                            class="form-control">
                 </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>被投保人姓名</label>
-                    <input id="ipName-#(i+1)" name="ipName" type="text"
+                    <input id="ipName-#(i+1)" name="ipName" type="text" maxlength="20"
                            class="form-control" required>
                 </div>
                 <div class="col-md-6">
@@ -128,7 +128,7 @@
             <div class="form-group">
                 <div class="col-md-6">
                     <label>手机号</label>
-                    <input id="ipTel-#(i+1)" name="ipTel" type="text"
+                    <input id="ipTel-#(i+1)" name="ipTel" type="text" maxlength="11"
                            class="form-control" required>
                 </div>
             </div>
@@ -305,6 +305,8 @@
                 layer.alert('投保人姓名不能为空', {icon: 5})
                 return ret;
             }
+            phName=Bee.StringUtils.trimToEmpty(phName)
+
             if (Bee.StringUtils.isBlank(phIdcard)) {
                 layer.alert('投保人证件号不能为空', {icon: 5})
                 return ret;
@@ -319,6 +321,7 @@
                     $("input[name='phSex'][value=" + phIdInfo['sex'] + "]").attr("checked", true);
                 }
             }
+
             if (Bee.StringUtils.isBlank(phTel)) {
                 layer.alert('投保人联系电话不能为空', {icon: 5})
                 return ret;
@@ -337,7 +340,9 @@
                     layer.alert('投保人EMAIL格式不正确', {icon: 5})
                     return ret;
                 }
+                phEmail=Bee.StringUtils.trimToEmpty(phEmail);
             }
+
 
 
             let ips = new Array;
@@ -357,6 +362,7 @@
                     layer.alert('被投保人姓名' + (i + 1) + '不能为空', {icon: 5});
                     return ret;
                 }
+                ipName=Bee.StringUtils.trimToEmpty(ipName)
                 temp['ip'+(i)+'.name'] = ipName
 
                 let ipIdcard = $("#ipIdcard-" + (i + 1)).val();

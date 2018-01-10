@@ -1,94 +1,155 @@
-<div class="well well-sm" id="contactWell" style="background-color: white;">
-    <form class="form-horizontal" id="cardInfoForm" method="post">
-        <input type="hidden" id="cardId" name="cardId" value="#(card.id??'')">
-        <fieldset>
-            <legend class="text-center header">投保人信息</legend>
+#@layout()
+#define content()
 
-            <div class="success text-center"
-                 style="display: none;color: black !important;font-size: 18px;font-family: 'nowaybold';"></div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>投保人类型：</label>
-                    #(cardCarPh.typeTxt)
+<div id="details" class="container-fluid">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-8 col-md-offset-2 ">
+                <ol class="breadcrumb">
+                    <li><a href="#(ctx)/">首页</a></li>
+                    <li class="active">保单详细信息</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 ">
+                <div class="well well-sm" style="background-color: white;">
+                    <legend class="text-center header">卡信息</legend>
+                    <div class="row">
+                        <div class="col-md-4">卡号：#(card.code??"")</div>
+                        <div class="col-md-4">卡类型：#(card.cardtypeName??"")</div>
+                        <div class="col-md-4">卡面值：#(card.faceVal??"")</div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>证件类型：</label>
-                    #(cardCarPh.certTypeTxt)
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="well well-sm" id="contactWell" style="background-color: white;">
+                    <form class="form-horizontal" id="cardInfoForm" method="post">
+                        <input type="hidden" id="cardId" name="cardId" value="#(card.id??'')">
+                        <fieldset>
+                            <legend class="text-center header">投保人信息</legend>
 
-                </div>
+                            <div class="success text-center"
+                                 style="display: none;color: black !important;font-size: 18px;font-family: 'nowaybold';"></div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>投保人类型：</label>
+                                    #(cardsCarPh.typeTxt)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>证件类型：</label>
+                                    #(cardsCarPh.certTypeTxt??"")
 
-                <div class="col-md-6">
-                    <label>证件号：</label>
-                    #(cardCarPh.certCode)
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>证件号：</label>
+                                    #(cardsCarPh.certCode)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>投保人/公司名称：</label>
+                                    #(cardsCarPh.name)
+                                </div>
+                                #if(cardsCarPh.linkName!=null)
+                                <div class="col-md-6">
+                                    <label>联系人：</label>
+                                    #(cardsCarPh.linkName)
+                                </div>
+                                #end
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>手机号：</label>
+                                    #(cardsCarPh.tel)
+                                </div>
+                                <div class="col-md-6">
+                                    <label>EMAIL：</label>
+                                    #(cardsCarPh.email)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label>地址：</label>
+                                    #(cardsCarPh.province)&nbsp;&nbsp;#(cardsCarPh.city)&nbsp;&nbsp; #(cardsCarPh.district)&nbsp;&nbsp; #(cardsCarPh.address)
+                                </div>
+                            </div>
+
+
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="text-center header">被投保车辆信息</legend>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>车辆类型：</label>
+                                    #(cardsCarIp.carTypeTxt)
+                                </div>
+                                <div class="col-md-6">
+                                    <label>营运性质：</label>
+                                    #(cardsCarIp.propTxt)
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>座位数：</label>
+                                    #(cardsCarIp.seatCount)
+                                </div>
+                                <div class="col-md-6">
+                                    <label>发动机号：</label>
+                                    #(cardsCarIp.engineNum)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>车架子号：</label>
+                                    #(cardsCarIp.frameNum)
+                                </div>
+                                <div class="col-md-6">
+                                    <label>车牌号：</label>
+                                    #(cardsCarIp.plateNum)
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend class="text-center header">保单</legend>
+                            <div class="form-group">
+                                <div class="col-md-12 text-center">
+                                    #if(!electronicPolicy.isEmpty())
+                                    #for(y:electronicPolicy)
+                                    <a href="#(y.accessUrl)#(y.path)">#(y.name)</a>
+                                    #end
+                                    #else
+                                    <div class="col-md-8 col-md-offset-2 alert alert-danger">
+                                        <strong>注意！</strong>电子保单尚未生成，请耐心等待。
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend class="text-center header"></legend>
+                            <div class="col-md-4 col-md-offset-4 text-center">
+                                <a class="btn btn-info btn-block btn-lg" href="#(ctx)/index">返回</a>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>投保人/公司名称：</label>
-                    #(cardCarPh.name)
-                </div>
-                <div class="col-md-6">
-                    <label>联系人：</label>
-                    #(cardCarPh.linkName)
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>手机号：</label>
-                    #(cardCarPh.tel)
-                </div>
-                <div class="col-md-6">
-                    <label>EMAIL：</label>
-                    #(cardCarPh.email)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-12">
-                    <label>地址：</label>
-                    #(cardCarPh.address)
-                </div>
-            </div>
-
-
-        </fieldset>
-
-        <fieldset>
-            <legend class="text-center header">被投保车辆信息</legend>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>车辆类型：</label>
-                    #(cardsCarIp.carTypeTxt)
-                </div>
-                <div class="col-md-6">
-                    <label>营运性质：</label>
-                    #(cardsCarIp.propTxt)
-                </div>
-
-            </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>座位数：</label>
-                    #(cardsCarIp.seatCount)
-                </div>
-                <div class="col-md-6">
-                    <label>发动机号：</label>
-                    #(cardsCarIp.engineNum)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label>车架子号：</label>
-                    #(cardsCarIp.frameNum)
-                </div>
-                <div class="col-md-6">
-                    <label>车牌号：</label>
-                    #(cardsCarIp.plateNum)
-                </div>
-            </div>
-        </fieldset>
-    </form>
+        </div>
+    </div>
 </div>
+#end
