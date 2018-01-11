@@ -125,6 +125,7 @@
                 this.$refs['formValidate'].resetFields()
                 this.depotModal = true;
                 this.modalLoading = false;
+                console.info(this.depot);
 //                if(this.depot.allLockStatus=='0'){
 //                    this.$Notice.info({
 //                        title: '通知',
@@ -133,17 +134,19 @@
 //                }
             },
             save(){
+
                 let vm = this;
                 this.modalLoading = true;
                 this.$refs['formValidate'].validate((valid) => {
                     if (valid) {
+
                         let param= {bNum:vm.depot.jsBNum,eNum:vm.depot.jsENum};
                         param=Object.assign(param,{depotId:vm.depot.id})
                         this.$store.dispatch('depot_unlockRecord_save', param).then((res) => {
-                            if (res && res == 'success') {
+                            if (res && res.resCode == 'success') {
                                 vm.depotModal = false;
                                 this.$store.dispatch('depot_unlockRecord_list').then(()=>{
-                                    this.$store.dispatch('depot_list')
+                                    this.$store.dispatch('depot_page')
                                 })
                             } else {
                                 this.modalLoading = false;

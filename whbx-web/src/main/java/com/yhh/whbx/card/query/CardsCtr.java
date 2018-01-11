@@ -1,10 +1,15 @@
 package com.yhh.whbx.card.query;
 
+import com.jfinal.aop.Before;
+import com.jfinal.aop.Duang;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
+import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
@@ -17,6 +22,9 @@ import java.util.Map;
  * Created by yuhaihui8913 on 2017/12/20.
  */
 public class CardsCtr extends CoreController {
+
+    private final static CardsService cardsService = Duang.duang(CardsService.class);
+
     public void page() {
         Page<Cards> page;
         Kv kv = Kv.create();
@@ -59,5 +67,32 @@ public class CardsCtr extends CoreController {
         map.put("cardtypeList", Cardtype.dao.findEnableList());
         renderJson(map);
     }
+    @Before({Tx.class})
+    public void lock(){
+        //将card状态更新到锁定状态
+        int cardsId=getParaToInt("cardsId");
+        Cards cards=Cards.dao.findById(cardsId);
+        cards.setActAt(null);
+        cards.setAct(Consts.YORN_STR.no.getVal());
+        cards.setIsLocked(Consts.YORN_STR.no.getVal());
+        cards.update();
+
+        //删除掉激活录入的数据
+        Cardtype cardtype=cardsService.getCardtypeByCardcode(cards.getCode());
+        cardsService.cleanActData(cardtype.getTypeVal(),cardsId);
+
+        renderSuccessJSON("卡锁定成功，激活数据被清除");
+    }
+    @Before({Tx.class})
+    public void unlock(){
+        int cardsId=getParaToInt("cardsId");
+        Cards cards=Cards.dao.findById(cardsId);
+        cards.setIsLocked(Consts.YORN_STR.yes.getVal());
+        cards.update();
+
+        renderSuccessJSON("卡解锁成功");
+
+    }
+
 
 }

@@ -146,8 +146,8 @@ const depot = {
             let vm = this._vm;
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c02/saveUnlockRecord',param).then((res) => {
-                    commit('set_depot_unlockRecordList', res)
-                    resolve()
+                    // commit('set_depot_unlockRecordList', res)
+                    resolve(res)
                 });
             });
         },

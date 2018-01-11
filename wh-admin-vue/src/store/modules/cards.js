@@ -65,6 +65,23 @@ const cards = {
                 });
             });
         },
+
+        cards_lock: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c03/lock',param).then((res) => {
+                    resolve(res)
+                });
+            });
+        },
+        cards_unlock: function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c03/unlock',param).then((res) => {
+                    resolve(res)
+                });
+            });
+        },
     }
 }
 export default cards

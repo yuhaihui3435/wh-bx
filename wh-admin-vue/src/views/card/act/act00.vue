@@ -5,7 +5,7 @@
             <Card>
                 <p slot="title">
                     <Icon type="help-buoy"></Icon>
-                    卡查询
+                    已激活意外险查询
                 </p>
                 <Row>
                     <Col span="24" offset="0" align="left">
@@ -24,12 +24,6 @@
                         <FormItem>
                             <DatePicker type="datetimerange"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
-                        <FormItem>
-                            <Select v-model="cardtypeId" placeholder="卡类型" clearable style="width:100px" align="left" @on-change="cardtypeChange">
-                                <Option v-for="item in cardtypeList" :value="item.id" :key="item.id">{{ item.name }}
-                                </Option>
-                            </Select>
-                        </FormItem>
                         <FormItem v-if="cardapplyList.length>0">
                             <Select v-model="cardapplyId"  placeholder="批次" clearable style="width:100px" align="left" >
                                 <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">{{ item.batch }}
@@ -39,12 +33,6 @@
                         <FormItem>
                             <Select v-model="status" placeholder="状态" clearable style="width:100px" align="left">
                                 <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label}}
-                                </Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem>
-                            <Select v-model="actStatus" placeholder="激活状态" clearable style="width:100px" align="left">
-                                <Option v-for="item in yonList" :value="item.value" :key="item.value">{{ item.label}}
                                 </Option>
                             </Select>
                         </FormItem>
@@ -77,8 +65,8 @@
                     </Col>
                 </Row>
                 <!--<Row class="margin-top-10">-->
-                    <!--<span @click="search" style="margin: 0 10px;"><Button type="error" icon="locked">锁定</Button></span>-->
-                    <!--<span @click="search" style="margin: 0 10px;"><Button type="success" icon="unlocked">解锁</Button></span>-->
+                <!--<span @click="search" style="margin: 0 10px;"><Button type="error" icon="locked">锁定</Button></span>-->
+                <!--<span @click="search" style="margin: 0 10px;"><Button type="success" icon="unlocked">解锁</Button></span>-->
                 <!--</Row>-->
                 <Row class="margin-top-10">
 
@@ -95,13 +83,10 @@
             </Col>
         </Row>
     </div>
-
 </template>
 <script>
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
-
-    const moment = require('moment');
 
     let lockBtn=(vm,h,param)=>{
         return h('Poptip', {
@@ -124,28 +109,28 @@
             }
         }, '锁定')]);
     }
-    let unLockBtn=(vm,h,param)=>{
+    let unActBtn=(vm,h,param)=>{
         return h('Poptip', {
             props: {
                 confirm: '',
-                title: '您确定要解锁这张卡吗？'
+                title: '您确定这张卡撤销到未激活吗？'
             },
             style: {
                 marginRight: '5px',
-                'z-index':100
             },
             on: {
                 'on-ok': () => {
-                    vm.unlock(param.row)
+                    vm.unAct(param.row)
                 }
             }
         }, [h('Button', {
             props: {
-                type: 'success',
+                type: 'error',
                 size: 'small'
             }
-        }, '解锁')]);
+        }, '撤销到未激活')]);
     }
+
 
     export default {
 
@@ -201,7 +186,7 @@
             unlock(obj){
                 this.$store.dispatch('cards_unlock',{cardsId:obj.id}).then((res)=>{
                     this.search();
-            });
+                });
             }
         },
         mounted () {
@@ -210,14 +195,15 @@
             this.$store.dispatch('cards_dataReady')
         },
         components: {
+
         },
         data () {
             return {
                 cardapplyId:'',//卡申请id
-                cardtypeId:'',//卡类型id
+                cardtypeId:'407',//卡类型id
                 code:'',//卡号
                 faceVal:'',//面值
-                actStatus:'',//是否激活
+                actStatus:'0',//是否激活
                 lockStatus:'',//是否解锁
                 outStatus:'',
                 bNum: '',//号段开始
@@ -229,12 +215,12 @@
                 statusList: consts.status,
                 yonList: consts.yon,
                 tableColums: [
-//                    {
-//                        type: 'selection',
-//                        width: 60,
-//                        align: 'center',
-//                        fixed: 'left'
-//                    },
+                     {
+                        type: 'selection',
+                        width: 60,
+                        align: 'center',
+                        fixed: 'left'
+                    },
                     {
                         title: '卡号',
                         key: 'code',
@@ -242,7 +228,6 @@
                         width: 100,
 
                     },
-
                     {
                         title: '卡类型',
                         width: 100,
@@ -259,8 +244,6 @@
                         key: 'salesmenName',
                     },
 
-
-
                     {
                         title: '卡面值',
                         width: 100,
@@ -272,92 +255,23 @@
                         key: 'actTime',
                     },
                     {
-                        title: '激活姓名',
+                        title: '投保人姓名',
                         width: 100,
                         key: 'actName',
                     },
                     {
-                        title: '激活状态',
-                        key: 'act',
-                        width: 120,
-                        render: (h, param) => {
-                            let color = (param.row.act == '0') ? 'green' : 'red'
-                            let txt = (param.row.act == '0') ? '激活' : '未激活'
-                            return h('Tag', {
-                                props: {
-                                    type: 'dot',
-                                    color: color
-                                }
-                            }, txt)
-                        }
-                    },
-                    {
-                        title: '出库状态',
-                        key: 'outStatus',
-                        width: 120,
-                        render: (h, param) => {
-                            let color = (param.row.outStatus == '0') ? 'green' : 'red'
-                            let txt = (param.row.outStatus == '0') ? '已出库' : '未出库'
-                            return h('Tag', {
-                                props: {
-                                    type: 'dot',
-                                    color: color
-                                }
-                            }, txt)
-                        }
-                    },
-                    {
-                        title: '解锁状态',
-                        key: 'isLocked',
-                        width: 120,
-                        render: (h, param) => {
-                            let color = (param.row.isLocked == '0') ? 'green' : 'red'
-                            let txt = (param.row.isLocked == '0') ? '已解锁' : '未解锁'
-                            return h('Tag', {
-                                props: {
-                                    type: 'dot',
-                                    color: color
-                                }
-                            }, txt)
-                        }
-                    },
-
-//                    {
-//                        title: '卡余额',
-//                        key: 'faceBalance',
-//                    },
-                    {
-                        title: '状态',
-                        key: 'status',
-                        width: 120,
-                        render: (h, param) => {
-                            let color = (param.row.status == '0') ? 'green' : 'red'
-                            let txt = (param.row.status == '0') ? '正常' : '禁用'
-                            return h('Tag', {
-                                props: {
-                                    type: 'dot',
-                                    color: color
-                                }
-                            }, txt)
-                        }
-                    },
-                    {
                         title: '操作',
                         key: 'action',
-                        width: 200,
-//                        fixed: 'right',
+                        width: 350,
                         align: 'center',
                         render: (h, param) => {
                             let vm=this;
                             let btns = new Array;
                             let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
-                            if(row.depotId!=undefined&&row.isLocked=='0'){
-                                btns.push(lockBtn(this,h,param))
-                            }else  if(row.depotId!=undefined&&(row.isLocked=='1' || row.isLocked==undefined)){
-                                btns.push(unLockBtn(this,h,param))
-                            }
-
+                            btns.push(consts.uploadBDBtn(this, h, param));
+                            btns.push(unActBtn(this,h,param))
+                            btns.push(lockBtn(this,h,param))
 
                             return h('div', btns)
                         }

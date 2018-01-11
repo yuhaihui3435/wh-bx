@@ -36,6 +36,22 @@ consts.viewBtn=(vm,h,param)=>{
         }
     }, '查看')
 };
+consts.uploadBDBtn=(vm,h,param)=>{
+    return h('Button', {
+        props: {
+            type: 'primary',
+            size: 'small'
+        },
+        style: {
+            marginRight: '5px'
+        },
+        on: {
+            click: () => {
+                vm.uploadBD(param)
+            }
+        }
+    }, '上传保单')
+};
 
 consts.delBtn=(vm,h,param)=>{
     return h('Poptip', {
@@ -102,6 +118,7 @@ consts.actBtn=(vm,h,param)=>{
         }
     }, '激活')]);
 }
+
 
 consts.status=[{value:'0',label:'正常'},{value:'1',label:'禁用'}]
 consts.yon=[{value:'0',label:'是'},{value:'1',label:'否'}]

@@ -4,9 +4,7 @@ import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.card.model.Cardapply;
-import com.yhh.whbx.card.model.Cards;
-import com.yhh.whbx.card.model.Cardtype;
+import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
@@ -72,6 +70,25 @@ public class CardsService {
         Cards cards=Cards.dao.findByCode(cardcode);
         Integer ctId=cards.getCtId();
         return Cardtype.dao.findById(ctId);
+    }
+
+    public void cleanActData(String type,int cardsId){
+        if (type.equals("accidentInsurance")) {
+            CardsPh cardsPh=CardsPh.dao.findFristByPropEQ("cardsId",cardsId);
+            if(cardsPh!=null)
+            cardsPh.delete();
+            List<CardsIp> cardsIps=CardsIp.dao.findByPropEQ("cardsId",cardsId);
+            for(CardsIp cardsIp:cardsIps){
+                cardsIp.delete();
+            }
+        }else{
+            CardsCarPh cardsCarPh=CardsCarPh.dao.findFristByPropEQ("cardsId",cardsId);
+            CardsCarIp cardsCarIp=CardsCarIp.dao.findFristByPropEQ("cardsId",cardsId);
+            if(cardsCarIp!=null)
+            cardsCarIp.delete();
+            if(cardsCarPh!=null)
+            cardsCarPh.delete();
+        }
     }
 
 }

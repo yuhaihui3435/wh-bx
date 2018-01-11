@@ -42,6 +42,10 @@ public class Cardapply extends BaseCardapply<Cardapply> {
 		return Cardtype.dao.findById(getCardtypeId()).getName();
 	}
 
+	public String getCardtypeTypeTxt(){
+		return Cardtype.dao.findById(getCardtypeId()).getTypeTxt();
+	}
+
 	public String getMediaTxt(){
 		Taxonomy taxonomy=null;
 		if(getMedia()!=null)

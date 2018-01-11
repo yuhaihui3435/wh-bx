@@ -280,31 +280,44 @@
                     {
                         title: '卡类型',
                         key: 'cardtypeTxt',
+                        width:100,
+                        fixed:'left'
+                    },
+                    {
+                        title: '类型',
+                        width:100,
+                        key: 'cardtypeTypeTxt',
                     },
 
                     {
                         title: '批次',
+                        width:100,
                         key: 'batch',
                     },
 
                     {
                         title: '介质',
+                        width:100,
                         key: 'mediaTxt',
                     },
                     {
                         title: '数量',
+                        width:100,
                         key: 'num',
                     },
                     {
                         title: '申请时间',
+                        width:100,
                         key: 'cAtTxt',
                     },
                     {
                         title: '下载时间',
+                        width:100,
                         key: 'downloadAt',
                     },
                     {
                         title: '操作员',
+                        width:100,
                         key: 'operTxt',
                     },
                     {

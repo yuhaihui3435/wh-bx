@@ -14,10 +14,15 @@
                 <Col span="24">
                 <Form :label-width="150" >
                     <Card>
+
+                        <Row>
+                            <Col span="24" align="middle"><h1>{{cardapply.cardtypeTxt}}</h1> </Col>
+                        </Row>
+
                         <Row>
                             <Col span="12">
-                            <FormItem label="卡类型:" >
-                                {{cardapply.cardtypeTxt}}
+                            <FormItem label="类型:" >
+                                {{cardapply.cardtypeTypeTxt}}
                             </FormItem>
                             </Col>
                             <Col span="12">

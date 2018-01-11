@@ -27,6 +27,9 @@ public class Cardtype extends BaseCardtype<Cardtype> {
 	public String getTypeTxt(){
 		return getType()!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString()))!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString())).getTitle():"":"";
 	}
+	public String getTypeVal(){
+		return getType()!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString()))!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getType().toString())).getText():"":"";
+	}
 	public String getCategoryTxt(){
 		return getCategory()!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString()))!=null?((Taxonomy)CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),getCategory().toString())).getTitle():"":"";
 	}

@@ -401,9 +401,12 @@
                                 }, '出库')]))
                             }
                             if (param.row.status == '0' && row.dAt == undefined && row.outStatus == '0' && row.salesmenId!=undefined) {
+
+                                let btnLabel=row.allLockStatus=='0'?'卡已全部解锁':'解锁';
+                                let btnStyle=row.allLockStatus=='0'?'primary':'success';
                                 btns.push(h('Button', {
                                     props: {
-                                        type: 'success',
+                                        type: btnStyle,
                                         size: 'small'
                                     },
                                     style: {
@@ -414,7 +417,7 @@
                                             vm.unlockCard(param.row)
                                         }
                                     }
-                                }, '解锁'))
+                                }, btnLabel))
                             }
                             return h('div', btns)
                         }
