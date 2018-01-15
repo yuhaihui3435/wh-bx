@@ -22,7 +22,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <DatePicker type="datetimerange"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
+                            <DatePicker type="datetimerange"   placement="bottom-end" v-model="at" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
                             <Select v-model="cardtypeId" placeholder="卡类型" clearable style="width:100px" align="left" @on-change="cardtypeChange">
@@ -70,8 +70,10 @@
                         </FormItem>
 
                         <FormItem>
-                            <span @click="search" style="margin: 0 10px;"><Button type="primary"
+                            <span @click="search(1)" style="margin: 0 10px;"><Button type="primary"
                                                                                   icon="search">搜索</Button></span>
+                            <span @click="reset" style="margin: 0 10px;"><Button type="primary"
+                                                                                 icon="ios-redo">重置</Button></span>
                         </FormItem>
                     </Form>
                     </Col>
@@ -162,6 +164,7 @@
         },
         methods: {
             search(pn){
+                console.info(pn)
                 if(pn==undefined)pn=1
                 let param = {
                     cardtypeId: this.cardtypeId,
@@ -202,7 +205,23 @@
                 this.$store.dispatch('cards_unlock',{cardsId:obj.id}).then((res)=>{
                     this.search();
             });
+            },
+            reset(){
+                this.cardapplyId='';//卡申请id
+                this.cardtypeId='';//卡类型id
+                this.code='';//卡号
+                this.faceVal='';//面值
+                this.actStatus='';//是否激活
+                this.lockStatus='';//是否解锁
+                this.outStatus='';
+                this.bNum= '';//号段开始
+                this.eNum= '';//号段结束
+                this.status= '';//状态 查询条件
+                this.salesmenId= '';//分配
+                this.actTime= '';//出库时间
+                this.at='';
             }
+
         },
         mounted () {
             this.$store.dispatch('cards_page')
@@ -213,6 +232,7 @@
         },
         data () {
             return {
+                at:'',
                 cardapplyId:'',//卡申请id
                 cardtypeId:'',//卡类型id
                 code:'',//卡号
@@ -258,9 +278,6 @@
                         width: 100,
                         key: 'salesmenName',
                     },
-
-
-
                     {
                         title: '卡面值',
                         width: 100,
@@ -269,12 +286,7 @@
                     {
                         title: '激活时间',
                         width: 100,
-                        key: 'actTime',
-                    },
-                    {
-                        title: '激活姓名',
-                        width: 100,
-                        key: 'actName',
+                        key: 'actAt',
                     },
                     {
                         title: '激活状态',

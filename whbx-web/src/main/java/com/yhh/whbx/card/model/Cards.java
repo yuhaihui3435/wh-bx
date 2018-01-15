@@ -130,9 +130,32 @@ public class Cards extends BaseCards<Cards> {
 		return this.get("manyPeople","1");
 	}
 
+	public boolean get_disabled(){
+		return StrUtil.isBlank(getExportCode())?false:true;
+	}
 
+	public Integer getCardtypeType(){
+		return this.getInt("cardtypeType");
+	}
+	public String getCardtypeTypeTxt(){
+		return  this.get("cardtypeTypeTxt");
+	}
 
+	public CardsCarPh getCcph(){
+		return (getCardtypeTypeTxt()!=null&&getCardtypeTypeTxt().equals("driverInsurance"))?CardsCarPh.dao.findFristByPropEQ("cardsId",getId()):null;
+	}
 
+	public CardsPh getCph(){
+		return (getCardtypeTypeTxt()!=null&&getCardtypeTypeTxt().equals("accidentInsurance"))?CardsPh.dao.findFristByPropEQ("cardsId",getId()):null;
+	}
+
+	public CardsCarIp getCcip(){
+		return (getCardtypeTypeTxt()!=null&&getCardtypeTypeTxt().equals("driverInsurance"))?CardsCarIp.dao.findFristByPropEQ("cardsId",getId()):null;
+	}
+
+	public List<CardsIp> getCip(){
+		return (getCardtypeTypeTxt()!=null&&getCardtypeTypeTxt().equals("accidentInsurance"))?CardsIp.dao.findByPropEQ("cardsId",getId()):null;
+	}
 
 
 }

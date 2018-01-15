@@ -50,6 +50,23 @@ public class CardsCtr extends CoreController {
             kv.put("d.outStatus=", getPara("outStatus"));
         if (!isParaBlank("salesmenId"))
             kv.put("d.salesmenId=", getPara("salesmenId"));
+        if (!isParaBlank("exportStatus"))
+            kv.put("c.exportCode", getPara("exportStatus"));
+        if(!isParaBlank("exportCode"))
+            kv.put("c.exportCode=", getPara("exportCode"));
+        if(!isParaBlank("policyNum"))
+            kv.put("c.policyNum=", getPara("policyNum"));
+        if(!isParaBlank("phIdNum"))
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType"))&&getPara("cardtypeType").equals("407"))?"ph.idCard=":"cph.idCard=", getPara("phIdNum"));
+        if(!isParaBlank("phName"))
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType"))&&getPara("cardtypeType").equals("407"))?"ph.name=":"cph.name=", getPara("phName"));
+        if(!isParaBlank("ipIdNum"))
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType"))&&getPara("cardtypeType").equals("407"))?"ip.idCard=":"cip.idCard=", getPara("ipIdNum"));
+        if(!isParaBlank("ipName"))
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType"))&&getPara("cardtypeType").equals("407"))?"ip.name=":"cip.name=", getPara("ipName"));
+
+        if (!isParaBlank("cardtypeType"))
+            kv.put("ct.type=", getPara("cardtypeType"));
         if (!isParaBlank("actTime")){
             String[] array= StrUtil.split(getPara("actTime")," - ");
             kv.put("c.actAt>=",StrUtil.trimEnd(array[0]));
@@ -93,6 +110,30 @@ public class CardsCtr extends CoreController {
         renderSuccessJSON("卡解锁成功");
 
     }
+
+    @Before({Tx.class})
+    public void unAct(){
+        int cardsId=getParaToInt("cardsId");
+        Cards cards=Cards.dao.findById(cardsId);
+        cards.setActAt(null);
+        cards.setAct(Consts.YORN_STR.no.getVal());
+        cards.update();
+
+        //删除掉激活录入的数据
+        Cardtype cardtype=cardsService.getCardtypeByCardcode(cards.getCode());
+        cardsService.cleanActData(cardtype.getTypeVal(),cardsId);
+
+        renderSuccessJSON("卡激活撤销成功");
+
+    }
+
+    public void exportActCards(){
+        String ids=getPara("ids");
+        if(StrUtil.isNotBlank(ids)){
+
+        }
+    }
+
 
 
 }

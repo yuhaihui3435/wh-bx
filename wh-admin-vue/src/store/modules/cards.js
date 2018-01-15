@@ -3,6 +3,7 @@ import kit from '../../libs/kit';
 const cards = {
     state: {
         cardsList: [],
+        cardsList_00: [],
         totalPage: 0,
         pageNumber: 1,
         totalRow: 1,
@@ -14,6 +15,18 @@ const cards = {
     mutations: {
         set_cards_page(state, page){
             state.cardsList = page.list
+            state.totalPage = page.totalPage
+            state.totalRow = page.totalRow
+            state.pageNumber = page.pageNumber
+        },
+        set_cards_page_00(state, page){
+            state.cardsList_00 = page.list
+
+            for(var i=0;i<state.cardsList_00.length;i++){
+                let c=state.cardsList_00[i];
+                c['_disabled']=c.disabled;
+            }
+
             state.totalPage = page.totalPage
             state.totalRow = page.totalRow
             state.pageNumber = page.pageNumber
@@ -38,6 +51,11 @@ const cards = {
         cards_page: function ({commit, state}, param) {
             this._vm.$axios.post('/c03/page', param).then((res) => {
                 commit('set_cards_page', res)
+            });
+        },
+        cards_page_00: function ({commit, state}, param) {
+            this._vm.$axios.post('/c03/page', param).then((res) => {
+                commit('set_cards_page_00', res)
             });
         },
         cards_get: function ({commit, state}, param) {
@@ -82,6 +100,15 @@ const cards = {
                 });
             });
         },
+        cards_unAct:function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c03/unAct',param).then((res) => {
+                    resolve(res)
+                });
+            });
+        },
+
     }
 }
 export default cards

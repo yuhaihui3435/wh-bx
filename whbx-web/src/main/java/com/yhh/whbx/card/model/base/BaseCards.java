@@ -9,35 +9,35 @@ import com.yhh.whbx.core.CoreModel;
 @SuppressWarnings("serial")
 public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> implements IBean {
 
-	public void setId(Long id) {
+	public void setId(java.lang.Long id) {
 		set("id", id);
 	}
 
-	public Long getId() {
+	public java.lang.Long getId() {
 		return getLong("id");
 	}
 
-	public void setCode(String code) {
+	public void setCode(java.lang.String code) {
 		set("code", code);
 	}
 
-	public String getCode() {
+	public java.lang.String getCode() {
 		return getStr("code");
 	}
 
-	public void setPwd(String pwd) {
+	public void setPwd(java.lang.String pwd) {
 		set("pwd", pwd);
 	}
 
-	public String getPwd() {
+	public java.lang.String getPwd() {
 		return getStr("pwd");
 	}
 
-	public void setAct(String act) {
+	public void setAct(java.lang.String act) {
 		set("act", act);
 	}
 
-	public String getAct() {
+	public java.lang.String getAct() {
 		return getStr("act");
 	}
 
@@ -49,19 +49,19 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return get("actAt");
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(java.lang.String status) {
 		set("status", status);
 	}
 
-	public String getStatus() {
+	public java.lang.String getStatus() {
 		return getStr("status");
 	}
 
-	public void setApplyId(Integer applyId) {
+	public void setApplyId(java.lang.Integer applyId) {
 		set("applyId", applyId);
 	}
 
-	public Integer getApplyId() {
+	public java.lang.Integer getApplyId() {
 		return getInt("applyId");
 	}
 
@@ -73,19 +73,19 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return getStr("isLocked");
 	}
 
-	public void setUnlockId(Integer unlockId) {
+	public void setUnlockId(java.lang.Integer unlockId) {
 		set("unlockId", unlockId);
 	}
 
-	public Integer getUnlockId() {
+	public java.lang.Integer getUnlockId() {
 		return getInt("unlockId");
 	}
 
-	public void setDepotId(Integer depotId) {
+	public void setDepotId(java.lang.Integer depotId) {
 		set("depotId", depotId);
 	}
 
-	public Integer getDepotId() {
+	public java.lang.Integer getDepotId() {
 		return getInt("depotId");
 	}
 
@@ -95,6 +95,30 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 
 	public java.lang.Integer getSeq() {
 		return getInt("seq");
+	}
+
+	public void setExportCode(java.lang.String exportCode) {
+		set("exportCode", exportCode);
+	}
+
+	public java.lang.String getExportCode() {
+		return getStr("exportCode");
+	}
+
+	public void setPolicyNum(java.lang.String policyNum) {
+		set("policyNum", policyNum);
+	}
+
+	public java.lang.String getPolicyNum() {
+		return getStr("policyNum");
+	}
+
+	public void setExportAt(java.util.Date exportAt) {
+		set("exportAt", exportAt);
+	}
+
+	public java.util.Date getExportAt() {
+		return get("exportAt");
 	}
 
 }

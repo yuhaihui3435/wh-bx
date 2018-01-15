@@ -15,37 +15,30 @@
                         </FormItem>
 
                         <FormItem >
-                            <Input v-model="bNum" placeholder="起始号" style="width: 200px"/>-<Input v-model="eNum" placeholder="结束号" style="width: 200px"/>
+                            <Input v-model="exportCode" placeholder="导出编号" style="width: 200px"/>
                         </FormItem>
                         <FormItem >
-                            <Input v-model="faceVal" placeholder="面值" style="width: 200px"/>
+                            <Input v-model="policyNum" placeholder="保单号" style="width: 200px"/>
+                        </FormItem>
+                        <FormItem >
+                            <Input v-model="phName" placeholder="投保人姓名" style="width: 200px"/>
+                        </FormItem>
+                        <FormItem >
+                            <Input v-model="phIdNum" placeholder="投保人证件号" style="width: 200px"/>
+                        </FormItem>
+                        <FormItem >
+                            <Input v-model="ipName" placeholder="被投保人姓名" style="width: 200px"/>
+                        </FormItem>
+                        <FormItem >
+                            <Input v-model="ipIdNum" placeholder="被投保人证件号" style="width: 200px"/>
                         </FormItem>
 
                         <FormItem>
-                            <DatePicker type="datetimerange"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
-                        </FormItem>
-                        <FormItem v-if="cardapplyList.length>0">
-                            <Select v-model="cardapplyId"  placeholder="批次" clearable style="width:100px" align="left" >
-                                <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">{{ item.batch }}
-                                </Option>
-                            </Select>
+                            <DatePicker type="datetimerange" v-model="at"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
-                            <Select v-model="status" placeholder="状态" clearable style="width:100px" align="left">
-                                <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label}}
-                                </Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem>
-                            <Select v-model="lockStatus" placeholder="解锁状态" clearable style="width:100px" align="left">
+                            <Select v-model="exportStatus" placeholder="导出状态" clearable style="width:100px" align="left">
                                 <Option v-for="item in yonList" :value="item.value" :key="item.value">{{ item.label}}
-                                </Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem>
-                            <Select v-model="outStatus" placeholder="出库状态" clearable style="width:100px" align="left">
-                                <Option v-for="item in yonList" :value="item.value" :key="item.value">{{ item.label
-                                    }}
                                 </Option>
                             </Select>
                         </FormItem>
@@ -58,8 +51,10 @@
                         </FormItem>
 
                         <FormItem>
-                            <span @click="search" style="margin: 0 10px;"><Button type="primary"
+                            <span @click="search(1)" style="margin: 0 10px;"><Button type="primary"
                                                                                   icon="search">搜索</Button></span>
+                            <span @click="reset" style="margin: 0 10px;"><Button type="primary"
+                                                                                     icon="ios-redo">重置</Button></span>
                         </FormItem>
                     </Form>
                     </Col>
@@ -69,9 +64,26 @@
                 <!--<span @click="search" style="margin: 0 10px;"><Button type="success" icon="unlocked">解锁</Button></span>-->
                 <!--</Row>-->
                 <Row class="margin-top-10">
+                    <Poptip
+                            confirm
+                            title="您确认到执行导出操作吗？"
+                            @on-ok="e"
+                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按勾选导出</Button></span></Poptip>
+                    <Poptip
+                            confirm
+                            title="您确认到执行导出操作吗？"
+                            @on-ok="eByQuery"
+                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按查询条件导出</Button></span></Poptip>
+                    <Poptip
+                            confirm
+                            title="你确认要执行导入操作吗？"
+                            @on-ok="i"
+                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Poptip>
+                </Row>
+                <Row class="margin-top-10">
 
 
-                    <Table :context="self" border :data="cardsList" :columns="tableColums" stripe></Table>
+                    <Table :context="self" border :data="cardsList" :columns="tableColums" @on-selection-change="getSelection" stripe></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
@@ -92,7 +104,7 @@
         return h('Poptip', {
             props: {
                 confirm: '',
-                title: '您确定要锁定这张卡吗？'
+                title: '您确定要锁定【'+param.row.code+'】这张卡吗？'
             },
             style: {
                 marginRight: '5px',
@@ -113,7 +125,7 @@
         return h('Poptip', {
             props: {
                 confirm: '',
-                title: '您确定这张卡撤销到未激活吗？'
+                title: '您确定【'+param.row.code+'】撤销到未激活吗？'
             },
             style: {
                 marginRight: '5px',
@@ -136,7 +148,7 @@
 
         computed: {
             ...mapState({
-                'cardsList': state => state.cards.cardsList,
+                'cardsList': state => state.cards.cardsList_00,
                 'totalPage': state => state.cards.totalPage,
                 'total': state => state.cards.totalRow,
                 'pageNumber': state => state.cards.pageNumber,
@@ -147,26 +159,27 @@
         },
         methods: {
             search(pn){
+
                 if(pn==undefined)pn=1
                 let param = {
-                    cardtypeId: this.cardtypeId,
-                    outStatus: this.outStatus,
-                    status: this.status,
+                    exportStatus:this.exportStatus,
                     salesmenId: this.salesmenId,
                     actTime: this.actTime,
-                    cardapplyId: this.cardapplyId,
                     code:this.code,
-                    faceVal:this.faceVal,
+                    policyNum:this.policyNum,
                     actStatus:this.actStatus,
-                    lockStatus:this.lockStatus,
-                    outStatus:this.outStatus,
-                    bNum:this.bNum,
-                    eNum:this.eNum,
+                    cardtypeType:this.cardtypeType,
+                    phIdNum:this.phIdNum,
+                    exportCode:this.exportCode,
+                    phName:this.phName,
+                    ipName:this.ipName,
+                    ipIdNum:this.ipIdNum,
                     pn: pn
                 }
-                this.$store.dispatch('cards_page', param)
+                this.$store.dispatch('cards_page_00', param)
             },
             dateTimeChange(val){
+                console.info(this.at)
                 if(val[0]!='')
                     this.actTime=val[0]+' - '+val[1];
                 else
@@ -187,10 +200,60 @@
                 this.$store.dispatch('cards_unlock',{cardsId:obj.id}).then((res)=>{
                     this.search();
                 });
+            },
+            unAct(obj){
+                this.$store.dispatch('cards_unAct',{cardsId:obj.id}).then((res)=>{
+                    this.search();
+                });
+            },
+            e(){
+                if(this.selections.length==0){
+                    this.$Message.warning("请选择要导出的卡数据")
+                    return ;
+                }
+                let ids=[];
+                for(var i=0;i<selections.length;i++){
+                    ids.push(selections[i].id)
+                }
+                ids=ids.join(",");
+
+
+
+
+            },
+            eByQuery(){
+
+            },
+            i(){
+
+            },
+            uploadBD(obj){
+
+            },
+            getSelection(selection){
+                this.selections=selection;
+            },
+            reset(){
+                    this.exportStatus='';
+                    this.exportCode='';
+                    this.phName='';
+                    this.code='';//卡号
+                    this.salesmenId= '';//分配业务员
+                    this.actTime='';//
+                    this.policyNum='';
+                    this.phIdNum='';
+                    this.ipName='';
+                    this.ipIdNum='';
+                    this.at='';
             }
+
         },
         mounted () {
-            this.$store.dispatch('cards_page')
+            let param = {
+                cardtypeType:this.cardtypeType,
+                actStatus:this.actStatus,
+            }
+            this.$store.dispatch('cards_page_00',param)
             this.$store.commit('set_cards_cardapply_list',[]);
             this.$store.dispatch('cards_dataReady')
         },
@@ -199,20 +262,21 @@
         },
         data () {
             return {
-                cardapplyId:'',//卡申请id
-                cardtypeId:'407',//卡类型id
+                at:'',
+                selections:[],
+                exportStatus:'',
+                cardtypeType:407,
+                exportCode:'',
+                phName:'',
                 code:'',//卡号
-                faceVal:'',//面值
                 actStatus:'0',//是否激活
-                lockStatus:'',//是否解锁
-                outStatus:'',
-                bNum: '',//号段开始
-                eNum: '',//号段结束
-                status: '',//状态 查询条件
                 salesmenId: '',//分配业务员
-                actTime: '',//出库时间
+                actTime: '',//
+                policyNum:'',
+                phIdNum:'',
+                ipName:'',
+                ipIdNum:'',
                 self:this,
-                statusList: consts.status,
                 yonList: consts.yon,
                 tableColums: [
                      {
@@ -252,12 +316,38 @@
                     {
                         title: '激活时间',
                         width: 100,
-                        key: 'actTime',
+                        key: 'actAt',
                     },
                     {
                         title: '投保人姓名',
                         width: 100,
-                        key: 'actName',
+                        render:(h,param)=>{
+                            return h('div',param.row.cph.name)
+                        }
+                    },
+                    {
+                        title: '投保人证件号',
+                        width: 200,
+
+                        render:(h,param)=>{
+                            return h('div',param.row.cph.idCard)
+                        }
+                    },
+                    {
+                        title: '投保人电话',
+                        width: 150,
+
+                        render:(h,param)=>{
+                            return h('div',param.row.cph.tel)
+                        }
+                    },
+                    {
+                        title: '投保人EMAIL',
+                        width: 250,
+
+                        render:(h,param)=>{
+                            return h('div',param.row.cph.email)
+                        }
                     },
                     {
                         title: '操作',
@@ -269,8 +359,12 @@
                             let btns = new Array;
                             let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
+                            if(row.act=='0'&&row.isLocked=='0'&&row.exportCode)
                             btns.push(consts.uploadBDBtn(this, h, param));
+
+                            if(row.act=='0')
                             btns.push(unActBtn(this,h,param))
+                            if(row.isLocked=='0')
                             btns.push(lockBtn(this,h,param))
 
                             return h('div', btns)
