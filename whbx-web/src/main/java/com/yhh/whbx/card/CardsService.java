@@ -1,6 +1,8 @@
 package com.yhh.whbx.card;
 
 import com.xiaoleilu.hutool.crypto.SecureUtil;
+import com.xiaoleilu.hutool.date.DatePattern;
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
@@ -8,7 +10,10 @@ import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 简介
@@ -26,6 +31,8 @@ import java.util.List;
  */
 public class CardsService {
     private static final Cards dao=Cards.dao;
+
+
 
 
     public Cards checkCard(String code,String pwd)throws CoreException{
@@ -81,7 +88,7 @@ public class CardsService {
             for(CardsIp cardsIp:cardsIps){
                 cardsIp.delete();
             }
-        }else{
+        }else if(type.equals("driverInsurance")){
             CardsCarPh cardsCarPh=CardsCarPh.dao.findFristByPropEQ("cardsId",cardsId);
             CardsCarIp cardsCarIp=CardsCarIp.dao.findFristByPropEQ("cardsId",cardsId);
             if(cardsCarIp!=null)
@@ -89,6 +96,115 @@ public class CardsService {
             if(cardsCarPh!=null)
             cardsCarPh.delete();
         }
+    }
+
+    public static final HashMap<String,String> relationships=new HashMap<>();
+    static {
+        relationships.put("00","父亲");
+        relationships.put("01","母亲");
+        relationships.put("02","儿子");
+        relationships.put("03","女儿");
+        relationships.put("04","配偶");
+        relationships.put("05","本人");
+
+
+    }
+
+    /**
+     * 装配保单
+     * @param cards 卡数据
+     * @param list  导出数据载体
+     */
+    public void assemblePolicy(Cards cards,List list){
+        Map ret=null;
+
+        if(cards.getCardtypeTypeTxt().equals("accidentInsurance")) {
+            List<CardsIp> cardsIpList=cards.getCip();
+            for (CardsIp cardsIp:cardsIpList){
+                ret=new HashMap();
+                ret.put("phName", cards.getCph().getName());
+                ret.put("phIdNum", cards.getCph().getIdCard());
+                ret.put("phTel", cards.getCph().getTel());
+                ret.put("puCertType",cards.getCph().getCertTypeTxt());
+                ret.put("phBirth", DateUtil.format(cards.getCph().getBirthDay(), DatePattern.NORM_DATE_PATTERN));
+                ret.put("phSex",cards.getCph().getSexTxt());
+                ret.put("phEmail",cards.getCph().getEmail());
+                ret.put("cardsCode",cards.getCode());
+                ret.put("relationship",relationships.get(cardsIp.getRelationship()));
+                ret.put("ipName",cardsIp.getName());
+                ret.put("ipCertType",cardsIp.getCertTypeTxt());
+                ret.put("ipIdNum",cardsIp.getIdCard());
+                ret.put("ipBirth",cardsIp.getBirthDay());
+                ret.put("ipSex",cardsIp.getSexTxt());
+                ret.put("ipTel",cardsIp.getTel());
+                ret.put("ipJob",cardsIp.getJobTxt());
+                list.add(ret);
+            }
+        }else{
+            ret=new HashMap();
+            ret.put("cardsCode",cards.getCode());
+            ret.put("cphName", cards.getCcph().getName());
+            ret.put("cphCertType", cards.getCcph().getCertTypeTxt());
+            ret.put("cphType", cards.getCcph().getTypeTxt());
+            ret.put("cphIdNum", cards.getCph().getIdCard());
+            ret.put("cphEmail", cards.getCph().getEmail());
+            ret.put("cphAddress", cards.getCcph().getFullAddress());
+            ret.put("cphLinkName", cards.getCcph().getLinkName());
+            ret.put("cphTel", cards.getCcph().getTel());
+            ret.put("cipProp", cards.getCcip().getPropTxt());
+            ret.put("cipSeatCount", cards.getCcip().getSeatCount());
+            ret.put("cipType", cards.getCcip().getCarTypeTxt());
+            ret.put("cipEngineNum", cards.getCcip().getEngineNum());
+            ret.put("cipFrameNum", cards.getCcip().getFrameNum());
+            ret.put("cipPlateNum", cards.getCcip().getPlateNum());
+
+            list.add(ret);
+        }
+    }
+
+
+    /**
+     * 被投保人年龄检查
+     * @param cardsIp
+     * @param cards
+     */
+    public void ipAgeCheck(CardsIp cardsIp,Cards cards){
+        Cardtype cardtype=Cardtype.dao.findById(cards.getCtId());
+        String ipAgeTopYear=cardtype.getIpAgeToplmt();
+        String ipAgeTopDay=cardtype.getIpAgeToplmtDay();
+        String ipAgeLowerYear=cardtype.getIpAgeLowerlmt();
+
+        Date birthDay=cardsIp.getBirthDay();
+
+        long birthDays=DateUtil.betweenDay(birthDay,DateUtil.date(),true);
+
+        long ipAgeTopYear_l=Long.valueOf(ipAgeTopYear)*365;
+        long ipAgeTopDay_l=Long.valueOf(ipAgeTopDay);
+        long ipAgeLowerYear_l=Long.valueOf(ipAgeLowerYear)*365;
+
+        if(!(birthDays<=ipAgeLowerYear_l&&birthDays>=(ipAgeTopDay_l+ipAgeTopYear_l)))
+            throw new CoreException("被投保人年龄不符合保险投保范围");
+    }
+
+    /**
+     * 投保人年龄检查
+     * @param cardsPh
+     * @param cards
+     */
+    public void phAgeCheck(CardsPh cardsPh,Cards cards){
+        Cardtype cardtype=Cardtype.dao.findById(cards.getCtId());
+        String ageTopYear=cardtype.getPhAgeToplmt();
+        String ageLowerYear=cardtype.getPhAgeLowerlmt();
+
+        Date birthDay=cardsPh.getBirthDay();
+
+        long birthDays=DateUtil.betweenDay(birthDay,DateUtil.date(),true);
+
+        long ageTopYear_l=Long.valueOf(ageTopYear)*365;
+        long ageLowerYear_l=Long.valueOf(ageLowerYear)*365;
+
+        if(!(birthDays<=ageLowerYear_l&&birthDays>=(ageTopYear_l)))
+            throw new CoreException("投保人年龄不符合保险投保范围");
     }
 
 }

@@ -27,5 +27,9 @@ public class CardsCarPh extends BaseCardsCarPh<CardsCarPh> {
 		return getType()==null?"":getType().equals("1")?"个人":"企业";
 	}
 
+	public String getFullAddress(){
+		return getProvince()+getCity()+getDistrict()+getAddress();
+	}
+
 
 }

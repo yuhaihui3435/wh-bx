@@ -89,6 +89,7 @@ public class CardTypeCtr extends CoreController {
             } catch (QiniuException e) {
                 LogKit.error("上传文件失败>>"+e.getMessage());
                 renderFailJSON("文件上传失败");
+                return;
             }
 
             attachment=new Attachment();
@@ -122,6 +123,7 @@ public class CardTypeCtr extends CoreController {
             } catch (QiniuException e) {
                 LogKit.error("上传文件失败>>"+e.getMessage());
                 renderFailJSON("文件上传失败");
+                return;
             }
 
             attachment=new Attachment();

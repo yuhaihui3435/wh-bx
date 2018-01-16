@@ -142,9 +142,12 @@ public class IndexCtr extends CoreController {
         CardsIp cardsIp = null;
         for (int i = 0; i < ipLen; i++) {
             cardsIp = getModel(CardsIp.class, "ip" + i, true);
+            cardsService.ipAgeCheck(cardsIp,cards);
             list.add(cardsIp);
         }
 
+
+        cardsService.phAgeCheck(cardsPh,cards);
         cardsPh.save();
         Db.batchSave(list, 10);
         try {

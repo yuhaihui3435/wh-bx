@@ -23,4 +23,8 @@ public class CardsIp extends BaseCardsIp<CardsIp> {
 	public String getCertTypeTxt(){
 		return Taxonomy.dao.findById(getCertTypeId()).getTitle();
 	}
+
+	public String getJobTxt(){
+		return getJob()!=null?InsuranceOcc.dao.findById(getJob()).getName():"";
+	}
 }

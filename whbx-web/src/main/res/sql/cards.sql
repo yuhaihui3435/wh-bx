@@ -26,6 +26,6 @@
 #sql("findListByIds")
   select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus,ct.type as cardtypeType,(select text from s_taxonomy where id=ct.type) as cardtypeTypeTxt
     from b_cards c LEFT JOIN b_depot d on c.depotId=d.id LEFT JOIN b_cardapply ca on c.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id LEFT JOIN b_salesmen sm on d.salesmenId=sm.id
-    where 1=1 and c.id in '('+#para(ids)+')' AND act='0' AND isLocked='0' AND exportCode is NULL
+    where 1=1 and c.id in '('+#para(ids)+')' AND c.act='0' AND c.isLocked='0' AND c.exportCode is NULL
     ORDER BY c.actAt,c.id DESC
 #end

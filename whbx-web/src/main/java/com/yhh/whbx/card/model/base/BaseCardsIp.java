@@ -97,4 +97,12 @@ public abstract class BaseCardsIp<M extends BaseCardsIp<M>> extends CoreModel<M>
 		return getInt("cardsId");
 	}
 
+	public void setJob(java.lang.Integer job) {
+		set("job", job);
+	}
+
+	public java.lang.Integer getJob() {
+		return getInt("job");
+	}
+
 }
