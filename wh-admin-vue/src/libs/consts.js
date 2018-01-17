@@ -36,22 +36,7 @@ consts.viewBtn=(vm,h,param)=>{
         }
     }, '查看')
 };
-consts.uploadBDBtn=(vm,h,param)=>{
-    return h('Button', {
-        props: {
-            type: 'primary',
-            size: 'small'
-        },
-        style: {
-            marginRight: '5px'
-        },
-        on: {
-            click: () => {
-                vm.uploadBD(param)
-            }
-        }
-    }, '上传保单')
-};
+
 
 consts.delBtn=(vm,h,param)=>{
     return h('Poptip', {

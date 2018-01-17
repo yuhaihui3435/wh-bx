@@ -28,7 +28,11 @@ public class ExceptionInterceptor implements Interceptor {
             boolean isAjax = ReqKit.isAjaxRequest(request);
             String msg = formatException(e);
             if(isAjax){
-                controller.renderFailJSON(ResKit.getMsg("500_msg"));
+                if(e instanceof CoreException){
+                    controller.renderFailJSON(((CoreException) e).getMsg());
+                }else {
+                    controller.renderFailJSON(ResKit.getMsg("500_msg"));
+                }
             }else{
                 String redirctUrl = request.getHeader("referer");
                 if(StrKit.isBlank(redirctUrl)){

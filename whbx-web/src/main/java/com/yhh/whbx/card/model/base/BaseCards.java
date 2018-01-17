@@ -121,4 +121,12 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return get("exportAt");
 	}
 
+	public void setReportTel(java.lang.String reportTel) {
+		set("reportTel", reportTel);
+	}
+
+	public java.lang.String getReportTel() {
+		return getStr("reportTel");
+	}
+
 }

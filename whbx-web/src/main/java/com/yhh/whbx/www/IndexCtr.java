@@ -215,7 +215,7 @@ public class IndexCtr extends CoreController {
         if (cards.getCardtype().equals("accidentInsurance")) {
             CardsPh cardsPh = CardsPh.dao.findFristByPropEQ("cardsId", cardsId);
             List<CardsIp> cardsIpList = CardsIp.dao.findByPropEQ("cardsId", cardsId);
-            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "accidentInsurance");
+            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "cards");
             setAttr("cardsPh", cardsPh);
             setAttr("cardsIpList", cardsIpList);
             setAttr("electronicPolicy", attachments);
@@ -224,7 +224,7 @@ public class IndexCtr extends CoreController {
         } else if (cards.getCardtype().equals("driverInsurance")) {
             CardsCarPh cardsCarPh = CardsCarPh.dao.findFristByPropEQ("cardsId", cardsId);
             CardsCarIp cardsCarIp = CardsCarIp.dao.findFristByPropEQ("cardsId", cardsId);
-            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "driverInsurance");
+            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "cards");
             setAttr("cardsCarPh", cardsCarPh);
             setAttr("cardsCarIp", cardsCarIp);
             setAttr("electronicPolicy", attachments);

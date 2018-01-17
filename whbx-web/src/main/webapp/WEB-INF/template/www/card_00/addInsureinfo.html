@@ -273,7 +273,7 @@
                         occ_code_obj_p.show();
                         occ_code_obj.empty();
                         $.each(data, function (index, obj) {
-                            occ_code_obj.append("<option value='" + obj.code + "'>" + obj.name + "</option>");
+                            occ_code_obj.append("<option value='" + obj.id + "'>" + obj.name + "</option>");
                         })
                     }
                     , beforeSend(XHR){

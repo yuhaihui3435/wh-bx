@@ -11,7 +11,7 @@
   select * from b_cardapply where dAt is null
     #for(x : cond)
       #if(x.key.indexOf('like')>-1)
-        and #(x.key) '%'+#para(x.value)+'%'
+        and #(x.key) %#para(x.value)%
       #else
         and #(x.key) #para(x.value)
       #end

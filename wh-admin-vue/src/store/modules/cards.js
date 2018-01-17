@@ -108,6 +108,14 @@ const cards = {
                 });
             });
         },
+        cards_act_export:function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c03/exportActCards',param).then((res) => {
+                    resolve(res)
+                });
+            });
+        }
 
     }
 }

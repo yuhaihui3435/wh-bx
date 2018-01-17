@@ -10,10 +10,7 @@ import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 简介
@@ -117,47 +114,49 @@ public class CardsService {
      */
     public void assemblePolicy(Cards cards,List list){
         Map ret=null;
-
         if(cards.getCardtypeTypeTxt().equals("accidentInsurance")) {
             List<CardsIp> cardsIpList=cards.getCip();
             for (CardsIp cardsIp:cardsIpList){
-                ret=new HashMap();
+                ret=new LinkedHashMap();
+                ret.put("cardsCode",cards.getCode());
                 ret.put("phName", cards.getCph().getName());
+                ret.put("phCertType",cards.getCph().getCertTypeTxt());
                 ret.put("phIdNum", cards.getCph().getIdCard());
-                ret.put("phTel", cards.getCph().getTel());
-                ret.put("puCertType",cards.getCph().getCertTypeTxt());
                 ret.put("phBirth", DateUtil.format(cards.getCph().getBirthDay(), DatePattern.NORM_DATE_PATTERN));
                 ret.put("phSex",cards.getCph().getSexTxt());
+                ret.put("phTel", cards.getCph().getTel());
                 ret.put("phEmail",cards.getCph().getEmail());
-                ret.put("cardsCode",cards.getCode());
                 ret.put("relationship",relationships.get(cardsIp.getRelationship()));
                 ret.put("ipName",cardsIp.getName());
                 ret.put("ipCertType",cardsIp.getCertTypeTxt());
                 ret.put("ipIdNum",cardsIp.getIdCard());
-                ret.put("ipBirth",cardsIp.getBirthDay());
+                ret.put("ipBirth",DateUtil.format(cardsIp.getBirthDay(), DatePattern.NORM_DATE_PATTERN));
                 ret.put("ipSex",cardsIp.getSexTxt());
                 ret.put("ipTel",cardsIp.getTel());
                 ret.put("ipJob",cardsIp.getJobTxt());
+                ret.put("policyNum","");
+                ret.put("reportTel","");
                 list.add(ret);
             }
-        }else{
-            ret=new HashMap();
+        }else if(cards.getCardtypeTypeTxt().equals("driverInsurance")){
+            ret=new LinkedHashMap();
             ret.put("cardsCode",cards.getCode());
+            ret.put("cphType", cards.getCcph().getTypeTxt());
             ret.put("cphName", cards.getCcph().getName());
             ret.put("cphCertType", cards.getCcph().getCertTypeTxt());
-            ret.put("cphType", cards.getCcph().getTypeTxt());
             ret.put("cphIdNum", cards.getCph().getIdCard());
-            ret.put("cphEmail", cards.getCph().getEmail());
-            ret.put("cphAddress", cards.getCcph().getFullAddress());
             ret.put("cphLinkName", cards.getCcph().getLinkName());
             ret.put("cphTel", cards.getCcph().getTel());
-            ret.put("cipProp", cards.getCcip().getPropTxt());
-            ret.put("cipSeatCount", cards.getCcip().getSeatCount());
-            ret.put("cipType", cards.getCcip().getCarTypeTxt());
+            ret.put("cphEmail", cards.getCph().getEmail());
+            ret.put("cphAddress", cards.getCcph().getFullAddress());
+            ret.put("cipPlateNum", cards.getCcip().getPlateNum());
             ret.put("cipEngineNum", cards.getCcip().getEngineNum());
             ret.put("cipFrameNum", cards.getCcip().getFrameNum());
-            ret.put("cipPlateNum", cards.getCcip().getPlateNum());
-
+            ret.put("cipProp", cards.getCcip().getPropTxt());
+            ret.put("cipType", cards.getCcip().getCarTypeTxt());
+            ret.put("cipSeatCount", cards.getCcip().getSeatCount());
+            ret.put("policyNum","");
+            ret.put("reportTel","");
             list.add(ret);
         }
     }
@@ -169,7 +168,8 @@ public class CardsService {
      * @param cards
      */
     public void ipAgeCheck(CardsIp cardsIp,Cards cards){
-        Cardtype cardtype=Cardtype.dao.findById(cards.getCtId());
+        Cards _cards=Cards.dao.findByCode(cards.getCode());
+        Cardtype cardtype=Cardtype.dao.findById(_cards.getCtId());
         String ipAgeTopYear=cardtype.getIpAgeToplmt();
         String ipAgeTopDay=cardtype.getIpAgeToplmtDay();
         String ipAgeLowerYear=cardtype.getIpAgeLowerlmt();
@@ -192,7 +192,8 @@ public class CardsService {
      * @param cards
      */
     public void phAgeCheck(CardsPh cardsPh,Cards cards){
-        Cardtype cardtype=Cardtype.dao.findById(cards.getCtId());
+        Cards _cards=Cards.dao.findByCode(cards.getCode());
+        Cardtype cardtype=Cardtype.dao.findById(_cards.getCtId());
         String ageTopYear=cardtype.getPhAgeToplmt();
         String ageLowerYear=cardtype.getPhAgeLowerlmt();
 

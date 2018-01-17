@@ -11,6 +11,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.CMNCtr;
 import com.yhh.whbx.admin.Res.ResCtr;
 import com.yhh.whbx.admin.art.ArtCtr;
@@ -102,6 +103,7 @@ public class CoreConfig extends JFinalConfig{
     @Override
     public void configEngine(Engine engine) {
         engine.addSharedObject("ctx", JFinal.me().getContextPath());
+        engine.addSharedMethod( new StrUtil());
         engine.setDevMode(ResKit.getConfigBoolean("devMode", true));
         //使用JF模板渲染通用页面
 //        engine.addSharedFunction("/WEB-INF/template/www/css.html");

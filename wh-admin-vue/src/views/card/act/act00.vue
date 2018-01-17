@@ -9,7 +9,7 @@
                 </p>
                 <Row>
                     <Col span="24" offset="0" align="left">
-                    <Form inline>
+                    <Form inline id="form" target="">
                         <FormItem >
                             <Input v-model="code" placeholder="卡号" style="width: 200px"/>
                         </FormItem>
@@ -64,21 +64,21 @@
                 <!--<span @click="search" style="margin: 0 10px;"><Button type="success" icon="unlocked">解锁</Button></span>-->
                 <!--</Row>-->
                 <Row class="margin-top-10">
+                    <Col span="3">
                     <Poptip
                             confirm
                             title="您确认到执行导出操作吗？"
                             @on-ok="e"
-                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按勾选导出</Button></span></Poptip>
+                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按勾选导出</Button></span></Poptip></Col>
+                    <Col span="3">
                     <Poptip
                             confirm
                             title="您确认到执行导出操作吗？"
                             @on-ok="eByQuery"
-                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按查询条件导出</Button></span></Poptip>
-                    <Poptip
-                            confirm
-                            title="你确认要执行导入操作吗？"
-                            @on-ok="i"
-                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Poptip>
+                            @on-cancel=""><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download">按查询条件导出</Button></span></Poptip></Col>
+                    <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
+                        :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
+                        :action="env+'/c03/importPolicyInfo'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Upload></Col>
                 </Row>
                 <Row class="margin-top-10">
 
@@ -99,6 +99,8 @@
 <script>
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
+
+
 
     let lockBtn=(vm,h,param)=>{
         return h('Poptip', {
@@ -143,6 +145,46 @@
         }, '撤销到未激活')]);
     }
 
+    let uploadBDBtn=(vm,h,param)=>{
+        return h('Col',{props:{span:3}},[h('Upload',{props:{
+            action:consts.env+'/c03/uploadPolicy?cardsId='+param.row.id+'&cardsCode='+param.row.code,
+            format:['pdf'],
+            'show-upload-list':false,
+            'on-success':(response, file, fileList)=>{
+                vm.$store.commit('upadteSpinshow',false);
+                if(response&&response.resCode&&response.resCode=='success'){
+                    vm.$Message.success(response.resMsg);
+                }else if(response&&response.resCode&&response.resCode=='fail'){
+                    vm.$Message.error(response.resMsg);
+                }
+            },
+            'on-error':(error, file, fileList)=>{
+                vm.$store.commit('upadteSpinshow',false);
+                vm.$Message.error('网络错误，请稍后再重试');
+            },
+            'on-format-error':(file)=>{
+                vm.$store.commit('upadteSpinshow',false);
+                vm.$Notice.warning({
+                    title: '上传文件格式错误',
+                    desc: '文件 ' + file.name + ' 格式不正确, 请选择 pdf.'
+                });
+            },
+            'before-upload':()=>{
+                vm.$store.commit('upadteSpinshow',true);
+            }
+        }},[h('Button', {
+            props: {
+                type: 'primary',
+                    size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+
+            }
+        }, '上传保单')])])
+    };
 
     export default {
 
@@ -212,23 +254,56 @@
                     return ;
                 }
                 let ids=[];
-                for(var i=0;i<selections.length;i++){
-                    ids.push(selections[i].id)
+                for(var i=0;i<this.selections.length;i++){
+                    ids.push(this.selections[i].id)
                 }
                 ids=ids.join(",");
+                this.$store.dispatch('cards_act_export',{ids:ids,"exportStatus":"1"}).then((res)=>{
+                    if(res&&res.resCode&&res.resCode=='success'){
+                        this.$Message.success("卡激活数据导出成功")
+                        this.search();
+                        let url=res.resData;
+                        window.open(url,'_blank')
+                    }else if(res&&res.resCode&&res.resCode=='fail'){
+                        this.$Message.success("卡激活数据导出失败>>"+res.resMsg);
+                    }
 
-
-
-
+                });
             },
             eByQuery(){
+                let param = {
+                    exportStatus:"1",
+                    salesmenId: this.salesmenId,
+                    actTime: this.actTime,
+                    code:this.code,
+                    policyNum:this.policyNum,
+                    actStatus:this.actStatus,
+                    cardtypeType:this.cardtypeType,
+                    phIdNum:this.phIdNum,
+                    exportCode:this.exportCode,
+                    phName:this.phName,
+                    ipName:this.ipName,
+                    ipIdNum:this.ipIdNum,
+                }
 
+                this.$store.dispatch('cards_act_export',param).then((res)=>{
+                    if(res&&res.resCode&&res.resCode=='success'){
+                        this.$Message.success("卡激活数据导出成功")
+                        this.search();
+                        let url=res.resData;
+                        window.open(url,'_blank')
+                    }else if(res&&res.resCode&&res.resCode=='fail'){
+                        this.$Message.success("卡激活数据导出失败>>"+res.resMsg);
+                    }
+
+                });
             },
-            i(){
-
-            },
-            uploadBD(obj){
-
+            createInput(name,value){
+                let input=document.createElement('input')
+                input.name=name;
+                input.value=value;
+                input.type='hidden';
+                return input
             },
             getSelection(selection){
                 this.selections=selection;
@@ -245,10 +320,34 @@
                     this.ipName='';
                     this.ipIdNum='';
                     this.at='';
+            },
+            handleFormatError(file){
+                vm.$store.commit('upadteSpinshow',false);
+                this.$Notice.warning({
+                    title: '上传文件格式错误',
+                    desc: '文件 ' + file.name + ' 格式不正确, 请选择 xls 或者 xlsx.'
+                });
+            },
+            handleSuccess(response, file, fileList){
+                this.$store.commit('upadteSpinshow',false);
+                if(response&&response.resCode&&response.resCode=='success'){
+                    this.$Message.success(response.resMsg);
+                    this.search();
+                }else if(response&&response.resCode&&response.resCode=='fail'){
+                    this.$Message.error(response.resMsg);
+                }
+            },
+            handleError(error, file, fileList){
+                this.$store.commit('upadteSpinshow',false);
+                this.$Message.error('网络错误，请稍后再重试');
+            },
+            handleBeforUpload(){
+                this.$store.commit('upadteSpinshow',true);
             }
 
         },
         mounted () {
+
             let param = {
                 cardtypeType:this.cardtypeType,
                 actStatus:this.actStatus,
@@ -262,6 +361,7 @@
         },
         data () {
             return {
+                env:consts.env,
                 at:'',
                 selections:[],
                 exportStatus:'',
@@ -292,6 +392,14 @@
                         width: 100,
 
                     },
+                    {
+                        title: '保单号',
+                        key: 'policyNum',
+                        fixed: 'left',
+                        width: 100,
+
+                    },
+
                     {
                         title: '卡类型',
                         width: 100,
@@ -350,6 +458,27 @@
                         }
                     },
                     {
+                        title: '报案电话',
+                        key: 'reportTel',
+                        fixed: 'left',
+                        width: 100,
+
+                    },
+                    {
+                        title: '导出编号',
+                        key: 'exportCode',
+                        width: 100,
+
+                    },
+                    {
+                        title: '导出时间',
+                        key: 'exportAt',
+                        width: 100,
+
+                    },
+
+
+                    {
                         title: '操作',
                         key: 'action',
                         width: 350,
@@ -359,8 +488,8 @@
                             let btns = new Array;
                             let row = param.row;
                             btns.push(consts.viewBtn(this, h, param));
-                            if(row.act=='0'&&row.isLocked=='0'&&row.exportCode)
-                            btns.push(consts.uploadBDBtn(this, h, param));
+                            if(row.act=='0'&&row.isLocked=='0'&&row.exportCode&&row.policyNum)
+                            btns.push(uploadBDBtn(this, h, param));
 
                             if(row.act=='0')
                             btns.push(unActBtn(this,h,param))
