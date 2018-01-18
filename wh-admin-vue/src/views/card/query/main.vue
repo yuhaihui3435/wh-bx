@@ -22,7 +22,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <DatePicker type="datetimerange"   placement="bottom-end" v-model="at" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
+                            <DatePicker type="datetimerange" :options="options"   placement="bottom-end" v-model="at" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
                             <Select v-model="cardtypeId" placeholder="卡类型" clearable style="width:100px" align="left" @on-change="cardtypeChange">
@@ -363,7 +363,7 @@
                             let vm=this;
                             let btns = new Array;
                             let row = param.row;
-                            btns.push(consts.viewBtn(this, h, param));
+                            //btns.push(consts.viewBtn(this, h, param));
                             if(row.depotId!=undefined&&row.isLocked=='0'){
                                 btns.push(lockBtn(this,h,param))
                             }else  if(row.depotId!=undefined&&(row.isLocked=='1' || row.isLocked==undefined)){
@@ -376,6 +376,47 @@
                     }
 
                 ]
+                ,
+                options: {
+                    shortcuts: [
+                        {
+                            text: '最近2天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近5天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 4);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近7天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近10天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 10);
+                                return [start, end];
+                            }
+                        }
+                    ]
+                }
             }
         }
     }

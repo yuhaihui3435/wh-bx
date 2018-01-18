@@ -1,7 +1,6 @@
 package com.yhh.whbx.core;
 
 import com.jfinal.plugin.ehcache.CacheKit;
-import com.jfinal.render.RenderManager;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Param;
@@ -24,7 +23,8 @@ public class CoreData {
         List<Param> list=Param.dao.find("select * from "+Param.TABLE);
 
         for(Param p:list){
-            RenderManager.me().getEngine().addSharedObject(p.getK(),p.getVal());
+
+//            RenderManager.me().getEngine().getEngineConfig().addSharedObject(p.getK(),p.getVal());
             CacheKit.put(Consts.CACHE_NAMES.paramCache.name(),p.getK(),p.getVal());
         }
         StaticLog.info("系统参数加载成功");

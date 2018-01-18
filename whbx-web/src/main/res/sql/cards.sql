@@ -17,7 +17,7 @@
 #end
 
 #sql("findByCode")
-  select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus,t.text as cardtype,ct.manyPeople as manyPeople,ct.peopleCount as peopleCount,ct.protocol as protocol,ct.id as ctId
+  select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus,t.text as cardtype,ct.manyPeople as manyPeople,ct.peopleCount as peopleCount,ct.protocol as protocol,ct.id as ctId,(select text from s_taxonomy where id=ct.type) as cardtypeTypeTxt
   from b_cards c LEFT JOIN b_depot d on c.depotId=d.id LEFT JOIN b_cardapply ca on c.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id
   LEFT JOIN b_salesmen sm on d.salesmenId=sm.id LEFT JOIN s_taxonomy t ON ct.type=t.id
   where  c.code=#para(code)

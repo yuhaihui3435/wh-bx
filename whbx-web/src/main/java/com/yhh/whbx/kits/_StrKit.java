@@ -55,8 +55,8 @@ public class _StrKit {
 
 
     public static void main(String[] args) throws IOException {
-        byte[] key_array= Base64.decode("a+Xdjd3GpAxKsL8zCjFf6w==", Charset.forName("UTF-8"));
-        System.out.println(SecureUtil.aes(key_array).decryptStr("e3b4a8ec38b6c3a4621a6c79149a15df"));
+        byte[] key_array= Base64.decode("F5Xzv8iYebYYH4m6/pYYrQ==", Charset.forName("UTF-8"));
+        System.out.println(SecureUtil.aes(key_array).decryptStr("f0bbab0297b6834664eca0b1de8be658"));
 
     }
 

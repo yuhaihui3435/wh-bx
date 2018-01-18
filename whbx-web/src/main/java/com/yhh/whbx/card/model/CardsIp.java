@@ -2,6 +2,7 @@ package com.yhh.whbx.card.model;
 
 
 import com.yhh.whbx.admin.model.Taxonomy;
+import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.base.BaseCardsIp;
 
 /**
@@ -26,5 +27,9 @@ public class CardsIp extends BaseCardsIp<CardsIp> {
 
 	public String getJobTxt(){
 		return getJob()!=null?InsuranceOcc.dao.findById(getJob()).getName():"";
+	}
+
+	public String getRelationshipTxt(){
+		return CardsService.relationships.get(getRelationship());
 	}
 }

@@ -309,40 +309,51 @@
                     {
                         title: '卡类型',
                         key: 'cardtypeTxt',
+                        fixed: 'left',
+                        width:100
                     },
                     {
                         title: '批次',
                         key: 'batch',
+                        width:100
                     },
 
                     {
                         title: '编号',
                         key: 'code',
+                        width:100,
+                        fixed: 'left',
                     },
 
                     {
                         title: '起始号',
                         key: 'bNum',
+                        width:100
                     },
                     {
                         title: '结束号',
                         key: 'eNum',
+                        width:100
                     },
                     {
                         title: '出库时间',
                         key: 'outTime',
+                        width:150
                     },
                     {
                         title: '出库状态',
                         key: 'outstatusTxt',
+                        width:120
                     },
                     {
                         title: '销售员',
                         key: 'salesmenTxt',
+                        width:120
                     },
                     {
                         title: '操作员',
                         key: 'operTxt',
+                        width:120
                     },
                     {
                         title: '状态',

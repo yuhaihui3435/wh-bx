@@ -116,16 +116,18 @@ public class CardsService {
         Map ret=null;
         if(cards.getCardtypeTypeTxt().equals("accidentInsurance")) {
             List<CardsIp> cardsIpList=cards.getCip();
+            CardsPh cardsPh=cards.getCph();
             for (CardsIp cardsIp:cardsIpList){
                 ret=new LinkedHashMap();
+
                 ret.put("cardsCode",cards.getCode());
-                ret.put("phName", cards.getCph().getName());
-                ret.put("phCertType",cards.getCph().getCertTypeTxt());
-                ret.put("phIdNum", cards.getCph().getIdCard());
-                ret.put("phBirth", DateUtil.format(cards.getCph().getBirthDay(), DatePattern.NORM_DATE_PATTERN));
-                ret.put("phSex",cards.getCph().getSexTxt());
-                ret.put("phTel", cards.getCph().getTel());
-                ret.put("phEmail",cards.getCph().getEmail());
+                ret.put("phName", cardsPh.getName());
+                ret.put("phCertType",cardsPh.getCertTypeTxt());
+                ret.put("phIdNum", cardsPh.getIdCard());
+                ret.put("phBirth", DateUtil.format(cardsPh.getBirthDay(), DatePattern.NORM_DATE_PATTERN));
+                ret.put("phSex",cardsPh.getSexTxt());
+                ret.put("phTel", cardsPh.getTel());
+                ret.put("phEmail",cardsPh.getEmail());
                 ret.put("relationship",relationships.get(cardsIp.getRelationship()));
                 ret.put("ipName",cardsIp.getName());
                 ret.put("ipCertType",cardsIp.getCertTypeTxt());
@@ -140,21 +142,23 @@ public class CardsService {
             }
         }else if(cards.getCardtypeTypeTxt().equals("driverInsurance")){
             ret=new LinkedHashMap();
+            CardsCarPh carPh=cards.getCcph();
+            CardsCarIp carIp=cards.getCcip();
             ret.put("cardsCode",cards.getCode());
-            ret.put("cphType", cards.getCcph().getTypeTxt());
-            ret.put("cphName", cards.getCcph().getName());
-            ret.put("cphCertType", cards.getCcph().getCertTypeTxt());
-            ret.put("cphIdNum", cards.getCph().getIdCard());
-            ret.put("cphLinkName", cards.getCcph().getLinkName());
-            ret.put("cphTel", cards.getCcph().getTel());
-            ret.put("cphEmail", cards.getCph().getEmail());
-            ret.put("cphAddress", cards.getCcph().getFullAddress());
-            ret.put("cipPlateNum", cards.getCcip().getPlateNum());
-            ret.put("cipEngineNum", cards.getCcip().getEngineNum());
-            ret.put("cipFrameNum", cards.getCcip().getFrameNum());
-            ret.put("cipProp", cards.getCcip().getPropTxt());
-            ret.put("cipType", cards.getCcip().getCarTypeTxt());
-            ret.put("cipSeatCount", cards.getCcip().getSeatCount());
+            ret.put("cphType", carPh.getTypeTxt());
+            ret.put("cphName", carPh.getName());
+            ret.put("cphCertType", carPh.getCertTypeTxt());
+            ret.put("cphIdNum", carPh.getCertCode());
+            ret.put("cphLinkName", carPh.getLinkName());
+            ret.put("cphTel", carPh.getTel());
+            ret.put("cphEmail", carPh.getEmail());
+            ret.put("cphAddress", carPh.getFullAddress());
+            ret.put("cipPlateNum", carIp.getPlateNum());
+            ret.put("cipEngineNum", carIp.getEngineNum());
+            ret.put("cipFrameNum", carIp.getFrameNum());
+            ret.put("cipProp", carIp.getPropTxt());
+            ret.put("cipType", carIp.getCarTypeTxt());
+            ret.put("cipSeatCount", carIp.getSeatCount());
             ret.put("policyNum","");
             ret.put("reportTel","");
             list.add(ret);

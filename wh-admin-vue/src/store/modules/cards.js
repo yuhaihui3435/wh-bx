@@ -4,13 +4,15 @@ const cards = {
     state: {
         cardsList: [],
         cardsList_00: [],
+        cardsList_01: [],
         totalPage: 0,
         pageNumber: 1,
         totalRow: 1,
         cards: {},
         cardtypeList: [],
         salesmenList:[],
-        cardapplyList:[]
+        cardapplyList:[],
+        electronicPolicy:[]
     },
     mutations: {
         set_cards_page(state, page){
@@ -31,12 +33,29 @@ const cards = {
             state.totalRow = page.totalRow
             state.pageNumber = page.pageNumber
         },
+        set_cards_page_01(state, page){
+            state.cardsList_01 = page.list
+
+            for(var i=0;i<state.cardsList_01.length;i++){
+                let c=state.cardsList_01[i];
+                c['_disabled']=c.disabled;
+            }
+
+            state.totalPage = page.totalPage
+            state.totalRow = page.totalRow
+            state.pageNumber = page.pageNumber
+        },
         set_cards(state, obj){
             if (obj != undefined)
                 state.cards = Object.assign({},obj);
             else {
                 state.cards = {};
             }
+        },
+        set_electronicPolicy(state, list){
+
+                state.electronicPolicy = list;
+
         },
         set_cards_dataReady(state, obj){
             state.cardtypeList = obj.cardtypeList;
@@ -58,11 +77,17 @@ const cards = {
                 commit('set_cards_page_00', res)
             });
         },
+        cards_page_01: function ({commit, state}, param) {
+            this._vm.$axios.post('/c03/page', param).then((res) => {
+                commit('set_cards_page_01', res)
+            });
+        },
         cards_get: function ({commit, state}, param) {
             let vm = this._vm;
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c03/get', param).then((res) => {
                     commit('set_cards', res.cards)
+                    commit('set_electronicPolicy', res.electronicPolicy)
                     resolve()
                 });
             });
@@ -112,6 +137,14 @@ const cards = {
             let vm = this._vm;
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/c03/exportActCards',param).then((res) => {
+                    resolve(res)
+                });
+            });
+        },
+        car_cards_act_export:function ({commit, state}, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/c03/exportActCarCards',param).then((res) => {
                     resolve(res)
                 });
             });

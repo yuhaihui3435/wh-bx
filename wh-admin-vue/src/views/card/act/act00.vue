@@ -27,6 +27,9 @@
                             <Input v-model="phIdNum" placeholder="投保人证件号" style="width: 200px"/>
                         </FormItem>
                         <FormItem >
+                            <Input v-model="phTel" placeholder="投保人电话" style="width: 200px"/>
+                        </FormItem>
+                        <FormItem >
                             <Input v-model="ipName" placeholder="被投保人姓名" style="width: 200px"/>
                         </FormItem>
                         <FormItem >
@@ -34,7 +37,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <DatePicker type="datetimerange" v-model="at"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
+                            <DatePicker :options="options" type="datetimerange" v-model="at"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
                             <Select v-model="exportStatus" placeholder="导出状态" clearable style="width:100px" align="left">
@@ -94,14 +97,32 @@
             </Card>
             </Col>
         </Row>
+        <view00 ref="v"></view00>
     </div>
+
 </template>
 <script>
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
+    import view00 from './view00.vue'
 
 
-
+    let viewBtn=(vm,h,param)=>{
+        return h('Button', {
+            props: {
+                type: 'primary',
+                size: 'small'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                    vm.view(param.row.code)
+                }
+            }
+        }, '查看')
+    };
     let lockBtn=(vm,h,param)=>{
         return h('Poptip', {
             props: {
@@ -216,23 +237,19 @@
                     phName:this.phName,
                     ipName:this.ipName,
                     ipIdNum:this.ipIdNum,
+                    phTel:this.phTel,
                     pn: pn
                 }
                 this.$store.dispatch('cards_page_00', param)
             },
             dateTimeChange(val){
-                console.info(this.at)
+
                 if(val[0]!='')
                     this.actTime=val[0]+' - '+val[1];
                 else
                     this.actTime='';
             },
-            cardtypeChange(val){
-                if(val!='')
-                    this.$store.dispatch('cards_cardapply_list',{ctId:val});
-                else
-                    this.$store.commit('set_cards_cardapply_list',[]);
-            },
+
             lock(obj){
                 this.$store.dispatch('cards_lock',{cardsId:obj.id}).then((res)=>{
                     this.search();
@@ -270,6 +287,11 @@
 
                 });
             },
+            view(code){
+                this.$store.dispatch('cards_get', {cardCode: code}).then(() => {
+                    this.$refs.v.open();
+                })
+            },
             eByQuery(){
                 let param = {
                     exportStatus:"1",
@@ -284,6 +306,7 @@
                     phName:this.phName,
                     ipName:this.ipName,
                     ipIdNum:this.ipIdNum,
+                    phTel:this.phTel
                 }
 
                 this.$store.dispatch('cards_act_export',param).then((res)=>{
@@ -297,13 +320,6 @@
                     }
 
                 });
-            },
-            createInput(name,value){
-                let input=document.createElement('input')
-                input.name=name;
-                input.value=value;
-                input.type='hidden';
-                return input
             },
             getSelection(selection){
                 this.selections=selection;
@@ -320,6 +336,7 @@
                     this.ipName='';
                     this.ipIdNum='';
                     this.at='';
+                    this.phTel='';
             },
             handleFormatError(file){
                 vm.$store.commit('upadteSpinshow',false);
@@ -353,16 +370,16 @@
                 actStatus:this.actStatus,
             }
             this.$store.dispatch('cards_page_00',param)
-            this.$store.commit('set_cards_cardapply_list',[]);
             this.$store.dispatch('cards_dataReady')
         },
         components: {
-
+            view00
         },
         data () {
             return {
                 env:consts.env,
                 at:'',
+                phTel:'',
                 selections:[],
                 exportStatus:'',
                 cardtypeType:407,
@@ -487,7 +504,7 @@
                             let vm=this;
                             let btns = new Array;
                             let row = param.row;
-                            btns.push(consts.viewBtn(this, h, param));
+                            btns.push(viewBtn(this, h, param));
                             if(row.act=='0'&&row.isLocked=='0'&&row.exportCode&&row.policyNum)
                             btns.push(uploadBDBtn(this, h, param));
 
@@ -500,7 +517,47 @@
                         }
                     }
 
-                ]
+                ],
+                options: {
+                    shortcuts: [
+                        {
+                            text: '最近2天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近5天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 4);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近7天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '最近10天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 10);
+                                return [start, end];
+                            }
+                        }
+                    ]
+                }
             }
         }
     }

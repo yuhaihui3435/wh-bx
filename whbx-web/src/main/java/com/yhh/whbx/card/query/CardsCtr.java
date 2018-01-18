@@ -196,7 +196,7 @@ public class CardsCtr extends CoreController {
                 list = Cards.dao.find(sqlPara);
 
             } else {
-                sqlPara = Db.getSqlPara("cards.findPage", Kv.by("cond", buildQueryCondition()));
+                sqlPara = Db.getSqlPara("cards.findList", Kv.by("cond", buildQueryCondition()));
                 list = Cards.dao.find(sqlPara);
             }
 
@@ -380,13 +380,15 @@ public class CardsCtr extends CoreController {
         if (!isParaBlank("policyNum"))
             kv.put("c.policyNum=", getPara("policyNum"));
         if (!isParaBlank("phIdNum"))
-            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ph.idCard=" : "cph.idCard=", getPara("phIdNum"));
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ph.idCard=" : "cph.certCode=", getPara("phIdNum"));
+        if (!isParaBlank("phTel"))
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ph.tel=" : "cph.tel=", getPara("phTel"));
         if (!isParaBlank("phName"))
             kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ph.name=" : "cph.name=", getPara("phName"));
         if (!isParaBlank("ipIdNum"))
-            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ip.idCard=" : "cip.idCard=", getPara("ipIdNum"));
+            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ip.idCard=" : "cip.plateNum=", getPara("plateNum"));
         if (!isParaBlank("ipName"))
-            kv.put((StrUtil.isNotBlank(getPara("cardtypeType")) && getPara("cardtypeType").equals("407")) ? "ip.name=" : "cip.name=", getPara("ipName"));
+            kv.put( "ip.name=" , getPara("ipName"));
         if (!isParaBlank("cardtypeType"))
             kv.put("ct.type=", getPara("cardtypeType"));
         if (!isParaBlank("actTime")) {
@@ -396,6 +398,16 @@ public class CardsCtr extends CoreController {
         }
 
         return kv;
+    }
+
+    public void get(){
+        String code=getPara("cardCode");
+        Cards cards=Cards.dao.findByCode(code);
+        Map<String,Object> ret=new HashMap<>();
+        ret.put("cards", cards);
+        List<Attachment> attachments = Attachment.dao.findByObjIdAndModule(cards.getId().intValue(), "cards");
+        ret.put("electronicPolicy",attachments);
+        renderJson(ret);
     }
 
 
