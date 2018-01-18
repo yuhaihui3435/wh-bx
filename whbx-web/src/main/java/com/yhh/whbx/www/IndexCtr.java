@@ -15,11 +15,10 @@ import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.interceptors.CardStatusCheckInterceptor;
 import com.yhh.whbx.kits.ALSMSKit;
+import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.ResKit;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by yuhaihui8913 on 2017/12/26.
@@ -249,6 +248,28 @@ public class IndexCtr extends CoreController {
             renderJson(list);
             return;
         }
+    }
+
+    /**
+     *
+     * home控制台的数据量统计
+     *
+     */
+    public void homeCountStatistics(){
+        Long applyCount=Db.queryLong("select IFNULL(sum(num),0) from b_cardapply where dAt is null and cAt>? and cAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        Long unlock=Db.queryLong("select IFNULL(sum(CAST(eNum AS signed)-CAST(bNum AS signed)+1),0) from b_unlock where  cAt>? and cAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        Long actCount=Db.queryLong("select count(id) from b_cards where  act='0' and status='0' and actAt>? and actAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        Long exportCount=Db.queryLong("select count(id) from b_cards where  exportCode is not null and status='0' and exportAt>? and exportAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        Long actNotExportCount=Db.queryLong("select count(id) from b_cards where  exportCode is null and act='0' and status='0'");
+
+        Map<String,Object> ret=new HashMap<>();
+        ret.put("applyCount",applyCount);
+        ret.put("unlock",unlock);
+        ret.put("actCount",actCount);
+        ret.put("exportCount",exportCount);
+        ret.put("actNotExportCount",actNotExportCount);
+
+        renderJson(ret);
     }
 
 }

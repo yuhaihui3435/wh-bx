@@ -13,6 +13,7 @@ import cardtype from './modules/cardtype';
 import cardapply from './modules/cardapply';
 import depot from './modules/depot';
 import cards from './modules/cards';
+import home from './modules/home';
 
 Vue.use(Vuex);
 
@@ -48,7 +49,8 @@ const store = new Vuex.Store({
         cardtype,
         cardapply,
         depot,
-        cards
+        cards,
+        home
     }
 });
 
