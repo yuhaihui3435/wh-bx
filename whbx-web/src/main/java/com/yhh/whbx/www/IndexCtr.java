@@ -261,15 +261,18 @@ public class IndexCtr extends CoreController {
         Long actCount=Db.queryLong("select count(id) from b_cards where  act='0' and status='0' and actAt>? and actAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
         Long exportCount=Db.queryLong("select count(id) from b_cards where  exportCode is not null and status='0' and exportAt>? and exportAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
         Long actNotExportCount=Db.queryLong("select count(id) from b_cards where  exportCode is null and act='0' and status='0'");
-
+        List list=Db.query("select IFNULL(sum(CAST(bu.eNum AS signed)-CAST(bu.bNum AS signed)+1),0)as count,bs.name from b_unlock bu left join b_depot bd on bu.depotId=bd.id  left join b_salesmen bs on bd.salesmenId=bs.id group by bd.salesmenId");
         Map<String,Object> ret=new HashMap<>();
         ret.put("applyCount",applyCount);
         ret.put("unlock",unlock);
         ret.put("actCount",actCount);
         ret.put("exportCount",exportCount);
         ret.put("actNotExportCount",actNotExportCount);
+        ret.put("salesmanStatistics",list);
 
         renderJson(ret);
     }
+
+
 
 }

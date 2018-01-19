@@ -10,7 +10,7 @@
                     <Col :xs="24" :sm="12" :md="5" :style="{marginBottom: '10px'}">
                     <infor-card
                             id-name="actNotExportCount"
-                            :end-val="countStatisticsData.actNotExportCount"
+                            :end-val="countStatisticsData.actNotExportCount==undefined?0:countStatisticsData.actNotExportCount"
                             iconType="fireball"
                             color="#f25e43"
                             intro-text="截止到现在激活未导出数量"
@@ -19,7 +19,7 @@
                     <Col :xs="24" :sm="12" :md="5" :style="{marginBottom: '10px'}">
                         <infor-card
                             id-name="applyCount"
-                            :end-val="countStatisticsData.applyCount"
+                            :end-val="countStatisticsData.applyCount==undefined?0:countStatisticsData.applyCount"
                             iconType="card"
                             color="#2d8cf0"
                             intro-text="今日卡申请数量"
@@ -28,7 +28,7 @@
                     <Col :xs="24" :sm="12" :md="5" :style="{marginBottom: '10px'}">
                         <infor-card
                             id-name="outDepotCount"
-                            :end-val="countStatisticsData.unlock"
+                            :end-val="countStatisticsData.unlock==undefined?0:countStatisticsData.unlock"
                             iconType="ios-cart"
                             color="#64d572"
                             :iconSize="50"
@@ -38,7 +38,7 @@
                     <Col :xs="24" :sm="12" :md="5" :style="{marginBottom: '10px'}">
                         <infor-card
                             id-name="actCount"
-                            :end-val="countStatisticsData.actCount"
+                            :end-val="countStatisticsData.actCount==undefined?0:countStatisticsData.actCount"
                             iconType="ios-bolt"
                             color="#ffd572"
                             intro-text="今日卡激活数量"
@@ -47,7 +47,7 @@
                     <Col :xs="24" :sm="12" :md="4" :style="{marginBottom: '10px'}">
                         <infor-card
                             id-name="exportCount"
-                            :end-val="countStatisticsData.exportCount"
+                            :end-val="countStatisticsData.exportCount==undefined?0:countStatisticsData.exportCount"
                             iconType="shuffle"
                             color="#8A2BE2"
                             intro-text="今日卡导出数量"
@@ -88,7 +88,7 @@
                         销售人员开卡量
                     </p>
                     <div class="data-source-row">
-                        <data-source-pie></data-source-pie>
+                        <data-source-pie ></data-source-pie>
                     </div>
                 </Card>
             </Col>
@@ -125,6 +125,7 @@ import inforCard from './components/inforCard.vue';
 import mapDataTable from './components/mapDataTable.vue';
 import toDoListItem from './components/toDoListItem.vue';
 import {mapState} from 'vuex'
+import kit from '../../libs/kit'
 
 export default {
     name: 'home',
@@ -142,10 +143,12 @@ export default {
     data () {
         return {
 
-        };
+        }
     },
     mounted () {
-        this.$store.dispatch('countStatisticsData_query')
+        console.info("home 挂载")
+        let vm=this;
+        this.$store.dispatch('countStatisticsData_query').then(()=> {})
     },
     computed: {
         avatorPath () {
@@ -160,4 +163,6 @@ export default {
 
     }
 };
+
+
 </script>
