@@ -421,7 +421,6 @@ public class CardsCtr extends CoreController {
     public void batchImportAct00(){
         try {
             UploadFile uploadFile=getFile();
-            File file=uploadFile.getFile();
             ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
             StringBuilder ret=new StringBuilder();
             List<Map<String, Object>> list = null;
@@ -605,11 +604,14 @@ public class CardsCtr extends CoreController {
             renderFailJSON("批量激活数据文件导入失败");
         }
     }
-
+    /**
+     *
+     * 批量激活导入，车险
+     *
+     */
     public void batchImportAct01(){
         try {
             UploadFile uploadFile=getFile();
-            File file=uploadFile.getFile();
             ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
             StringBuilder ret=new StringBuilder();
             List<Map<String, Object>> list = null;
@@ -624,9 +626,7 @@ public class CardsCtr extends CoreController {
             CardsCarIp cardsCarIp=null;
             StringBuilder stringBuilder=null;
             Taxonomy taxonomy=null;
-            Date date=null;
             count = list.size();
-            InsuranceOcc insuranceOcc=null;
             for (Map map : list) {
                 stringBuilder=new StringBuilder();
                 obj =  map.get("卡号");
@@ -669,85 +669,34 @@ public class CardsCtr extends CoreController {
                 }catch (CoreException ce){
                     stringBuilder.append(">>"+ce.getMsg());
                 }
-
-
                 cardsCarPh=new CardsCarPh();
                 cardsCarPh.setType(col3.equals("个人")?"1":"2");
                 cardsCarPh.setName(col4);
-
-                cardsCarPh.setCertCode(col6);
-
-                if(StrUtil.isBlank(col6)){
-                    stringBuilder.append(">>投保人生日不能为空");
+                if(StrUtil.isBlank(col5)){
+                    stringBuilder.append(">>投保人证件类型不能为空");
                 }else{
-                    try {
-                        date = DateUtil.parseDate(col6);
-                        cardsPh.setBirthDay(date);
-                    }catch (DateException e){
-                        stringBuilder.append(">>投保人生日格式不正确");
-                    }
-                }
-                if(StrUtil.isBlank(col7)){
-                    stringBuilder.append(">>投保人性别不能为空");
-                }else{
-                    cardsPh.setSex(col7.equals("男")?"1":"0");
-                }
-                if(StrUtil.isBlank(col8)){
-                    stringBuilder.append(">>投保人联系电话不能为空");
-                }else{
-                    cardsPh.setTel(col8);
-                }
-                cardsPh.setTel(col9);
-                cardsPh.setCardsId(cards.getId().intValue());
-
-                cardsIp=new CardsIp();
-
-                if(StrUtil.isBlank(col10)){
-                    stringBuilder.append(">>投保人与被投保人关系不能为空");
-                }else{
-                    cardsIp.setRelationship(CardsService.relationships.get(col10));
-                }
-
-                if(StrUtil.isBlank(col11)){
-                    stringBuilder.append(">>被投保人姓名不能为空");
-                }else{
-                    cardsIp.setName(col11);
-                }
-                if(StrUtil.isBlank(col12)){
-                    stringBuilder.append(">>被投保人证件类型不能为空");
-                }else{
-                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col12);
+                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col5);
                     if(taxonomy==null)
                         stringBuilder.append(">>投保人证件类型系统未识别");
                     else
-                        cardsIp.setCertTypeId(taxonomy.getId().intValue());
+                        cardsCarPh.setCertTypeId(taxonomy.getId().intValue());
                 }
-                if(StrUtil.isBlank(col13)){
-                    stringBuilder.append(">>被投保人证件号不能为空");
-                }else{
-                    cardsIp.setIdCard(col13);
-                }
-                if(StrUtil.isBlank(col14)){
-                    stringBuilder.append(">>被投保人生日不能为空");
-                }else{
-                    try {
-                        date = DateUtil.parseDate(col14);
-                        cardsIp.setBirthDay(date);
-                    }catch (DateException e){
-                        stringBuilder.append(">>被投保人生日格式不正确");
-                    }
-                }
-                if(StrUtil.isBlank(col15)){
-                    stringBuilder.append(">>被投保人性别不能为空");
-                }else{
-                    cardsIp.setSex(col15.equals("男")?"1":"0");
-                }
-                if(StrUtil.isBlank(col16)){
-                    stringBuilder.append(">>被投保人联系电话不能为空");
-                }else{
-                    cardsIp.setTel(col16);
-                }
-
+                cardsCarPh.setCertCode(col6);
+                cardsCarPh.setLinkName(col7);
+                cardsCarPh.setTel(col8);
+                cardsCarPh.setEmail(col9);
+                cardsCarPh.setAddress(col10);
+                cardsCarIp=new CardsCarIp();
+                cardsCarIp.setPlateNum(col11);
+                cardsCarIp.setEngineNum(col12);
+                cardsCarIp.setFrameNum(col13);
+                cardsCarIp.setProp(col14.equals("营运")?"2":"1");
+                taxonomy=Taxonomy.dao.findFristByPropEQ("title",col15);
+                if(taxonomy==null)
+                    stringBuilder.append(">>车辆类型在系统中未找到");
+                else
+                    cardsCarIp.setType(taxonomy.getId().intValue());
+                cardsCarIp.setSeatCount(col16);
 
                 if(stringBuilder.length()>0){
                     stringBuilder.insert(0,"卡号>>"+col1);
@@ -757,13 +706,7 @@ public class CardsCtr extends CoreController {
                     continue;
                 }
 
-                if(StrUtil.isNotBlank(col17)) {
-                    insuranceOcc = new InsuranceOcc();
-                    insuranceOcc.setName(col17);
-                    insuranceOcc = InsuranceOcc.dao.checkAndAdd(insuranceOcc);
-                    cardsIp.setJob(insuranceOcc!=null?insuranceOcc.getId().intValue():null);
-                }
-                cardsService.savePhAndIp(cards,cardsPh,cardsIp);
+                cardsService.saveCarPhAndIp(cards,cardsCarPh,cardsCarIp);
             }
 
             if(ret.length()>0) {

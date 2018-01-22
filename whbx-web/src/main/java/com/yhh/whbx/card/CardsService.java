@@ -231,4 +231,15 @@ public class CardsService {
         cardsIp.save();
     }
 
+    @Before(Tx.class)
+    public void saveCarPhAndIp(Cards cards,CardsCarPh cardsPh,CardsCarIp cardsIp){
+        cards.setAct(Consts.YORN_STR.yes.getVal());
+        cards.setActAt(new Date());
+        cards.update();
+        cardsPh.setCardsId(cards.getId().intValue());
+        cardsPh.save();
+        cardsIp.setCardsId(cards.getId().intValue());
+        cardsIp.save();
+    }
+
 }
