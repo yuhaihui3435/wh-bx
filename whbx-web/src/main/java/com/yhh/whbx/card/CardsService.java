@@ -1,5 +1,7 @@
 package com.yhh.whbx.card;
 
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateUtil;
@@ -103,9 +105,16 @@ public class CardsService {
         relationships.put("03","女儿");
         relationships.put("04","配偶");
         relationships.put("05","本人");
-
-
+        relationships.put("父亲","00");
+        relationships.put("母亲","01");
+        relationships.put("儿子","02");
+        relationships.put("女儿","03");
+        relationships.put("配偶","04");
+        relationships.put("本人","05");
     }
+
+
+
 
     /**
      * 装配保单
@@ -210,6 +219,16 @@ public class CardsService {
 
         if(!(birthDays<=ageLowerYear_l&&birthDays>=(ageTopYear_l)))
             throw new CoreException("投保人年龄不符合保险投保范围");
+    }
+    @Before(Tx.class)
+    public void savePhAndIp(Cards cards,CardsPh cardsPh,CardsIp cardsIp){
+        cards.setAct(Consts.YORN_STR.yes.getVal());
+        cards.setActAt(new Date());
+        cards.update();
+        cardsPh.setCardsId(cards.getId().intValue());
+        cardsPh.save();
+        cardsIp.setCardsId(cards.getId().intValue());
+        cardsIp.save();
     }
 
 }

@@ -62,30 +62,30 @@
             <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
                 <Card>
                     <p slot="title" class="card-title">
-                        <Icon type="android-map"></Icon>
+                        <Icon type="ios-pulse-strong"></Icon>
                         上周每日开卡量
                     </p>
                     <div class="data-source-row">
-                        <visite-volume></visite-volume>
+                        <last-week-unlock></last-week-unlock>
                     </div>
                 </Card>
             </Col>
             <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
             <Card>
                 <p slot="title" class="card-title">
-                    <Icon type="android-map"></Icon>
+                    <Icon type="ios-pulse-strong"></Icon>
                     上周每日激活量
                 </p>
                 <div class="data-source-row">
-                    <visite-volume></visite-volume>
+                    <last-week-act></last-week-act>
                 </div>
             </Card>
             </Col>
             <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
                 <Card>
                     <p slot="title" class="card-title">
-                        <Icon type="ios-pulse-strong"></Icon>
-                        销售人员开卡量
+                        <Icon type="pie-graph"></Icon>
+                        上周销售人员开卡量
                     </p>
                     <div class="data-source-row">
                         <data-source-pie ></data-source-pie>
@@ -94,51 +94,44 @@
             </Col>
 
         </Row>
-        <Row :gutter="10" class="margin-top-10">
-            <Col :md="24" :lg="24" >
-            <Row>
-                <Card>
-                    <p slot="title" class="card-title">
-                        <Icon type="ios-shuffle-strong"></Icon>
-                        上周各类卡开卡量统计
-                    </p>
-                    <div class="line-chart-con">
-                        <service-requests></service-requests>
-                    </div>
-                </Card>
-            </Row>
-            </Col>
-        </Row>
+        <!--<Row :gutter="10" class="margin-top-10">-->
+            <!--<Col :md="24" :lg="24" >-->
+            <!--<Row>-->
+                <!--<Card>-->
+                    <!--<p slot="title" class="card-title">-->
+                        <!--<Icon type="ios-shuffle-strong"></Icon>-->
+                        <!--上周各类卡开卡量统计-->
+                    <!--</p>-->
+                    <!--<div class="line-chart-con">-->
+                        <!--<last-week-cards-unlock></last-week-cards-unlock>-->
+                    <!--</div>-->
+                <!--</Card>-->
+            <!--</Row>-->
+            <!--</Col>-->
+        <!--</Row>-->
 
     </div>
 </template>
 
 <script>
-import cityData from './map-data/get-city-value.js';
-import homeMap from './components/map.vue';
 import dataSourcePie from './components/dataSourcePie.vue';
-import visiteVolume from './components/visiteVolume.vue';
-import serviceRequests from './components/serviceRequests.vue';
-import userFlow from './components/userFlow.vue';
+import lastWeekUnlock from './components/lastWeekUnlock.vue';
+import lastWeekAct from './components/lastWeekAct.vue';
+//import lastWeekCardsUnlock from './components/lastWeekCardsUnlock.vue';
 import countUp from './components/countUp.vue';
 import inforCard from './components/inforCard.vue';
-import mapDataTable from './components/mapDataTable.vue';
-import toDoListItem from './components/toDoListItem.vue';
 import {mapState} from 'vuex'
 import kit from '../../libs/kit'
 
 export default {
     name: 'home',
     components: {
-        homeMap,
         dataSourcePie,
-        visiteVolume,
-        serviceRequests,
-        userFlow,
+        lastWeekUnlock,
+        lastWeekAct,
+//        lastWeekCardsUnlock,
         countUp,
         inforCard,
-        mapDataTable,
-        toDoListItem
     },
     data () {
         return {
@@ -146,18 +139,13 @@ export default {
         }
     },
     mounted () {
-        console.info("home 挂载")
         let vm=this;
         this.$store.dispatch('countStatisticsData_query').then(()=> {})
     },
     computed: {
-        avatorPath () {
-            return localStorage.avatorImgPath;
-        },
         ...mapState({
             'countStatisticsData': state => state.home.countStatisticsData,
         })
-
     },
     methods: {
 

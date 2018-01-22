@@ -82,6 +82,11 @@
                     <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
                         :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
                         :action="env+'/c03/importPolicyInfo'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Upload></Col>
+                    <Col span="4" align="center"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload" @click="downloadTemplate">批量激活模板下载</Button></span></Col>
+                    <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
+                                                         :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
+                                                         :action="env+'/c03/batchImportAct00'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">批量激活导入</Button></span></Upload></Col>
+
                 </Row>
                 <Row class="margin-top-10">
 
@@ -339,7 +344,7 @@
                     this.phTel='';
             },
             handleFormatError(file){
-                vm.$store.commit('upadteSpinshow',false);
+                this.$store.commit('upadteSpinshow',false);
                 this.$Notice.warning({
                     title: '上传文件格式错误',
                     desc: '文件 ' + file.name + ' 格式不正确, 请选择 xls 或者 xlsx.'
@@ -360,6 +365,9 @@
             },
             handleBeforUpload(){
                 this.$store.commit('upadteSpinshow',true);
+            },
+            downloadTemplate(){
+                window.open(consts.env+'/static/templates/act00.xls')
             }
 
         },

@@ -7,6 +7,7 @@ import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.CardsService;
@@ -256,22 +257,42 @@ public class IndexCtr extends CoreController {
      *
      */
     public void homeCountStatistics(){
+        //今天申请数量
         Long applyCount=Db.queryLong("select IFNULL(sum(num),0) from b_cardapply where dAt is null and cAt>? and cAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        //今天解锁数量
         Long unlock=Db.queryLong("select IFNULL(sum(CAST(eNum AS signed)-CAST(bNum AS signed)+1),0) from b_unlock where  cAt>? and cAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        //今天激活数量
         Long actCount=Db.queryLong("select count(id) from b_cards where  act='0' and status='0' and actAt>? and actAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        //今天导出数量
         Long exportCount=Db.queryLong("select count(id) from b_cards where  exportCode is not null and status='0' and exportAt>? and exportAt<?", DateKit.getTimeStampBegin(new Date()),DateKit.getTimeStampEnd(new Date()));
+        //当前激活未导出数量
         Long actNotExportCount=Db.queryLong("select count(id) from b_cards where  exportCode is null and act='0' and status='0'");
-        List list=Db.query("select IFNULL(sum(CAST(bu.eNum AS signed)-CAST(bu.bNum AS signed)+1),0)as count,bs.name from b_unlock bu left join b_depot bd on bu.depotId=bd.id  left join b_salesmen bs on bd.salesmenId=bs.id group by bd.salesmenId");
+        //前一周开卡数量
+        Date lastWeekFirstDay= DateUtil.beginOfWeek(DateUtil.lastWeek());
+        Date lastWeekLastDay=DateUtil.endOfDay(DateUtil.offsetDay(lastWeekFirstDay,6));
+        //销售开卡量
+        List salemanCards=Db.query("select IFNULL(t.count,0) as count,bs.name from  (select IFNULL(sum(CAST(bu.eNum AS signed)-CAST(bu.bNum AS signed)+1),0)as count,bs.name,bs.id as bsId from b_unlock bu left join b_depot bd on bu.depotId=bd.id  left join b_salesmen bs on bd.salesmenId=bs.id where  bu.cAt>=? and bu.cAt<=? group by bd.salesmenId) t right join `b_salesmen` bs on t.bsId=bs.id", lastWeekFirstDay,lastWeekLastDay);
+
+
+        List lastWeekUnlockCount=Db.query("select IFNULL(t.count,0) as count,DATE_FORMAT(datelist,'%Y-%m-%d') as date from  (select IFNULL(sum(CAST(eNum AS signed)-CAST(bNum AS signed)+1),0) as count,DATE_FORMAT(cAt,'%Y-%m-%d') as date from b_unlock where  cAt>=? and cAt<=?   group by DATE_FORMAT(cAt,'%Y-%m-%d')) t right join calendar on t.date=date(datelist) where  datelist>=? and datelist<=? order by date", lastWeekFirstDay,lastWeekLastDay, lastWeekFirstDay,lastWeekLastDay);
+
+        //前一周卡激活量
+        List lastWeekActCount=Db.query("select IFNULL(t.count,0) as count,DATE_FORMAT(datelist,'%Y-%m-%d') as date from  (select count(id) as count,DATE_FORMAT(actAt,'%Y-%m-%d') as date from  b_cards where  act='0' and status='0' and actAt>=? and actAt<=?   group by DATE_FORMAT(actAt,'%Y-%m-%d')) t right join calendar on t.date=date(datelist) where  datelist>=? and datelist<=?  order by date", lastWeekFirstDay,lastWeekLastDay, lastWeekFirstDay,lastWeekLastDay);
+
         Map<String,Object> ret=new HashMap<>();
         ret.put("applyCount",applyCount);
         ret.put("unlock",unlock);
         ret.put("actCount",actCount);
         ret.put("exportCount",exportCount);
         ret.put("actNotExportCount",actNotExportCount);
-        ret.put("salesmanStatistics",list);
+        ret.put("salesmanStatistics",salemanCards);
+        ret.put("lastWeekUnlockCount",lastWeekUnlockCount);
+        ret.put("lastWeekActCount",lastWeekActCount);
 
         renderJson(ret);
     }
+
+
 
 
 

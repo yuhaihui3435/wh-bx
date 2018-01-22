@@ -2,7 +2,9 @@ import kit from '../../libs/kit'
 const home = {
     state: {
         countStatisticsData:{},
-        dspOption:{}
+        dspOption:{},
+        lastWeekUnlock:{},
+        lastWeekAct:{}
     },
     mutations: {
         setCountStatisticsData:function (state,obj) {
@@ -11,9 +13,17 @@ const home = {
             let data=[];
             let records=[];
             let ss=state.countStatisticsData.salesmanStatistics;
+            let colors=[];
             for(let i=0;i<ss.length;i++){
                 label.push(ss[i][1]);
-                records.push({value:ss[i][0],name:ss[i][1],itemStyle: {normal: {color: '#'+kit.getColor()}}})
+                let colorCode='';
+                let ac=true;
+                while(ac){
+                    colorCode=kit.getColor();
+                    ac=kit.arrayContains(colors,colorCode);
+                }
+                colors.push(colorCode);
+                records.push({value:ss[i][0],name:ss[i][1],itemStyle: {normal: {color: colorCode}}})
             }
             state.dspOption={
                 tooltip: {
@@ -42,6 +52,99 @@ const home = {
                     }
                 ]
             }
+
+            this.commit("setLastWeekUnlock",obj.lastWeekUnlockCount)
+            this.commit("setLastWeekAct",obj.lastWeekActCount)
+
+        },
+        setLastWeekUnlock:function (state,list) {
+            let dateArray=[];
+            let dataArray=[];
+            for(let i=0;i<list.length;i++){
+                dateArray.push(list[i][1]);
+                dataArray.push({value:list[i][0],name:list[i][1],itemStyle: {normal: {color: '#2d8cf0'}}})
+            }
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    top: 0,
+                    left: '2%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    splitNumber:1,
+                    boundaryGap: [0, 0.01]
+                },
+                yAxis: {
+                    type: 'category',
+                    data: dateArray,
+                    nameTextStyle: {
+                        color: '#c3c3c3'
+                    }
+                },
+                series: [
+                    {
+                        name: '开卡数量',
+                        type: 'bar',
+                        data: dataArray
+                    }
+                ]
+            };
+
+            state.lastWeekUnlock=Object.assign({},option);
+
+        },
+        setLastWeekAct:function (state,list) {
+            let dateArray=[];
+            let dataArray=[];
+            for(let i=0;i<list.length;i++){
+                dateArray.push(list[i][1]);
+                dataArray.push({value:list[i][0],name:list[i][1],itemStyle: {normal: {color: '#ff8718'}}})
+            }
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    top: 0,
+                    left: '2%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    splitNumber:1,
+                    boundaryGap: [0, 0.01]
+                },
+                yAxis: {
+                    type: 'category',
+                    data: dateArray,
+                    nameTextStyle: {
+                        color: '#c3c3c3'
+                    }
+                },
+                series: [
+                    {
+                        name: '卡激活数量',
+                        type: 'bar',
+                        data: dataArray
+                    }
+                ]
+            };
+
+            state.lastWeekAct=Object.assign({},option);
 
         }
     },

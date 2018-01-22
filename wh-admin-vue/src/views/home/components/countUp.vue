@@ -101,6 +101,7 @@ export default {
             let res = transformValue(val);
             let endVal = res.val;
             this.unit = res.unit;
+            if(this.demo!=undefined&&typeof this.demo.update=="function")
             this.demo.update(endVal);
         }
     }

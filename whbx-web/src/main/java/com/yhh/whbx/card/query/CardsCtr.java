@@ -12,8 +12,10 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.upload.UploadFile;
 import com.qiniu.common.QiniuException;
+import com.xiaoleilu.hutool.date.DateException;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.poi.excel.ExcelReader;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelWriter;
@@ -21,10 +23,11 @@ import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
+import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.CardsService;
-import com.yhh.whbx.card.model.Cards;
-import com.yhh.whbx.card.model.Cardtype;
+import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
 import com.yhh.whbx.sale.model.Salesmen;
@@ -408,6 +411,372 @@ public class CardsCtr extends CoreController {
         List<Attachment> attachments = Attachment.dao.findByObjIdAndModule(cards.getId().intValue(), "cards");
         ret.put("electronicPolicy",attachments);
         renderJson(ret);
+    }
+
+    /**
+     *
+     * 批量激活导入，意外险
+     *
+     */
+    public void batchImportAct00(){
+        try {
+            UploadFile uploadFile=getFile();
+            File file=uploadFile.getFile();
+            ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
+            StringBuilder ret=new StringBuilder();
+            List<Map<String, Object>> list = null;
+            list = excelReader.readAll();
+            int count = 0;
+            int fCount=0;
+            String col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16,col17;
+            Object obj=null;
+            String msg = "一共导入{}条数据，失败{}条。<br>";
+            Cards cards=null;
+            CardsPh cardsPh=null;
+            CardsIp cardsIp=null;
+            StringBuilder stringBuilder=null;
+            Taxonomy taxonomy=null;
+            Date date=null;
+            count = list.size();
+            InsuranceOcc insuranceOcc=null;
+            for (Map map : list) {
+                stringBuilder=new StringBuilder();
+                col1 = (String) map.get("卡号");
+                obj =  map.get("密码");
+                col2=obj==null?"":obj.toString();
+                obj=map.get("投保人姓名");
+                col3 = obj==null?"":obj.toString();
+                obj=map.get("投保人证件类型");
+                col4 = obj==null?"":obj.toString();
+                obj=map.get("投保人证件号");
+                col5 = obj==null?"":obj.toString();
+                obj=map.get("投保人生日");
+                col6 = obj==null?"":obj.toString();
+                obj=map.get("投保人性别");
+                col7 = obj==null?"":obj.toString();
+                obj=map.get("投保人联系电话");
+                col8 = obj==null?"":obj.toString();
+                obj=map.get("投保人EMAIL");
+                col9 = obj==null?"":obj.toString();
+                obj=map.get("投保人与被投保人关系");
+                col10 = obj==null?"":obj.toString();
+                obj=map.get("被投保人姓名");
+                col11 = obj==null?"":obj.toString();
+                obj=map.get("被投保人证件类型");
+                col12 = obj==null?"":obj.toString();
+                obj=map.get("被投保人证件号");
+                col13 = obj==null?"":obj.toString();
+                obj=map.get("被投保人生日");
+                col14 = obj==null?"":obj.toString();
+                obj=map.get("被投保人性别");
+                col15 = obj==null?"":obj.toString();
+                obj=map.get("被投保人联系电话");
+                col16 = obj==null?"":obj.toString();
+                obj=map.get("被投保人工作");
+                col17 = obj==null?"":obj.toString();
+                try {
+                     cards = cardsService.checkCard(col1, col2);
+                     if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal()))
+                         ret.append("卡号>>"+col1+"已经被激活<br>");
+                         continue;
+                }catch (CoreException ce){
+                    stringBuilder.append(">>"+ce.getMsg());
+                }
+
+
+                cardsPh=new CardsPh();
+                if(StrUtil.isBlank(col3)){
+                    stringBuilder.append(">>投保人姓名不能为空");
+                }else {
+                    cardsPh.setName(col3);
+                }
+                if(StrUtil.isBlank(col4)){
+                    stringBuilder.append(">>投保人证件类型不能为空");
+                }else{
+                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col4);
+                    if(taxonomy==null)
+                        stringBuilder.append(">>投保人证件类型系统未识别");
+                    else
+                        cardsPh.setCertTypeId(taxonomy.getId().intValue());
+                }
+                if(StrUtil.isBlank(col5)){
+                    stringBuilder.append(">>投保人证件号不能为空");
+                }else{
+                    cardsPh.setIdCard(col5);
+                }
+                if(StrUtil.isBlank(col6)){
+                    stringBuilder.append(">>投保人生日不能为空");
+                }else{
+                    try {
+                        date = DateUtil.parseDate(col6);
+                        cardsPh.setBirthDay(date);
+                    }catch (DateException e){
+                        stringBuilder.append(">>投保人生日格式不正确");
+                    }
+                }
+                if(StrUtil.isBlank(col7)){
+                    stringBuilder.append(">>投保人性别不能为空");
+                }else{
+                    cardsPh.setSex(col7.equals("男")?"1":"0");
+                }
+                if(StrUtil.isBlank(col8)){
+                    stringBuilder.append(">>投保人联系电话不能为空");
+                }else{
+                    cardsPh.setTel(col8);
+                }
+                cardsPh.setTel(col9);
+                cardsPh.setCardsId(cards.getId().intValue());
+
+                cardsIp=new CardsIp();
+
+                if(StrUtil.isBlank(col10)){
+                    stringBuilder.append(">>投保人与被投保人关系不能为空");
+                }else{
+                    cardsIp.setRelationship(CardsService.relationships.get(col10));
+                }
+
+                if(StrUtil.isBlank(col11)){
+                    stringBuilder.append(">>被投保人姓名不能为空");
+                }else{
+                    cardsIp.setName(col11);
+                }
+                if(StrUtil.isBlank(col12)){
+                    stringBuilder.append(">>被投保人证件类型不能为空");
+                }else{
+                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col12);
+                    if(taxonomy==null)
+                        stringBuilder.append(">>投保人证件类型系统未识别");
+                    else
+                        cardsIp.setCertTypeId(taxonomy.getId().intValue());
+                }
+                if(StrUtil.isBlank(col13)){
+                    stringBuilder.append(">>被投保人证件号不能为空");
+                }else{
+                    cardsIp.setIdCard(col13);
+                }
+                if(StrUtil.isBlank(col14)){
+                    stringBuilder.append(">>被投保人生日不能为空");
+                }else{
+                    try {
+                        date = DateUtil.parseDate(col14);
+                        cardsIp.setBirthDay(date);
+                    }catch (DateException e){
+                        stringBuilder.append(">>被投保人生日格式不正确");
+                    }
+                }
+                if(StrUtil.isBlank(col15)){
+                    stringBuilder.append(">>被投保人性别不能为空");
+                }else{
+                    cardsIp.setSex(col15.equals("男")?"1":"0");
+                }
+                if(StrUtil.isBlank(col16)){
+                    stringBuilder.append(">>被投保人联系电话不能为空");
+                }else{
+                    cardsIp.setTel(col16);
+                }
+
+
+                if(stringBuilder.length()>0){
+                    stringBuilder.insert(0,"卡号>>"+col1);
+                    StaticLog.error(stringBuilder.toString());
+                    ret.append(stringBuilder.toString()+"<br>");
+                    fCount++;
+                    continue;
+                }
+
+                if(StrUtil.isNotBlank(col17)) {
+                    insuranceOcc = new InsuranceOcc();
+                    insuranceOcc.setName(col17);
+                    insuranceOcc = InsuranceOcc.dao.checkAndAdd(insuranceOcc);
+                    cardsIp.setJob(insuranceOcc!=null?insuranceOcc.getId().intValue():null);
+                }
+                cardsService.savePhAndIp(cards,cardsPh,cardsIp);
+            }
+
+            if(ret.length()>0) {
+                ret.insert(0, StrUtil.format(msg, count, fCount));
+                renderFailJSON(ret.toString());
+            }
+            else
+                renderSuccessJSON("批量激活数据导入成功");
+
+        } catch (Exception e) {
+            LogKit.error("批量激活数据文件导入失败>>" + e.getMessage());
+            renderFailJSON("批量激活数据文件导入失败");
+        }
+    }
+
+    public void batchImportAct01(){
+        try {
+            UploadFile uploadFile=getFile();
+            File file=uploadFile.getFile();
+            ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
+            StringBuilder ret=new StringBuilder();
+            List<Map<String, Object>> list = null;
+            list = excelReader.readAll();
+            int count = 0;
+            int fCount=0;
+            String col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16;
+            Object obj=null;
+            String msg = "一共导入{}条数据，失败{}条。<br>";
+            Cards cards=null;
+            CardsCarPh cardsCarPh=null;
+            CardsCarIp cardsCarIp=null;
+            StringBuilder stringBuilder=null;
+            Taxonomy taxonomy=null;
+            Date date=null;
+            count = list.size();
+            InsuranceOcc insuranceOcc=null;
+            for (Map map : list) {
+                stringBuilder=new StringBuilder();
+                obj =  map.get("卡号");
+                col1=obj==null?"":obj.toString();
+                obj =  map.get("密码");
+                col2=obj==null?"":obj.toString();
+                obj=map.get("投保人类型");
+                col3 = obj==null?"":obj.toString();
+                obj=map.get("投保人姓名");
+                col4 = obj==null?"":obj.toString();
+                obj=map.get("投保人证件类型");
+                col5 = obj==null?"":obj.toString();
+                obj=map.get("投保人证件号");
+                col6 = obj==null?"":obj.toString();
+                obj=map.get("投保人联系人姓名");
+                col7 = obj==null?"":obj.toString();
+                obj=map.get("投保人联系电话");
+                col8 = obj==null?"":obj.toString();
+                obj=map.get("投保人EMAIL");
+                col9 = obj==null?"":obj.toString();
+                obj=map.get("投保人地址");
+                col10 = obj==null?"":obj.toString();
+                obj=map.get("被投保车车牌号");
+                col11 = obj==null?"":obj.toString();
+                obj=map.get("被投保车发动机号");
+                col12 = obj==null?"":obj.toString();
+                obj=map.get("被投保车大架号");
+                col13 = obj==null?"":obj.toString();
+                obj=map.get("被投保车营运类型");
+                col14 = obj==null?"":obj.toString();
+                obj=map.get("被投保车类型");
+                col15 = obj==null?"":obj.toString();
+                obj=map.get("被投保车座位数");
+                col16 = obj==null?"":obj.toString();
+                try {
+                    cards = cardsService.checkCard(col1, col2);
+                    if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal()))
+                        ret.append("卡号>>"+col1+"已经被激活<br>");
+                    continue;
+                }catch (CoreException ce){
+                    stringBuilder.append(">>"+ce.getMsg());
+                }
+
+
+                cardsCarPh=new CardsCarPh();
+                cardsCarPh.setType(col3.equals("个人")?"1":"2");
+                cardsCarPh.setName(col4);
+
+                cardsCarPh.setCertCode(col6);
+
+                if(StrUtil.isBlank(col6)){
+                    stringBuilder.append(">>投保人生日不能为空");
+                }else{
+                    try {
+                        date = DateUtil.parseDate(col6);
+                        cardsPh.setBirthDay(date);
+                    }catch (DateException e){
+                        stringBuilder.append(">>投保人生日格式不正确");
+                    }
+                }
+                if(StrUtil.isBlank(col7)){
+                    stringBuilder.append(">>投保人性别不能为空");
+                }else{
+                    cardsPh.setSex(col7.equals("男")?"1":"0");
+                }
+                if(StrUtil.isBlank(col8)){
+                    stringBuilder.append(">>投保人联系电话不能为空");
+                }else{
+                    cardsPh.setTel(col8);
+                }
+                cardsPh.setTel(col9);
+                cardsPh.setCardsId(cards.getId().intValue());
+
+                cardsIp=new CardsIp();
+
+                if(StrUtil.isBlank(col10)){
+                    stringBuilder.append(">>投保人与被投保人关系不能为空");
+                }else{
+                    cardsIp.setRelationship(CardsService.relationships.get(col10));
+                }
+
+                if(StrUtil.isBlank(col11)){
+                    stringBuilder.append(">>被投保人姓名不能为空");
+                }else{
+                    cardsIp.setName(col11);
+                }
+                if(StrUtil.isBlank(col12)){
+                    stringBuilder.append(">>被投保人证件类型不能为空");
+                }else{
+                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col12);
+                    if(taxonomy==null)
+                        stringBuilder.append(">>投保人证件类型系统未识别");
+                    else
+                        cardsIp.setCertTypeId(taxonomy.getId().intValue());
+                }
+                if(StrUtil.isBlank(col13)){
+                    stringBuilder.append(">>被投保人证件号不能为空");
+                }else{
+                    cardsIp.setIdCard(col13);
+                }
+                if(StrUtil.isBlank(col14)){
+                    stringBuilder.append(">>被投保人生日不能为空");
+                }else{
+                    try {
+                        date = DateUtil.parseDate(col14);
+                        cardsIp.setBirthDay(date);
+                    }catch (DateException e){
+                        stringBuilder.append(">>被投保人生日格式不正确");
+                    }
+                }
+                if(StrUtil.isBlank(col15)){
+                    stringBuilder.append(">>被投保人性别不能为空");
+                }else{
+                    cardsIp.setSex(col15.equals("男")?"1":"0");
+                }
+                if(StrUtil.isBlank(col16)){
+                    stringBuilder.append(">>被投保人联系电话不能为空");
+                }else{
+                    cardsIp.setTel(col16);
+                }
+
+
+                if(stringBuilder.length()>0){
+                    stringBuilder.insert(0,"卡号>>"+col1);
+                    StaticLog.error(stringBuilder.toString());
+                    ret.append(stringBuilder.toString()+"<br>");
+                    fCount++;
+                    continue;
+                }
+
+                if(StrUtil.isNotBlank(col17)) {
+                    insuranceOcc = new InsuranceOcc();
+                    insuranceOcc.setName(col17);
+                    insuranceOcc = InsuranceOcc.dao.checkAndAdd(insuranceOcc);
+                    cardsIp.setJob(insuranceOcc!=null?insuranceOcc.getId().intValue():null);
+                }
+                cardsService.savePhAndIp(cards,cardsPh,cardsIp);
+            }
+
+            if(ret.length()>0) {
+                ret.insert(0, StrUtil.format(msg, count, fCount));
+                renderFailJSON(ret.toString());
+            }
+            else
+                renderSuccessJSON("批量激活数据导入成功");
+
+        } catch (Exception e) {
+            LogKit.error("批量激活数据文件导入失败>>" + e.getMessage());
+            renderFailJSON("批量激活数据文件导入失败");
+        }
     }
 
 

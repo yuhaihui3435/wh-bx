@@ -56,8 +56,16 @@ public class _StrKit {
 
     public static void main(String[] args) throws IOException {
         byte[] key_array= Base64.decode("F5Xzv8iYebYYH4m6/pYYrQ==", Charset.forName("UTF-8"));
-        System.out.println(SecureUtil.aes(key_array).decryptStr("f0bbab0297b6834664eca0b1de8be658"));
+        System.out.println(SecureUtil.aes(key_array).decryptStr("0635a37244b62528773e125bc0f28284"));
         System.out.println(System.getProperty("java.io.tmpdir"));
+//        Date lastWeek=DateUtil.lastWeek();
+//        Date beginWeek=DateUtil.beginOfWeek(lastWeek);
+//        Date endWeek=DateUtil.endOfDay(DateUtil.offsetDay(lastWeek,6));
+//
+//
+//        System.out.println(beginWeek);
+//        System.out.println(endWeek);
+
     }
 
 

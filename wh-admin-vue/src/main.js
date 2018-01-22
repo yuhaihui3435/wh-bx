@@ -120,6 +120,7 @@ ajaxMethod.forEach((method)=> {
 
 Vue.prototype.$axios = api;
 
+
 new Vue({
     el: '#app',
     router: router,

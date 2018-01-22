@@ -1,7 +1,9 @@
 package com.yhh.whbx.card.model;
 
 
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.card.model.base.BaseInsuranceOcc;
+import com.yhh.whbx.core.CoreException;
 
 import java.util.List;
 
@@ -25,6 +27,20 @@ public class InsuranceOcc extends BaseInsuranceOcc<InsuranceOcc> {
 	public List<InsuranceOcc> findThirdLevel(String pCode,String insurance){
 		String sql="select * from b_insurance_occ where pCode =? and insurance=? and type is not null";
 		return dao.find(sql,pCode,insurance);
+	}
+
+	public InsuranceOcc checkAndAdd(InsuranceOcc insuranceOcc){
+		if(StrUtil.isBlank(insuranceOcc.getName()))
+			throw new CoreException("职业名称为空");
+
+		InsuranceOcc insuranceOcc1=dao.findFirst("select * from b_insurance_occ where name=? and pCode is null",insuranceOcc.getName());
+
+		if(insuranceOcc1==null){
+			insuranceOcc.save();
+			return insuranceOcc;
+		}else{
+			return insuranceOcc1;
+		}
 	}
 
 }

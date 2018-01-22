@@ -69,4 +69,14 @@ kit.getColor=function getColor() {
     return color;
 }
 
+kit.arrayContains=function contains(arr, obj) {
+    var i = arr.length;
+    while (i--) {
+        if (arr[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export default kit

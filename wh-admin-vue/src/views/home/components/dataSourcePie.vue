@@ -7,8 +7,7 @@ import echarts from 'echarts';
 import {mapState} from 'vuex'
 let timerId='';
 function createdsp(vm) {
-    console.info(vm)
-    console.info(vm.dspOption);
+
     if(vm.dspOption.tooltip!=undefined) {
         var dataSourcePie = echarts.init(document.getElementById('data_source_con'));
         const option = vm.dspOption;
@@ -40,9 +39,12 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            console.info("dsp DOM 渲染")
             let vm=this;
-            timerId=setInterval(createdsp(vm),500)
+            timerId=setInterval(function () {
+
+                    createdsp(vm);
+
+            },500)
         });
     }
 };
