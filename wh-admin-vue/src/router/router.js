@@ -100,6 +100,17 @@ export const appRouter = [
 
         ]
     },
+    {
+        path: '/report',
+        icon: 'stats-bar',
+        name: 'report',
+        title: '数据统计',
+        component: Main,
+        children: [
+            { path: 'cards', title: '卡销量统计', name: 'report_cards', component: resolve => { require(['@/views/card/report/ds00.vue'], resolve); } },
+            { path: 'salesmen', title: '销售员销量统计', name: 'report_salesmen', component: resolve => { require(['@/views/card/report/ds01.vue'], resolve); } },
+        ]
+    },
     // {
     //     path: '/access',
     //     icon: 'key',
