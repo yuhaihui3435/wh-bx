@@ -492,97 +492,99 @@ public class CardsCtr extends CoreController {
                     stringBuilder.append(">>"+ce.getMsg());
                 }
 
+                if(cards!=null) {
 
-                cardsPh=new CardsPh();
-                if(StrUtil.isBlank(col3)){
-                    stringBuilder.append(">>投保人姓名不能为空");
-                }else {
-                    cardsPh.setName(col3);
-                }
-                if(StrUtil.isBlank(col4)){
-                    stringBuilder.append(">>投保人证件类型不能为空");
-                }else{
-                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col4);
-                    if(taxonomy==null)
-                        stringBuilder.append(">>投保人证件类型系统未识别");
-                    else
-                        cardsPh.setCertTypeId(taxonomy.getId().intValue());
-                }
-                if(StrUtil.isBlank(col5)){
-                    stringBuilder.append(">>投保人证件号不能为空");
-                }else{
-                    cardsPh.setIdCard(col5);
-                }
-                if(StrUtil.isBlank(col6)){
-                    stringBuilder.append(">>投保人生日不能为空");
-                }else{
-                    try {
-                        date = DateUtil.parseDate(col6);
-                        cardsPh.setBirthDay(date);
-                    }catch (DateException e){
-                        stringBuilder.append(">>投保人生日格式不正确");
+                    cardsPh = new CardsPh();
+                    if (StrUtil.isBlank(col3)) {
+                        stringBuilder.append(">>投保人姓名不能为空");
+                    } else {
+                        cardsPh.setName(col3);
                     }
-                }
-                if(StrUtil.isBlank(col7)){
-                    stringBuilder.append(">>投保人性别不能为空");
-                }else{
-                    cardsPh.setSex(col7.equals("男")?"1":"0");
-                }
-                if(StrUtil.isBlank(col8)){
-                    stringBuilder.append(">>投保人联系电话不能为空");
-                }else{
-                    cardsPh.setTel(col8);
-                }
-                cardsPh.setEmail(col9);
-                cardsPh.setCardsId(cards.getId().intValue());
-
-                cardsIp=new CardsIp();
-
-                if(StrUtil.isBlank(col10)){
-                    stringBuilder.append(">>投保人与被投保人关系不能为空");
-                }else{
-                    cardsIp.setRelationship(CardsService.relationships.get(col10));
-                }
-
-                if(StrUtil.isBlank(col11)){
-                    stringBuilder.append(">>被投保人姓名不能为空");
-                }else{
-                    cardsIp.setName(col11);
-                }
-                if(StrUtil.isBlank(col12)){
-                    stringBuilder.append(">>被投保人证件类型不能为空");
-                }else{
-                    taxonomy=Taxonomy.dao.findFristByPropEQ("title",col12);
-                    if(taxonomy==null)
-                        stringBuilder.append(">>投保人证件类型系统未识别");
-                    else
-                        cardsIp.setCertTypeId(taxonomy.getId().intValue());
-                }
-                if(StrUtil.isBlank(col13)){
-                    stringBuilder.append(">>被投保人证件号不能为空");
-                }else{
-                    cardsIp.setIdCard(col13);
-                    cardTypeService.actCountCheck(cardsIp.getIdCard(),cardtype.getId());
-                }
-                if(StrUtil.isBlank(col14)){
-                    stringBuilder.append(">>被投保人生日不能为空");
-                }else{
-                    try {
-                        date = DateUtil.parseDate(col14);
-                        cardsIp.setBirthDay(date);
-                    }catch (DateException e){
-                        stringBuilder.append(">>被投保人生日格式不正确");
+                    if (StrUtil.isBlank(col4)) {
+                        stringBuilder.append(">>投保人证件类型不能为空");
+                    } else {
+                        taxonomy = Taxonomy.dao.findFristByPropEQ("title", col4);
+                        if (taxonomy == null)
+                            stringBuilder.append(">>投保人证件类型系统未识别");
+                        else
+                            cardsPh.setCertTypeId(taxonomy.getId().intValue());
                     }
-                }
-                if(StrUtil.isBlank(col15)){
-                    stringBuilder.append(">>被投保人性别不能为空");
-                }else{
-                    cardsIp.setSex(col15.equals("男")?"1":"0");
-                }
-                if(StrUtil.isBlank(col16)){
-                    stringBuilder.append(">>被投保人联系电话不能为空");
-                }else{
-                    cardsIp.setTel(col16);
+                    if (StrUtil.isBlank(col5)) {
+                        stringBuilder.append(">>投保人证件号不能为空");
+                    } else {
+                        cardsPh.setIdCard(col5);
+                    }
+                    if (StrUtil.isBlank(col6)) {
+                        stringBuilder.append(">>投保人生日不能为空");
+                    } else {
+                        try {
+                            date = DateUtil.parseDate(col6);
+                            cardsPh.setBirthDay(date);
+                        } catch (DateException e) {
+                            stringBuilder.append(">>投保人生日格式不正确");
+                        }
+                    }
+                    if (StrUtil.isBlank(col7)) {
+                        stringBuilder.append(">>投保人性别不能为空");
+                    } else {
+                        cardsPh.setSex(col7.equals("男") ? "1" : "0");
+                    }
+                    if (StrUtil.isBlank(col8)) {
+                        stringBuilder.append(">>投保人联系电话不能为空");
+                    } else {
+                        cardsPh.setTel(col8);
+                    }
+                    cardsPh.setEmail(col9);
+
+
+                    cardsIp = new CardsIp();
+
+                    if (StrUtil.isBlank(col10)) {
+                        stringBuilder.append(">>投保人与被投保人关系不能为空");
+                    } else {
+                        cardsIp.setRelationship(CardsService.relationships.get(col10));
+                    }
+
+                    if (StrUtil.isBlank(col11)) {
+                        stringBuilder.append(">>被投保人姓名不能为空");
+                    } else {
+                        cardsIp.setName(col11);
+                    }
+                    if (StrUtil.isBlank(col12)) {
+                        stringBuilder.append(">>被投保人证件类型不能为空");
+                    } else {
+                        taxonomy = Taxonomy.dao.findFristByPropEQ("title", col12);
+                        if (taxonomy == null)
+                            stringBuilder.append(">>投保人证件类型系统未识别");
+                        else
+                            cardsIp.setCertTypeId(taxonomy.getId().intValue());
+                    }
+                    if (StrUtil.isBlank(col13)) {
+                        stringBuilder.append(">>被投保人证件号不能为空");
+                    } else {
+                        cardsIp.setIdCard(col13);
+                        cardTypeService.actCountCheck(cardsIp.getIdCard(), cardtype.getId());
+                    }
+                    if (StrUtil.isBlank(col14)) {
+                        stringBuilder.append(">>被投保人生日不能为空");
+                    } else {
+                        try {
+                            date = DateUtil.parseDate(col14);
+                            cardsIp.setBirthDay(date);
+                        } catch (DateException e) {
+                            stringBuilder.append(">>被投保人生日格式不正确");
+                        }
+                    }
+                    if (StrUtil.isBlank(col15)) {
+                        stringBuilder.append(">>被投保人性别不能为空");
+                    } else {
+                        cardsIp.setSex(col15.equals("男") ? "1" : "0");
+                    }
+                    if (StrUtil.isBlank(col16)) {
+                        stringBuilder.append(">>被投保人联系电话不能为空");
+                    } else {
+                        cardsIp.setTel(col16);
+                    }
                 }
 
 

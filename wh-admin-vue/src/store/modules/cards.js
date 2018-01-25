@@ -131,6 +131,7 @@ const cards = {
                     all['aCount'] = aac;
                     all['eCount'] = aec;
                     all['aeCount'] = aaec;
+                    all['_disableExpand']=true;
                     state.ds01List.push(all);
                 }
 
