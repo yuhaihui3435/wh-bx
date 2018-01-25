@@ -12,6 +12,7 @@ import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.*;
+import com.yhh.whbx.card.type.CardTypeService;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.interceptors.CardStatusCheckInterceptor;
@@ -26,6 +27,7 @@ import java.util.*;
  */
 public class IndexCtr extends CoreController {
     private final static CardsService cardsService = Duang.duang(CardsService.class);
+    private final static CardTypeService cardTypeService = Duang.duang(CardTypeService.class);
 
     public void index() {
         render("index.html");
@@ -122,6 +124,10 @@ public class IndexCtr extends CoreController {
     public void saveCardInfo() {
         CardsPh cardsPh = getModel(CardsPh.class, "ph", true);
         Cards cards = Cards.dao.findById(cardsPh.getCardsId());
+        Cardtype cardtype=cardsService.getCardtypeByCardcode(cards.getCode());
+
+
+
         cards.setAct(Consts.YORN_STR.yes.getVal());
         cards.setActAt(new Date());
         cards.update();
@@ -143,10 +149,9 @@ public class IndexCtr extends CoreController {
         for (int i = 0; i < ipLen; i++) {
             cardsIp = getModel(CardsIp.class, "ip" + i, true);
             cardsService.ipAgeCheck(cardsIp,cards);
+            cardTypeService.actCountCheck(cardsIp.getIdCard(),cardtype.getId());
             list.add(cardsIp);
         }
-
-
         cardsService.phAgeCheck(cardsPh,cards);
         cardsPh.save();
         Db.batchSave(list, 10);

@@ -26,6 +26,7 @@ import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.*;
+import com.yhh.whbx.card.type.CardTypeService;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.kits.DateKit;
@@ -44,6 +45,7 @@ import java.util.*;
 public class CardsCtr extends CoreController {
 
     private final static CardsService cardsService = Duang.duang(CardsService.class);
+    private final static CardTypeService cardTypeService = Duang.duang(CardTypeService.class);
 
     public void page() {
         Page<Cards> page;
@@ -419,7 +421,6 @@ public class CardsCtr extends CoreController {
      *
      */
     public void batchImportAct00(){
-        try {
             UploadFile uploadFile=getFile();
             ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
             StringBuilder ret=new StringBuilder();
@@ -437,7 +438,9 @@ public class CardsCtr extends CoreController {
             Taxonomy taxonomy=null;
             Date date=null;
             count = list.size();
+            Cardtype cardtype=null;
             InsuranceOcc insuranceOcc=null;
+            String ctt=null;
             for (Map map : list) {
                 stringBuilder=new StringBuilder();
                 col1 = (String) map.get("卡号");
@@ -475,9 +478,16 @@ public class CardsCtr extends CoreController {
                 col17 = obj==null?"":obj.toString();
                 try {
                      cards = cardsService.checkCard(col1, col2);
-                     if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal()))
-                         ret.append("卡号>>"+col1+"已经被激活<br>");
+                     cardtype=cardsService.getCardtypeByCardcode(cards.getCode());
+                     ctt=cardtype.getTypeVal();
+                     if(!ctt.equals("accidentInsurance")){
+                         ret.append("卡号>>" + col1 + "类型不匹配，无法进行激活<br>");
                          continue;
+                     }
+                     if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal())) {
+                         ret.append("卡号>>" + col1 + "已经被激活<br>");
+                         continue;
+                     }
                 }catch (CoreException ce){
                     stringBuilder.append(">>"+ce.getMsg());
                 }
@@ -523,7 +533,7 @@ public class CardsCtr extends CoreController {
                 }else{
                     cardsPh.setTel(col8);
                 }
-                cardsPh.setTel(col9);
+                cardsPh.setEmail(col9);
                 cardsPh.setCardsId(cards.getId().intValue());
 
                 cardsIp=new CardsIp();
@@ -552,6 +562,7 @@ public class CardsCtr extends CoreController {
                     stringBuilder.append(">>被投保人证件号不能为空");
                 }else{
                     cardsIp.setIdCard(col13);
+                    cardTypeService.actCountCheck(cardsIp.getIdCard(),cardtype.getId());
                 }
                 if(StrUtil.isBlank(col14)){
                     stringBuilder.append(">>被投保人生日不能为空");
@@ -599,10 +610,6 @@ public class CardsCtr extends CoreController {
             else
                 renderSuccessJSON("批量激活数据导入成功");
 
-        } catch (Exception e) {
-            LogKit.error("批量激活数据文件导入失败>>" + e.getMessage());
-            renderFailJSON("批量激活数据文件导入失败");
-        }
     }
     /**
      *
@@ -610,7 +617,7 @@ public class CardsCtr extends CoreController {
      *
      */
     public void batchImportAct01(){
-        try {
+
             UploadFile uploadFile=getFile();
             ExcelReader excelReader = ExcelUtil.getReader(uploadFile.getFile());
             StringBuilder ret=new StringBuilder();
@@ -627,6 +634,8 @@ public class CardsCtr extends CoreController {
             StringBuilder stringBuilder=null;
             Taxonomy taxonomy=null;
             count = list.size();
+            Cardtype cardtype=null;
+            String ctt=null;
             for (Map map : list) {
                 stringBuilder=new StringBuilder();
                 obj =  map.get("卡号");
@@ -663,9 +672,16 @@ public class CardsCtr extends CoreController {
                 col16 = obj==null?"":obj.toString();
                 try {
                     cards = cardsService.checkCard(col1, col2);
-                    if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal()))
-                        ret.append("卡号>>"+col1+"已经被激活<br>");
-                    continue;
+                    cardtype=cardsService.getCardtypeByCardcode(cards.getCode());
+                    ctt=cardtype.getTypeVal();
+                    if(!ctt.equals("driverInsurance")){
+                        ret.append("卡号>>" + col1 + "类型不匹配，无法进行激活<br>");
+                        continue;
+                    }
+                    if(cards.getAct()!=null&&cards.getAct().equals(Consts.YORN_STR.yes.getVal())) {
+                        ret.append("卡号>>" + col1 + "已经被激活<br>");
+                        continue;
+                    }
                 }catch (CoreException ce){
                     stringBuilder.append(">>"+ce.getMsg());
                 }
@@ -716,10 +732,6 @@ public class CardsCtr extends CoreController {
             else
                 renderSuccessJSON("批量激活数据导入成功");
 
-        } catch (Exception e) {
-            LogKit.error("批量激活数据文件导入失败>>" + e.getMessage());
-            renderFailJSON("批量激活数据文件导入失败");
-        }
     }
 
 

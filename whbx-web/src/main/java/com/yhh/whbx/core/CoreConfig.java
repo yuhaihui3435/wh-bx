@@ -22,6 +22,7 @@ import com.yhh.whbx.admin.user.UserCtr;
 import com.yhh.whbx.card.apply.CardapplyCtr;
 import com.yhh.whbx.card.depot.DepotCtr;
 import com.yhh.whbx.card.query.CardsCtr;
+import com.yhh.whbx.card.report.ReportCtr;
 import com.yhh.whbx.card.type.CardTypeCtr;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.interceptors.WwwInterceptor;
@@ -85,6 +86,7 @@ public class CoreConfig extends JFinalConfig{
                 add("/c01", CardapplyCtr.class);
                 add("/c02", DepotCtr.class);
                 add("/c03", CardsCtr.class);
+                add("/c04", ReportCtr.class);
             }
         });
 
@@ -129,6 +131,8 @@ public class CoreConfig extends JFinalConfig{
         //开启DB+record 映射关系插件
         ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
         _MappingKit.mapping(arp);
+        arp.getEngine().setDevMode(true);
+        arp.getEngine().addSharedMethod(new StrUtil());
         arp.setBaseSqlTemplatePath(PathKit.getRootClassPath()+"/sql");
         arp.addSqlTemplate("all.sql");
         arp.setShowSql(true);

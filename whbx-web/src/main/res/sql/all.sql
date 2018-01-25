@@ -13,3 +13,6 @@
 #namespace("cards")
   #include("cards.sql")
 #end
+#namespace("cardsIp")
+  #include("cardsIp.sql")
+#end

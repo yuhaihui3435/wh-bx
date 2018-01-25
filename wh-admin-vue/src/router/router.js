@@ -102,7 +102,7 @@ export const appRouter = [
     },
     {
         path: '/report',
-        icon: 'stats-bar',
+        icon: 'ios-pie',
         name: 'report',
         title: '数据统计',
         component: Main,

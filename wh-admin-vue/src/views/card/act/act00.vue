@@ -82,7 +82,7 @@
                     <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
                         :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
                         :action="env+'/c03/importPolicyInfo'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Upload></Col>
-                    <Col span="4" align="center"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload" @click="downloadTemplate">批量激活模板下载</Button></span></Col>
+                    <Col span="4" align="center"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download" @click="downloadTemplate">批量激活模板下载</Button></span></Col>
                     <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
                                                          :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
                                                          :action="env+'/c03/batchImportAct00'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">批量激活导入</Button></span></Upload></Col>
@@ -287,7 +287,11 @@
                         let url=res.resData;
                         window.open(url,'_blank')
                     }else if(res&&res.resCode&&res.resCode=='fail'){
-                        this.$Message.success("卡激活数据导出失败>>"+res.resMsg);
+                        this.$Message.success({
+                        content: "卡激活数据导出失败>>"+res.resMsg,
+                            duration: 10,
+                            closable: true
+                    });
                     }
 
                 });
@@ -356,7 +360,11 @@
                     this.$Message.success(response.resMsg);
                     this.search();
                 }else if(response&&response.resCode&&response.resCode=='fail'){
-                    this.$Message.error(response.resMsg);
+                    this.$Message.error({
+                        content: response.resMsg,
+                        duration: 10,
+                        closable: true
+                    });
                 }
             },
             handleError(error, file, fileList){

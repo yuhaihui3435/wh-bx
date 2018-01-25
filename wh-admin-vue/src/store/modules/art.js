@@ -4,7 +4,7 @@ const art = {
         artList: [],
         totalPage: 0,
         pageNumber: 1,
-        totalRow: 1,
+        totalRow: 0,
         art: {title: '', flag: '01', top: '1', good: '1', module: 'art'},
         artTaxList: []
     },
