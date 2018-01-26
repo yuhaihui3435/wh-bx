@@ -78,7 +78,7 @@ public class CardapplyCtr extends CoreController {
         cardapply.setStatus(Consts.STATUS.enable.getVal());
         cardapply.setCheckStatus(Consts.CHECK_STATUS.waitingCheck.getVal());
         cardapply.setExeCard(Consts.YORN_STR.no.getVal());
-        cardapply.setOper(currUser() == null ? null : Integer.parseInt(currUser().getId()));
+        cardapply.setOper(currUser() == null ? null : currUser().getId().intValue());
         cardapply.save();
         renderSuccessJSON("新增操作成功。");
     }

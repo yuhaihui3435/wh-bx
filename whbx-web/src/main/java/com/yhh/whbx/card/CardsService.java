@@ -9,6 +9,7 @@ import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.*;
+import com.yhh.whbx.card.query.CardsCtr;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
@@ -220,7 +221,7 @@ public class CardsService {
         if(!(birthDays<=ageLowerYear_l&&birthDays>=(ageTopYear_l)))
             throw new CoreException("投保人年龄不符合保险投保范围");
     }
-    @Before(Tx.class)
+
     public void savePhAndIp(Cards cards,CardsPh cardsPh,CardsIp cardsIp){
         cards.setAct(Consts.YORN_STR.yes.getVal());
         cards.setActAt(new Date());
@@ -230,8 +231,20 @@ public class CardsService {
         cardsIp.setCardsId(cards.getId().intValue());
         cardsIp.save();
     }
+    @Before(Tx.class)
+    public void batchSavePhAndIp(List<CardsCtr.DTO> dtoList){
+        for (CardsCtr.DTO dto:dtoList){
+            savePhAndIp(dto.getCards(),dto.getCardsPh(),dto.getCardsIp());
+        }
+    }
 
     @Before(Tx.class)
+    public void batchSaveCarPhAndIp(List<CardsCtr.DTO01> list){
+           for (CardsCtr.DTO01 dto01:list){
+               saveCarPhAndIp(dto01.getCards(),dto01.getCardsCarPh(),dto01.getCardsCarIp());
+           }
+    }
+
     public void saveCarPhAndIp(Cards cards,CardsCarPh cardsPh,CardsCarIp cardsIp){
         cards.setAct(Consts.YORN_STR.yes.getVal());
         cards.setActAt(new Date());

@@ -72,7 +72,7 @@ public class DepotCtr extends CoreController {
         Depot depot = getModel(Depot.class, "", true);
         depot.setCAt(new Date());
         depot.setStatus(Consts.STATUS.enable.getVal());
-        depot.setOper(currUser() == null ? null : Integer.parseInt(currUser().getId()));
+        depot.setOper(currUser() == null ? null : currUser().getId().intValue());
         depot.setOutStatus(Consts.YORN_STR.no.getVal());
         String str=service.checkCount(depot.getBNum(),depot.getENum(),depot.getCardapplyId());
         if(str.equals(Consts.YORN_STR.yes.getVal()))depot.save();
@@ -130,7 +130,7 @@ public class DepotCtr extends CoreController {
     public void saveUnlockRecord(){
         Unlock unlock=getModel(Unlock.class,"",true);
         unlock.setCAt(new Date());
-        unlock.setOper(currUser() == null ? null : Integer.parseInt(currUser().getId()));
+        unlock.setOper(currUser() == null ? null : currUser().getId().intValue());
         unlock.save();
 
         int b=unlock.getBNum();

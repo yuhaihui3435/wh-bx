@@ -7,16 +7,14 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
-import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.admin.model.Role;
-import com.yhh.whbx.admin.model.Taxonomy;
-import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.sale.model.Salesmen;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 简介       销售人员管理
@@ -74,14 +72,14 @@ public class SalesmenCtr extends CoreController {
         Salesmen salesmen=getModel(Salesmen.class,"",true);
         salesmen.setCAt(new Date());
         salesmen.setStatus(Consts.STATUS.enable.getVal());
-        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.save();
         renderSuccessJSON("新增业务员成功。");
     }
     @Before({SalesmenValidator.class, Tx.class})
     public void update(){
         Salesmen salesmen=getModel(Salesmen.class,"",true);
-        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.update();
         renderSuccessJSON("修改业务员信息成功");
     }
@@ -90,7 +88,7 @@ public class SalesmenCtr extends CoreController {
         Long id=getParaToLong("id");
         Salesmen salesmen=Salesmen.dao.findById(id);
         salesmen.setDAt(new Date());
-        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.update();
         renderSuccessJSON("删除业务员信息成功");
     }

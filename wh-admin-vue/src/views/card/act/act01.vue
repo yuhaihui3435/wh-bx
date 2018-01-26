@@ -80,6 +80,10 @@
                                                          :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
                                                          :action="env+'/c03/importPolicyInfo'">
                     <span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">导入</Button></span></Upload></Col>
+                    <Col span="4" align="center"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-download" @click="downloadTemplate">批量激活模板下载</Button></span></Col>
+                    <Col span="3" align="center"><Upload :on-success="handleSuccess" :on-error="handleError" :before-upload="handleBeforUpload"
+                                                         :format="['xls','xlsx']" :on-format-error="handleFormatError" :show-upload-list="false"
+                                                         :action="env+'/c03/batchImportAct01'"><span  style="margin: 0 10px;"><Button type="primary" icon="ios-upload">批量激活导入</Button></span></Upload></Col>
                 </Row>
                 <Row class="margin-top-10">
 
@@ -348,7 +352,11 @@
                     this.$Message.success(response.resMsg);
                     this.search();
                 }else if(response&&response.resCode&&response.resCode=='fail'){
-                    this.$Message.error(response.resMsg);
+                    this.$Message.error({
+                        content: response.resMsg,
+                        duration: 10,
+                        closable: true
+                    });
                 }
             },
             handleError(error, file, fileList){
@@ -357,6 +365,9 @@
             },
             handleBeforUpload(){
                 this.$store.commit('upadteSpinshow',true);
+            },
+            downloadTemplate(){
+                window.open(consts.env+'/static/templates/act01.xls')
             }
 
         },

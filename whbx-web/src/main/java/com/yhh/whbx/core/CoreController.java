@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.jfinal.core.Controller;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.auth.Role;
-import com.yhh.whbx.auth.User;
+import com.yhh.whbx.admin.model.Role;
+import com.yhh.whbx.admin.model.User;
 
 import java.util.List;
 

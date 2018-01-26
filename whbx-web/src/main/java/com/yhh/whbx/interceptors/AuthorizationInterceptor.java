@@ -5,7 +5,7 @@ import com.jfinal.aop.Invocation;
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.StrKit;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.auth.User;
+import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.kits.ReqKit;
 import com.yhh.whbx.kits.ResKit;

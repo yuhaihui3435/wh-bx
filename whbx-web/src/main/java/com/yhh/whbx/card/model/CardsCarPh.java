@@ -28,7 +28,7 @@ public class CardsCarPh extends BaseCardsCarPh<CardsCarPh> {
 	}
 
 	public String getFullAddress(){
-		return getProvince()+getCity()+getDistrict()+getAddress();
+		return (getProvince()==null?"":getProvince())+(getCity()==null?"":getCity())+(getDistrict()==null?"":getDistrict())+getAddress();
 	}
 
 

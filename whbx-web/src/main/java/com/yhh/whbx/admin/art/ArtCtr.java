@@ -5,7 +5,6 @@ import com.jfinal.aop.Before;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Content;
@@ -18,7 +17,6 @@ import com.yhh.whbx.kits.QiNiuKit;
 import com.yhh.whbx.kits._StrKit;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -84,7 +82,7 @@ public class ArtCtr extends CoreController {
                 }
             }
         }
-        content.setUserid(currUser()!=null?new BigInteger(currUser().getId()):null);
+        content.setUserid(currUser()!=null?currUser().getId():null);
         content.setCAt(new Date());
         content.setStatus(Consts.CHECK_STATUS.normal.getVal());
         if(content.getId()==null)

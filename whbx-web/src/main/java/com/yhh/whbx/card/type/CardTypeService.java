@@ -21,7 +21,7 @@ public class CardTypeService {
         Record record=Db.findFirst(sqlPara);
         Long actedCount=record.getLong("actCount");
         if(actCount<=actedCount){
-            throw new CoreException("证件号"+certCode+"的被投保人,已经投保了"+actedCount+"次，超过了该类保险规定的最大投保次数");
+            throw new CoreException("证件号"+certCode+"的被投保人,已经投保了"+actedCount+"次，超过了该类保险规定的最大投保次数"+actCount);
         }
 
     }

@@ -94,21 +94,6 @@
             </Col>
 
         </Row>
-        <!--<Row :gutter="10" class="margin-top-10">-->
-            <!--<Col :md="24" :lg="24" >-->
-            <!--<Row>-->
-                <!--<Card>-->
-                    <!--<p slot="title" class="card-title">-->
-                        <!--<Icon type="ios-shuffle-strong"></Icon>-->
-                        <!--上周各类卡开卡量统计-->
-                    <!--</p>-->
-                    <!--<div class="line-chart-con">-->
-                        <!--<last-week-cards-unlock></last-week-cards-unlock>-->
-                    <!--</div>-->
-                <!--</Card>-->
-            <!--</Row>-->
-            <!--</Col>-->
-        <!--</Row>-->
 
     </div>
 </template>
@@ -117,7 +102,6 @@
 import dataSourcePie from './components/dataSourcePie.vue';
 import lastWeekUnlock from './components/lastWeekUnlock.vue';
 import lastWeekAct from './components/lastWeekAct.vue';
-//import lastWeekCardsUnlock from './components/lastWeekCardsUnlock.vue';
 import countUp from './components/countUp.vue';
 import inforCard from './components/inforCard.vue';
 import {mapState} from 'vuex'

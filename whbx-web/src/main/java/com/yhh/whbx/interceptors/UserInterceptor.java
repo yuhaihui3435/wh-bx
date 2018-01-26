@@ -3,12 +3,10 @@ package com.yhh.whbx.interceptors;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
-import com.jfinal.core.Controller;
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.StrKit;
 import com.yhh.whbx.Consts;
-import com.yhh.whbx.auth.AuthHandle;
-import com.yhh.whbx.auth.User;
+import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.kits.CookieKit;
 import com.yhh.whbx.kits.ReqKit;
@@ -24,7 +22,7 @@ import java.net.URLEncoder;
  *
  *
  */
-public class UserInterceptor implements AuthHandle, Interceptor {
+public class UserInterceptor implements Interceptor {
 
 
     public void intercept(Invocation inv) {
@@ -32,17 +30,17 @@ public class UserInterceptor implements AuthHandle, Interceptor {
         CoreController controller = (CoreController)inv.getController();
         String ck=inv.getControllerKey();
         HttpServletRequest request=controller.getRequest();
-        String userId= checkUserLoginStatus(controller);
+
         boolean flag = false;
         User user = null;
 
-        if(StrKit.notBlank(userId)) {
-            user = getUser(userId);
-            if(user != null) {
-                flag = true;
-                controller.setAttr(Consts.CURR_USER,user);
-            }
-        }
+//        if(StrKit.notBlank(userId)) {
+//            user = getUser(userId);
+//            if(user != null) {
+//                flag = true;
+//                controller.setAttr(Consts.CURR_USER,user);
+//            }
+//        }
         //是否需要用户身份认证,方便测试
         if(!ResKit.getConfigBoolean("userAuth"))
             flag=true;
@@ -76,16 +74,5 @@ public class UserInterceptor implements AuthHandle, Interceptor {
                 }
             }
         }
-    }
-
-
-    @Override
-    public User getUser(String userId) {
-        return null;
-    }
-
-    @Override
-    public String checkUserLoginStatus(Controller controller) {
-        return CookieKit.get(controller, Consts.USER_ACCESS_TOKEN);
     }
 }

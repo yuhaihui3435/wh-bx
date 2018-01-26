@@ -75,7 +75,7 @@ public class CardTypeCtr extends CoreController {
         Cardtype cardtype=getModel(Cardtype.class,"",true);
         cardtype.setCAt(new Date());
         cardtype.setStatus(Consts.STATUS.enable.getVal());
-        cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        cardtype.setOper(currUser()==null?null:currUser().getId().intValue());
         cardtype.save();
 
         String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
@@ -110,7 +110,7 @@ public class CardTypeCtr extends CoreController {
         if(StrUtil.isBlank(savePath))
             savePath="/cmn/files/";
         Cardtype cardtype=getModel(Cardtype.class,"",true);
-        cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        cardtype.setOper(currUser()==null?null:currUser().getId().intValue());
         cardtype.update();
         String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
         String filename=null;
@@ -141,7 +141,7 @@ public class CardTypeCtr extends CoreController {
         Long id=getParaToLong("id");
         Cardtype Cardtype= com.yhh.whbx.card.model.Cardtype.dao.findById(id);
         Cardtype.setDAt(new Date());
-        Cardtype.setOper(currUser()==null?null:Integer.parseInt(currUser().getId()));
+        Cardtype.setOper(currUser()==null?null:currUser().getId().intValue());
         Cardtype.update();
         renderSuccessJSON("删除卡类型信息成功");
     }
