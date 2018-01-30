@@ -60,17 +60,37 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
-                    Cookies.set('password', this.form.password);
                     this.$store.commit('setAvator', 'http://p2qdi4xy4.bkt.clouddn.com/head.png');
-                    if (this.form.userName === 'iview_admin') {
-                        Cookies.set('access', 0);
-                    } else {
-                        Cookies.set('access', 1);
-                    }
-                    this.$router.push({
-                        name: 'home_index'
-                    });
+                    this.$store.dispatch('user_login',{user:this.form.userName,password:this.form.password}).then((res)=>{
+                        if(res.resCode&&res.resCode=='success'){
+
+                            let resData=JSON.parse(res.resData);
+                            let resList=[];
+                            for(let i=0;i<resData.resList.length;i++){
+                                let tmp=resData.resList[i];
+                                resList.push(tmp.url);
+                                if(tmp.children.length>0){
+                                    for(let j=0;j<tmp.children.length;j++){
+                                        resList.push(tmp.children[j].url);
+                                    }
+                                }
+                            }
+                            Cookies.set('resList',resList);
+                            Cookies.set('user',resData.username);
+                            this.$router.push({
+                                name: 'home_index'
+                            });
+                        }else if(res.resCode&&res.resCode=='fail'){
+
+                        }
+                    })
+
+//                    if (this.form.userName === 'iview_admin') {
+//                        Cookies.set('access', 0);
+//                    } else {
+//                        Cookies.set('access', 1);
+//                    }
+
                 }
             });
         }

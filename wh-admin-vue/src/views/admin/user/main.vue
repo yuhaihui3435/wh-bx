@@ -108,6 +108,27 @@
             }
         }, '删除')]);
     }
+    const resetPwdBtn=(vm,h,param)=>{
+        return h('Poptip', {
+            props: {
+                confirm: '',
+                title: '您确定要重置这个用户密码吗？'
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                'on-ok': () => {
+                    vm.resetPwd(param.row.id)
+                }
+            }
+        }, [h('Button', {
+            props: {
+                type: 'error',
+                size: 'small'
+            }
+        }, '重置密码')]);
+    }
 
     const stopBtn=(vm,h,param)=>{
         return h('Poptip', {
@@ -256,6 +277,26 @@
             },
             reset(){
                 this.$refs['formValidate'].resetFields()
+            },
+            resetPwd(id){
+                this.$store.dispatch('user_reset_pwd',{id:id}).then((res)=>{
+                    if(res.resCode&&res.resCode=='success'){
+                        this.$Modal.success({
+                            title: '提示消息',
+                            content: res.resMsg
+                        });
+                    }else if(res.resCode&&res.resCode=='fail'){
+                        this.$Modal.error({
+                            title: '提示消息',
+                            content: res.resMsg
+                        });
+                    }else{
+                        this.$Modal.error({
+                            title: '提示消息',
+                            content: '密码重置失败'
+                        });
+                    }
+                });
             }
         },
         mounted () {
@@ -395,17 +436,35 @@
                         render: (h, param) =>{
                             if (!param.row.dAt) {
                                 if (param.row.status == '0') {
-                                    return h('div', [
-                                        editBtn(this,h,param),
-                                        delBtn(this,h,param),
-                                        stopBtn(this,h,param)
-                                    ]);
+
+                                    if(param.row.isAdmin=='0'){
+                                        return h('div', [
+                                            editBtn(this,h,param),
+                                            resetPwdBtn(this,h,param),
+                                        ]);
+                                    }else{
+                                        return h('div', [
+                                            editBtn(this,h,param),
+                                            delBtn(this,h,param),
+                                            stopBtn(this,h,param),
+                                            resetPwdBtn(this,h,param),
+                                        ]);
+                                    }
                                 } else {
-                                    return h('div', [
-                                        editBtn(this,h,param),
-                                        delBtn(this,h,param),
-                                        actBtn(this,h,param)
-                                    ]);
+                                    if(param.row.isAdmin=='0'){
+                                        return h('div', [
+                                            editBtn(this,h,param),
+                                            resetPwdBtn(this,h,param),
+                                        ]);
+                                    }else{
+                                        return h('div', [
+                                            editBtn(this,h,param),
+                                            delBtn(this,h,param),
+                                            actBtn(this,h,param),
+                                            resetPwdBtn(this,h,param),
+                                        ]);
+                                    }
+
                                 }
 
                             }

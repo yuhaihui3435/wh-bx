@@ -50,5 +50,26 @@
            diskPersistent="true"
            memoryStoreEvictionPolicy="FIFO"
     />
+    <cache name="currUserReses"
+           maxEntriesLocalHeap="5000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
+    <cache name="currUserRoles"
+           maxEntriesLocalHeap="5000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
+    <cache name="currUser"
+           maxEntriesLocalHeap="5000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
 
 </ehcache>

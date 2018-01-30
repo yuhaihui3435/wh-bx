@@ -12,9 +12,9 @@ public class Consts {
 
     public static final String ENCRYPT_KEY="yuhaihui3435-never-late";
 
-    public static final String USER_ACCESS_TOKEN="ccId";
+    public static final String USER_ACCESS_TOKEN="userId-anbaojk";
 
-    public static final int COOKIE_TIMEOUT=24*60*60*6;
+    public static final int COOKIE_TIMEOUT=24*60*60*10;
 
     public static final int COOKIE_FOREVER=24*60*60*6*365*50;
 

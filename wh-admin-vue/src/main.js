@@ -93,7 +93,13 @@ ajaxMethod.forEach((method)=> {
                     resolve(data);
 
 
-                } else if (response.status === 403) {
+                }
+                else if (response.status === 401) {
+                    store.commit('logout')
+                    router.push({
+                        path: "/login"
+                    });
+                }else if (response.status === 403) {
                     router.push({
                         path: "/403"
                     });

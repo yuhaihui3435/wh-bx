@@ -61,16 +61,17 @@ export const otherRouter = {
 export const appRouter = [
     {
         path: '/admin',
+        access:'/ad',
         icon: 'monitor',
         name: 'admin',
         title: '系统管理',
         component: Main,
         children: [
-            { path: 'param', title: '参数管理', name: 'admin_param', component: resolve => { require(['@/views/admin/param/main.vue'], resolve); } },
-            { path: 'user', title: '用户管理', name: 'admin_user', component: resolve => { require(['@/views/admin/user/main.vue'], resolve); } },
-            { path: 'role', title: '角色管理', name: 'admin_role', component: resolve => { require(['@/views/admin/role/main.vue'], resolve); } },
-            { path: 'tax', title: '分类管理', name: 'admin_tax', component: resolve => { require(['@/views/admin/taxonomy/main.vue'], resolve); } },
-            { path: 'art', title: '文章管理', name: 'admin_art', component: resolve => { require(['@/views/admin/art/main.vue'], resolve); } },
+            { path: 'param',access:'/ad00/getSettingJSON', title: '参数管理', name: 'admin_param', component: resolve => { require(['@/views/admin/param/main.vue'], resolve); } },
+            { path: 'user', access:'/ad01/list',title: '用户管理', name: 'admin_user', component: resolve => { require(['@/views/admin/user/main.vue'], resolve); } },
+            { path: 'role', access:'/ad02/list',title: '角色管理', name: 'admin_role', component: resolve => { require(['@/views/admin/role/main.vue'], resolve); } },
+            { path: 'tax',  access:'/ad05/treeJsonArray',title: '分类管理', name: 'admin_tax', component: resolve => { require(['@/views/admin/taxonomy/main.vue'], resolve); } },
+            { path: 'art', access:'/ad04/list',title: '文章管理', name: 'admin_art', component: resolve => { require(['@/views/admin/art/main.vue'], resolve); } },
             // { path: 'artList', title: '文章列表', name: 'admin_artList', component: resolve => { require(['@/views/admin/art/list.vue'], resolve); } },
         ]
     },
@@ -78,37 +79,40 @@ export const appRouter = [
         path: '/sale',
         icon: 'social-yen-outline',
         name: 'sale',
+        access:'/sl',
         title: '销售人员管理',
         component: Main,
         children: [
-            { path: 'salesmen', title: '销售人员管理', name: 'sale_salesmen', component: resolve => { require(['@/views/sale/salesmen/main.vue'], resolve); } },
+            { path: 'salesmen', title: '销售人员管理',access:'/sl00/page', name: 'sale_salesmen', component: resolve => { require(['@/views/sale/salesmen/main.vue'], resolve); } },
 
         ]
     },
     {
         path: '/card',
         icon: 'card',
+        access:'/c',
         name: 'card',
         title: '卡管理',
         component: Main,
         children: [
-            { path: 'type', title: '卡类型管理', name: 'card_type', component: resolve => { require(['@/views/card/type/main.vue'], resolve); } },
-            { path: 'apply', title: '卡申请', name: 'card_apply', component: resolve => { require(['@/views/card/apply/main.vue'], resolve); } },
-            { path: 'oow', title: '卡出库', name: 'card_oow', component: resolve => { require(['@/views/card/oow/main.vue'], resolve); } },
-            { path: 'query', title: '卡查询', name: 'card_query', component: resolve => { require(['@/views/card/query/main.vue'], resolve); } },
-            { path: 'act', title: '卡激活', name: 'card_act', component: resolve => { require(['@/views/card/act/main.vue'], resolve); } },
+            { path: 'type', title: '卡类型管理',access:'/c00/page', name: 'card_type', component: resolve => { require(['@/views/card/type/main.vue'], resolve); } },
+            { path: 'apply', title: '卡申请', access:'/c01/page',name: 'card_apply', component: resolve => { require(['@/views/card/apply/main.vue'], resolve); } },
+            { path: 'oow', title: '卡出库',access:'/c02/page', name: 'card_oow', component: resolve => { require(['@/views/card/oow/main.vue'], resolve); } },
+            { path: 'query', title: '卡查询', access:'/c03/page',name: 'card_query', component: resolve => { require(['@/views/card/query/main.vue'], resolve); } },
+            { path: 'act', title: '卡激活',access:'/c03/page', name: 'card_act', component: resolve => { require(['@/views/card/act/main.vue'], resolve); } },
 
         ]
     },
     {
         path: '/report',
         icon: 'ios-pie',
+        access:'/r',
         name: 'report',
         title: '数据统计',
         component: Main,
         children: [
-            { path: 'cards', title: '卡销量统计', name: 'report_cards', component: resolve => { require(['@/views/card/report/ds00.vue'], resolve); } },
-            { path: 'salesmen', title: '销售员销量统计', name: 'report_salesmen', component: resolve => { require(['@/views/card/report/ds01.vue'], resolve); } },
+            { path: 'cards', title: '卡销量统计', name: 'report_cards',access:'ad05', component: resolve => { require(['@/views/card/report/ds00.vue'], resolve); } },
+            { path: 'salesmen', title: '销售员销量统计', name: 'report_salesmen',access:'ad05', component: resolve => { require(['@/views/card/report/ds01.vue'], resolve); } },
         ]
     },
     // {

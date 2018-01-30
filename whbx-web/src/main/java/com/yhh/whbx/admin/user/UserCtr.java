@@ -7,12 +7,14 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.collection.CollUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.kits.CookieKit;
 import com.yhh.whbx.kits.ext.BCrypt;
 
 import java.math.BigInteger;
@@ -100,9 +102,9 @@ public class UserCtr extends CoreController {
                 ur.save();
             }
         }
-//        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
-//        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
-//        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
         user.update();
         renderSuccessJSON("更新用户信息成功。", "");
     }
@@ -112,6 +114,9 @@ public class UserCtr extends CoreController {
         User user=User.dao.findById(BigInteger.valueOf(id));
         user.setDAt(new Date());
         user.update();
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
         renderSuccessJSON("删除用户信息成功。");
     }
     /**
@@ -202,6 +207,20 @@ public class UserCtr extends CoreController {
                 renderFailJSON("您输入的旧密码不正确！","");
             }
         }
+    }
+
+    public void resetPwd(){
+        if(currUser()!=null&&!currUser().getIsAdmin().equals(Consts.YORN_STR.yes.getVal())){
+            renderFailJSON("重置密码需要超级管理员权限");
+            return;
+        }
+        Integer id=getParaToInt("id");
+        User user=User.dao.findById(id);
+        String newPwd=RandomUtil.randomString(6);
+        user.setSalt(BCrypt.gensalt());
+        user.setPassword(BCrypt.hashpw(newPwd,user.getSalt()));
+        user.update();
+        renderSuccessJSON("新密码为:"+newPwd+",请尽快登录进行密码修改!");
     }
 
 

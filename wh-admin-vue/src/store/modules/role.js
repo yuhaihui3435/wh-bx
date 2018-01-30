@@ -37,7 +37,7 @@ const  role={
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/ad02/'+action, state.role).then((res) => {
                     resolve(res.resCode);
-                }).catch(reject());
+                })
             });
         },
         role_del:function ({ commit,state },param) {

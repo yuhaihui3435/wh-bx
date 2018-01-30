@@ -186,8 +186,5 @@ public class User extends BaseUser<User>  {
 		return "s_user";
 	}
 
-	public boolean hasResByNameOrContent(String ck){
 
-		return false;
-	}
 }

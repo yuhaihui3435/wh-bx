@@ -1,17 +1,16 @@
-package com.yhh.whbx.auth;
+package com.yhh.whbx.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.kit.StrKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
+import com.yhh.whbx.admin.model.Res;
 import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.kits.CookieKit;
 import com.yhh.whbx.kits.ext.BCrypt;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yuhaihui8913 on 2018/1/26.
@@ -36,17 +35,26 @@ public class LoginCtr extends CoreController{
         }
 
 
-        User user = com.yhh.whbx.admin.model.User.dao.findFirst("select * from s_user where loginname=? and isAdmin='0' ", username);
+        User user = com.yhh.whbx.admin.model.User.dao.findFirst("select * from s_user where loginname=? ", username);
+
+        if(user==null){
+            renderFailJSON("用户不存在!");
+            return;
+        }
 
         if (BCrypt.checkpw(password, user.getPassword())) {
             if (user.getStatus().equals(Consts.STATUS.enable.getVal())) {
+
+                Map<String, Object> data = new HashMap<String, Object>();
+                List<Res> resList=Res.dao.findResesByUserId(user.getId());
+                data.put("resList",resList);
+                data.put("username",user.getNickname());
+                user.setLogged(new Date());
+                user.update();
                 if(StrKit.notBlank(rm)&&rm.equals("0"))
                     CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), 60*60*24*14);
                 else
                     CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), Consts.COOKIE_TIMEOUT);
-                Map<String, String> data = new HashMap<String, String>();
-                user.setLogged(new Date());
-                user.update();
                 renderSuccessJSON("登录成功", JSON.toJSONString(data));
                 return;
             } else {

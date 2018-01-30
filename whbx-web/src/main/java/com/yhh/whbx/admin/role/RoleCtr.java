@@ -4,8 +4,10 @@ import com.jfinal.aop.Before;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Res;
 import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.RoleRes;
@@ -18,7 +20,7 @@ import java.util.List;
 /**
  * Created by yuhaihui8913 on 2016/12/5.
  */
-//@Before(UserInterceptor.class)
+//@Before(AdminIAuthInterceptor.class)
 public class RoleCtr extends CoreController{
 
 
@@ -44,8 +46,7 @@ public class RoleCtr extends CoreController{
     public void update(){
         Role role=getModel(Role.class,"",true);
         role.update();
-
-
+        CacheKit.removeAll(Consts.CURR_USER_ROLES);
         renderSuccessJSON("角色更新成功","");
     }
     @Before(Tx.class)
@@ -60,7 +61,10 @@ public class RoleCtr extends CoreController{
                 RoleRes.dao.delByRoleId(id);
                 UserRole.dao.delByRoleId(id);
             }
+            CacheKit.removeAll(Consts.CURR_USER_RESES);
+            CacheKit.removeAll(Consts.CURR_USER_ROLES);
             renderSuccessJSON("角色删除成功","");
+
 
         }else{
             renderFailJSON("角色删除失败,没有得到角色id","");
@@ -95,6 +99,8 @@ public class RoleCtr extends CoreController{
                 rr.save();
             }
         }
+        CacheKit.removeAll(Consts.CURR_USER_RESES);
+        CacheKit.removeAll(Consts.CURR_USER_ROLES);
         renderSuccessJSON("设置权限成功","");
     }
 }

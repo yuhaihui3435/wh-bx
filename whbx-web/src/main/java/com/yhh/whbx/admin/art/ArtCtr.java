@@ -11,7 +11,7 @@ import com.yhh.whbx.admin.model.Content;
 import com.yhh.whbx.admin.model.Mapping;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.interceptors.UserInterceptor;
+import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
 import com.yhh.whbx.kits._StrKit;
@@ -33,7 +33,7 @@ import java.util.*;
  * 修改备注:  []
  * 版本:     [v1.0]
  */
-@Before(UserInterceptor.class)
+@Before(AdminIAuthInterceptor.class)
 public class ArtCtr extends CoreController {
 
 

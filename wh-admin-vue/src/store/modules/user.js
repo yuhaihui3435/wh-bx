@@ -91,6 +91,22 @@ const user = {
                     resolve(res.resCode)
                 })
             });
+        },
+        user_reset_pwd:function ({ commit,state },param) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/resetPwd', param).then((res) => {
+                    resolve(res);
+                });
+            });
+        },
+        user_login:function ({ commit,state },param) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad06/login', param).then((res) => {
+                    resolve(res);
+                });
+            });
         }
 
     }

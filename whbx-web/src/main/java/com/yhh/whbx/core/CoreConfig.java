@@ -19,6 +19,7 @@ import com.yhh.whbx.admin.param.ParamCtr;
 import com.yhh.whbx.admin.role.RoleCtr;
 import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
+import com.yhh.whbx.admin.LoginCtr;
 import com.yhh.whbx.card.apply.CardapplyCtr;
 import com.yhh.whbx.card.depot.DepotCtr;
 import com.yhh.whbx.card.query.CardsCtr;
@@ -61,6 +62,7 @@ public class CoreConfig extends JFinalConfig{
                 add("/ad03", ResCtr.class);
                 add("/ad04", ArtCtr.class);
                 add("/ad05", TaxCtr.class);
+                add("/ad06", LoginCtr.class);
 
             }
         });

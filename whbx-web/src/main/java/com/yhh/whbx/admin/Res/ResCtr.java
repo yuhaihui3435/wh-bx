@@ -3,10 +3,12 @@ package com.yhh.whbx.admin.Res;
 
 import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Res;
 import com.yhh.whbx.admin.model.RoleRes;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.interceptors.UserInterceptor;
+import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ import java.util.List;
  * 修改备注:  []
  * 版本:     [v1.0]
  */
-@Before(UserInterceptor.class)
+@Before(AdminIAuthInterceptor.class)
 public class ResCtr extends CoreController {
 
 
@@ -60,6 +62,7 @@ public class ResCtr extends CoreController {
     public void update(){
         Res res=getModel(Res.class);
         res.update();
+        CacheKit.removeAll(Consts.CURR_USER_RESES);
         renderSuccessJSON("更新成功","");
     }
     @Before(Tx.class)
@@ -69,11 +72,8 @@ public class ResCtr extends CoreController {
         List<RoleRes> list=RoleRes.dao.find("select * from s_role_res where resId=?",id);
         for(RoleRes rr:list){
             RoleRes.dao.deleteById(rr.getId().longValue());
-//            List<UserRole> userRoles=UserRole.dao.find("select * from s_user_role where rid=?",rr.getRoleId());
-//            for(UserRole userRole:userRoles){
-//                CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),userRole.getUid());
-//                CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),userRole.getUid());
-//            }
+            CacheKit.removeAll(Consts.CURR_USER_RESES);
+            CacheKit.removeAll(Consts.CURR_USER_ROLES);
         }
         renderSuccessJSON("删除成功","");
     }
