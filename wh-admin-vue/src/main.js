@@ -10,12 +10,9 @@ import 'iview/dist/styles/iview.css';
 import util from '@/libs/util';
 import axios from 'axios'
 import qs from 'qs'
-import message from 'iview/src/components/message'
+// import message from 'iview/src/components/message'
 import env from '../build/env';
-
-// Vue.use(VueI18n);
 Vue.use(iView);
-// Vue.use(VeeValidate,veeConfig);
 require('es6-promise').polyfill()
 
 let axiosIns = axios.create({});
@@ -78,10 +75,10 @@ ajaxMethod.forEach((method)=> {
             axiosIns[method](uri, data, config).then((response)=> {
                 let data=response.data;
                     if(data.resCode&&data.resCode=='success') {
-                        message.success(data.resMsg);
+                        iView.Message.success(data.resMsg);
                     }
                     else if(data.resCode&&data.resCode=='fail') {
-                        message.error(data.resMsg);
+                        iView.Message.error(data.resMsg);
                     }
                     resolve(data);
 

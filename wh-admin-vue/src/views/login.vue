@@ -34,6 +34,7 @@
                 </div>
             </Card>
         </div>
+        <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
 </template>
 
@@ -42,6 +43,7 @@ import Cookies from 'js-cookie';
 export default {
     data () {
         return {
+            spinShow:false,
             form: {
                 userName: 'iview_admin',
                 password: ''
@@ -58,10 +60,14 @@ export default {
     },
     methods: {
         handleSubmit () {
+            let vm=this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
+
+                    this.spinShow=true;
                     this.$store.commit('setAvator', 'http://p2qdi4xy4.bkt.clouddn.com/head.png');
                     this.$store.dispatch('user_login',{user:this.form.userName,password:this.form.password}).then((res)=>{
+                        vm.spinShow=false;
                         if(res.resCode&&res.resCode=='success'){
 
                             let resData=JSON.parse(res.resData);
@@ -101,6 +107,8 @@ export default {
                         }else if(res.resCode&&res.resCode=='fail'){
 
                         }
+                    }).catch(()=>{
+                        vm.spinShow=false;
                     })
 
 //                    if (this.form.userName === 'iview_admin') {
