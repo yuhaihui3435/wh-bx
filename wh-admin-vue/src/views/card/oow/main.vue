@@ -172,7 +172,7 @@
             },
             edit(depot){
                 let vm = this;
-                console.info(depot)
+
                 this.$store.dispatch('depot_get', {id: depot.id}).then(() => {
                     if (vm.depot.status == '0' && (vm.depot.dAt == undefined)&&vm.depot.outStatus!='0')
                         this.$refs.df.open('编辑出库信息', false);
@@ -264,7 +264,7 @@
             },
             unlockCard(row){
                 let vm=this;
-                this.$store.commit('set_depot',row);
+                this.$store.commit('set_depot1',row);
                 this.$store.dispatch('depot_unlockRecord_list',{depotId:row.id}).then(()=>{
                     vm.$refs.uf.open();
                 });
@@ -386,9 +386,9 @@
                                 btns.push(delBtn(this, h, param))
                             }
 
-                            if (param.row.status == '0' && row.dAt == undefined)
+                            if (param.row.status == '0' && row.dAt == undefined&&row.allLockStatus=='1')
                                 btns.push(stopBtn(this, h, param))
-                            else if (param.row.status == '1' && row.dAt == undefined)
+                            else if (param.row.status == '1' && row.dAt == undefined&&row.allLockStatus=='1')
                                 btns.push(actBtn(this, h, param))
                             if (param.row.status == '0' && row.dAt == undefined && row.outStatus == '1' ) {
                                 btns.push(h('Poptip', {

@@ -162,7 +162,7 @@
             del(row){
                 row['dAt'] = moment().format('YYYY-MM-DD HH:mm:ss');
                 row['exe'] = 'del'
-                this.$store.dispatch('cardapply_del', row).then((res) => {
+                this.$store.dispatch('cardapply_updateStatus', row).then((res) => {
                     if (res && res == 'success') {
                         this.$store.dispatch('cardapply_page')
                     }

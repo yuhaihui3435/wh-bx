@@ -77,24 +77,16 @@ ajaxMethod.forEach((method)=> {
         return new Promise(function (resolve, reject) {
             axiosIns[method](uri, data, config).then((response)=> {
                 let data=response.data;
-                if (response.status==200) {
-                    // message.warning("请您先登录")
-                    // setTimeout(router.push({
-                    //     path: "/login"
-                    // }),2000)
-                    //if(response.data.resCode=='success'){
                     if(data.resCode&&data.resCode=='success') {
                         message.success(data.resMsg);
                     }
                     else if(data.resCode&&data.resCode=='fail') {
                         message.error(data.resMsg);
                     }
-
                     resolve(data);
 
-
-                }
-                else if (response.status === 401) {
+            }).catch((response)=> {
+                if (response.status === 401) {
                     store.commit('logout')
                     router.push({
                         path: "/login"
@@ -113,12 +105,7 @@ ajaxMethod.forEach((method)=> {
                     router.push({
                         path: "/404"
                     });
-                }else{
-                    resolve(data);
                 }
-            }).catch((response)=> {
-                message.error("服务器内部错误，请稍后重试")
-                reject(response)
             })
         })
     }

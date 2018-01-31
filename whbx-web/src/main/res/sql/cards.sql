@@ -58,8 +58,8 @@
 (select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` left join b_depot bd on bc.`depotId`=bd.`id` where bc.`depotId` is not null and bd.`outTime`>=#para(bDate) and bd.`outTime`<=#para(eDate)   group by bca.`cardtypeId`) t1 on t0.id=t1.ctId  left join
 (select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` left join `b_unlock` bu on bc.`unlockId`=bu.`id` where bc.`unlockId` is not null  and bu.`cAt`>=#para(bDate) and bu.`cAt`<=#para(eDate) group by bca.`cardtypeId` ) t2 on t0.id=t2.ctId left join
 (select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` where bc.`act` ='0' and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bca.`cardtypeId` ) t3 on t0.id=t3.ctId left join
-(select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` where bc.`exportAt` is not null and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) group by bca.`cardtypeId` ) t4  on t0.id=t4.ctId left join
-(select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` where bc.`act`='0' and bc.`exportAt` is null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bca.`cardtypeId` ) t5 on t0.id=t5.ctId
+(select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` where bc.`act`='0' and bc.`exportAt` is not null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) group by bca.`cardtypeId` ) t4  on t0.id=t4.ctId left join
+(select count(bc.id) as count,bca.`cardtypeId` as ctId from b_cards bc left join b_cardApply bca on bc.`applyId`=bca.`id` where bc.`act`='0' and bc.`exportAt` is null  and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bca.`cardtypeId` ) t5 on t0.id=t5.ctId
 #end
 
 #sql("ds01")
@@ -76,9 +76,9 @@ select t0.id as id,t0.name as name,ifnull(t1.count,0) dCount,ifnull(t2.count,0) 
 left join
 (select count(bc.id) as count,bs.`id` as bsId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` where bc.`act` ='0' and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bs.`id` ) t3 on t0.id=t3.bsId
 left join
-(select count(bc.id) as count,bs.`id` as bsId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` where bc.`exportAt` is not null and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) group by bs.`id` ) t4  on t0.id=t4.bsId
+(select count(bc.id) as count,bs.`id` as bsId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` where bc.`act`='0' and  bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`exportAt` is not null and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) group by bs.`id` ) t4  on t0.id=t4.bsId
 left join
-(select count(bc.id) as count,bs.`id` as bsId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` where bc.`act`='0' and bc.`exportAt` is null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bs.`id` ) t5 on t0.id=t5.bsId
+(select count(bc.id) as count,bs.`id` as bsId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` where bc.`act`='0' and  bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`exportAt` is null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) group by bs.`id` ) t5 on t0.id=t5.bsId
 #end
 
 #sql("ds0100")
@@ -91,8 +91,8 @@ select t0.id as id, t0.name as name,ifnull(t1.count,0) dCount,ifnull(t2.count,0)
 left join
 (select count(bc.id) as count,bct.`id` as ctId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` left join `b_cardapply` bca on bc.`applyId`=bca.`id` left join `b_cardtype` bct on bca.`cardtypeId`=bct.`id` where bc.`act` ='0' and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bs.id=#para(smId) group by bct.`id` ) t3 on t0.id=t3.ctId
 left join
-(select count(bc.id) as count,bct.`id` as ctId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` left join `b_cardapply` bca on bc.`applyId`=bca.`id` left join `b_cardtype` bct on bca.`cardtypeId`=bct.`id` where bc.`exportAt` is not null and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) and bs.id=#para(smId) group by bct.`id` ) t4  on t0.id=t4.ctId
+(select count(bc.id) as count,bct.`id` as ctId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` left join `b_cardapply` bca on bc.`applyId`=bca.`id` left join `b_cardtype` bct on bca.`cardtypeId`=bct.`id` where bc.`act`='0' and bc.`exportAt` is not null  and  bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`exportAt`>=#para(bDate) and bc.`exportAt`<=#para(eDate) and bs.id=#para(smId) group by bct.`id` ) t4  on t0.id=t4.ctId
 left join
-(select count(bc.id) as count,bct.`id` as ctId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` left join `b_cardapply` bca on bc.`applyId`=bca.`id` left join `b_cardtype` bct on bca.`cardtypeId`=bct.`id` where bc.`act`='0' and bc.`exportAt` is null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bs.id=#para(smId) group by bct.`id` ) t5 on t0.id=t5.ctId
+(select count(bc.id) as count,bct.`id` as ctId from b_cards bc left join b_depot bd on bc.`depotId`=bd.`id` left join b_salesmen bs on bd.`salesmenId`=bs.`id` left join `b_cardapply` bca on bc.`applyId`=bca.`id` left join `b_cardtype` bct on bca.`cardtypeId`=bct.`id` where bc.`act`='0' and  bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bc.`exportAt` is null and bc.`actAt`>=#para(bDate) and bc.`actAt`<=#para(eDate) and bs.id=#para(smId) group by bct.`id` ) t5 on t0.id=t5.ctId
 #end
 

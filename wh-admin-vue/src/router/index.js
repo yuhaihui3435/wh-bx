@@ -26,6 +26,7 @@ router.beforeEach((to, from, next) => {
     } else if (Cookies.get('locking') === '0' && to.name === 'locking') {
         next(false);
     } else {
+
         if (!Cookies.get('user') && to.name !== 'login') {  // 判断是否已经登录且前往的页面不是登录页
             next({
                 name: 'login'
@@ -37,10 +38,10 @@ router.beforeEach((to, from, next) => {
             });
         } else {
             const curRouterObj = Util.getRouterObjByName([otherRouter, ...appRouter], to.name);
-            let resList=Cookies.get('resList');
+            let ma=Cookies.get('menuArray');
+            if (curRouterObj && curRouterObj.path !== undefined&&curRouterObj.isCheck!=undefined&&curRouterObj.isCheck=='yes') {  // 需要判断权限的路由
 
-            if (curRouterObj && curRouterObj.access !== undefined) {  // 需要判断权限的路由
-                if (curRouterObj.access === parseInt(Cookies.get('access'))) {
+                if (curRouterObj.path!='/'&&Util.oneOf(curRouterObj.path,ma)) {
                     Util.toDefaultPage([otherRouter, ...appRouter], to.name, router, next);  // 如果在地址栏输入的是一级菜单则默认打开其第一个二级菜单的页面
                 } else {
                     next({
@@ -54,7 +55,7 @@ router.beforeEach((to, from, next) => {
         }
     }
 });
-
+let isOpenNewPage=true;
 router.afterEach((to) => {
     Util.openNewPage(router.app, to.name, to.params, to.query);
     iView.LoadingBar.finish();

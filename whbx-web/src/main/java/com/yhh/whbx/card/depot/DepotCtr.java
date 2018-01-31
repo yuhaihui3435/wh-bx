@@ -1,6 +1,7 @@
 package com.yhh.whbx.card.depot;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -14,6 +15,7 @@ import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.card.model.Depot;
 import com.yhh.whbx.card.model.Unlock;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 import com.yhh.whbx.sale.model.Salesmen;
 
 import java.util.Date;
@@ -114,14 +116,14 @@ public class DepotCtr extends CoreController {
         renderJson(Depot.dao.findById(id));
     }
 
-
+    @Clear(AdminAAuthInterceptor.class)
     public void dataReady() {
         Map<String, Object> map = new HashMap<>();
         map.put("salesmenList", Salesmen.dao.findAll());
         map.put("cardtypeList", Cardtype.dao.findEnableList());
         renderJson(map);
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void unlockRecord(){
         Integer depotId=getParaToInt("depotId");
         renderJson(Unlock.dao.paginate(getPN(),getPS(),"select * ","from b_unlock where depotId=? order by cAt desc",depotId));

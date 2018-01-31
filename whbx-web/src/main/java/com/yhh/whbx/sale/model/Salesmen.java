@@ -44,7 +44,7 @@ public class Salesmen extends BaseSalesmen<Salesmen> {
 
 
 	public List findAll(){
-		return dao.find("select * from b_salesmen where dAt is null ");
+		return dao.find("select * from b_salesmen where dAt is null and status='0'");
 	}
 
 	public String getTypeTxt(){

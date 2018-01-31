@@ -142,12 +142,12 @@
                     {
                         title: '导出数量',
 
-                        key: 'eCount',
+                        key: 'aeCount',
                     },
                     {
                         title: '激活未导出数量',
 
-                        key: 'aeCount',
+                        key: 'eCount',
                     },
                 ]
                 ,

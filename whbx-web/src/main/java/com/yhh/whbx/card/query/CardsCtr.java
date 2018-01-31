@@ -49,8 +49,13 @@ public class CardsCtr extends CoreController {
 
     public void page() {
         Page<Cards> page;
+        SqlPara sqlPara = Db.getSqlPara("cards.findPage", Kv.by("cond", buildQueryCondition()));
+        page = Cards.dao.paginate(getPN(), getPS(), sqlPara);
+        renderJson(page);
+    }
 
-
+    public void actPage() {
+        Page<Cards> page;
         SqlPara sqlPara = Db.getSqlPara("cards.findPage", Kv.by("cond", buildQueryCondition()));
         page = Cards.dao.paginate(getPN(), getPS(), sqlPara);
         renderJson(page);

@@ -2,6 +2,7 @@ package com.yhh.whbx.admin.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -14,7 +15,7 @@ import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.kits.CookieKit;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 import com.yhh.whbx.kits.ext.BCrypt;
 
 import java.math.BigInteger;
@@ -126,6 +127,7 @@ public class UserCtr extends CoreController {
      * @author: 于海慧  2016/12/10
      * @Description: 查询用户持有的角色和全部角色
      **/
+    @Clear(AdminAAuthInterceptor.class)
     public void loadRoles() {
         int userId = getParaToInt("userId", -1);
         List<Role> ownRoles = CollUtil.newArrayList();
@@ -189,6 +191,7 @@ public class UserCtr extends CoreController {
         renderSuccessJSON("恢复操作执行成功。", "");
     }
     @Before(Tx.class)
+    @Clear(AdminAAuthInterceptor.class)
     public void modifyPassword(){
         String loginname=getPara("loginname");
         String old_pwd=getPara("oldPwd");

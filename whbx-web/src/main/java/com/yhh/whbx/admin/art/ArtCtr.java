@@ -2,6 +2,7 @@ package com.yhh.whbx.admin.art;
 
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -11,7 +12,7 @@ import com.yhh.whbx.admin.model.Content;
 import com.yhh.whbx.admin.model.Mapping;
 import com.yhh.whbx.admin.model.Taxonomy;
 import com.yhh.whbx.core.CoreController;
-import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
 import com.yhh.whbx.kits._StrKit;
@@ -33,7 +34,6 @@ import java.util.*;
  * 修改备注:  []
  * 版本:     [v1.0]
  */
-@Before(AdminIAuthInterceptor.class)
 public class ArtCtr extends CoreController {
 
 
@@ -136,7 +136,7 @@ public class ArtCtr extends CoreController {
         renderSuccessJSON("删除成功","");
 
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void get(){
         Long id=getParaToLong("id");
         List<Taxonomy> all=Taxonomy.dao.findAllListByModule("art");
@@ -154,7 +154,7 @@ public class ArtCtr extends CoreController {
         renderJson(map);
     }
 
-
+    @Clear(AdminAAuthInterceptor.class)
     public void getTax(){
         Long cId=getParaToLong("cId");
         renderJson(Taxonomy.dao.findTaxsByCId(cId));

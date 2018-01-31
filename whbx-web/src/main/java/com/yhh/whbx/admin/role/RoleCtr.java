@@ -1,6 +1,7 @@
 package com.yhh.whbx.admin.role;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -13,6 +14,7 @@ import com.yhh.whbx.admin.model.Role;
 import com.yhh.whbx.admin.model.RoleRes;
 import com.yhh.whbx.admin.model.UserRole;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +42,14 @@ public class RoleCtr extends CoreController{
     public void save(){
         Role role=getModel(Role.class,"",true);
         role.save();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
         renderSuccessJSON("角色新增成功","");
     }
     @Before({RoleValidator.class,Tx.class})
     public void update(){
         Role role=getModel(Role.class,"",true);
         role.update();
-        CacheKit.removeAll(Consts.CURR_USER_ROLES);
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
         renderSuccessJSON("角色更新成功","");
     }
     @Before(Tx.class)
@@ -61,8 +64,8 @@ public class RoleCtr extends CoreController{
                 RoleRes.dao.delByRoleId(id);
                 UserRole.dao.delByRoleId(id);
             }
-            CacheKit.removeAll(Consts.CURR_USER_RESES);
-            CacheKit.removeAll(Consts.CURR_USER_ROLES);
+            CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
+            CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
             renderSuccessJSON("角色删除成功","");
 
 
@@ -71,7 +74,7 @@ public class RoleCtr extends CoreController{
         }
     }
 
-
+    @Clear(AdminAAuthInterceptor.class)
     public void loadRes(){
         int roleId=getParaToInt("roleId",-1);
         List<Res> list=Res.dao.find("select sr.* from s_res sr,s_role_res srr where sr.id=srr.resId and srr.roleId=?",roleId);
@@ -99,8 +102,8 @@ public class RoleCtr extends CoreController{
                 rr.save();
             }
         }
-        CacheKit.removeAll(Consts.CURR_USER_RESES);
-        CacheKit.removeAll(Consts.CURR_USER_ROLES);
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
         renderSuccessJSON("设置权限成功","");
     }
 }

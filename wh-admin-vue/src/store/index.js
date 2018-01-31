@@ -21,7 +21,8 @@ const store = new Vuex.Store({
     state: {
         spinShow:false,
         uploadPicMaxSize:5242880,
-        ignoreSpinshow:false
+        ignoreSpinshow:false,
+
     },
     mutations: {
         upadteSpinshow(state,p){
@@ -30,7 +31,7 @@ const store = new Vuex.Store({
         },
         updateIgnoreSpinshow(state,p){
             state.ignoreSpinshow=p
-        }
+        },
 
 
     },

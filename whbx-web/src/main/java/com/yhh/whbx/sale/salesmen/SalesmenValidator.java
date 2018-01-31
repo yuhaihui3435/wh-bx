@@ -60,7 +60,7 @@ public class SalesmenValidator extends CoreValidator {
             }
             list=Salesmen.dao.findByIdcard(salesmen.getIdcard());
             if(!list.isEmpty()){
-                addError(Consts.REQ_JSON_CODE.fail.name(),EMAIL_EXIST);
+                addError(Consts.REQ_JSON_CODE.fail.name(),IDCARD_EXIST);
                 return ;
             }
         }
@@ -80,7 +80,7 @@ public class SalesmenValidator extends CoreValidator {
                 if (!list.isEmpty()) {
                     for (Salesmen s : list) {
                         if (s.getId() != salesmen.getId()) {
-                            addError(Consts.REQ_JSON_CODE.fail.name(), CODE_EXIST);
+                            addError(Consts.REQ_JSON_CODE.fail.name(), EMAIL_EXIST);
                             return;
                         }
                     }
@@ -90,7 +90,7 @@ public class SalesmenValidator extends CoreValidator {
             if(!list.isEmpty()){
                 for (Salesmen s:list){
                     if(s.getId()!=salesmen.getId()){
-                        addError(Consts.REQ_JSON_CODE.fail.name(),CODE_EXIST);
+                        addError(Consts.REQ_JSON_CODE.fail.name(),PHONE_EXIST);
                         return ;
                     }
                 }
@@ -99,7 +99,7 @@ public class SalesmenValidator extends CoreValidator {
             if(!list.isEmpty()){
                 for (Salesmen s:list){
                     if(s.getId()!=salesmen.getId()){
-                        addError(Consts.REQ_JSON_CODE.fail.name(),CODE_EXIST);
+                        addError(Consts.REQ_JSON_CODE.fail.name(),IDCARD_EXIST);
                         return ;
                     }
                 }

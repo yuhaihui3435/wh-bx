@@ -106,10 +106,10 @@
     export default {
         computed: {
             ...mapState({
-                'depot': state => state.depot.depot,
-                'totalPage': state => state.depot.totalPage,
-                'total': state => state.depot.totalRow,
-                'pageNumber': state => state.depot.pageNumber,
+                'depot': state => state.depot.depot1,
+                'totalPage': state => state.depot.totalPage1,
+                'total': state => state.depot.totalRow1,
+                'pageNumber': state => state.depot.pageNumber1,
                 'unlockRecordList': state => state.depot.unlockRecordList,
             })
         },
@@ -125,7 +125,7 @@
                 this.$refs['formValidate'].resetFields()
                 this.depotModal = true;
                 this.modalLoading = false;
-                console.info(this.depot);
+//                console.info(this.depot);
 //                if(this.depot.allLockStatus=='0'){
 //                    this.$Notice.info({
 //                        title: '通知',

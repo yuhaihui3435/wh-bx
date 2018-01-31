@@ -28,7 +28,7 @@
                             </Col>
                             <Col span="12" >
                             <FormItem label="批次" prop="cardapplyId"  v-show="(depot.cardapplyId!=undefined&&depot.cardapplyId!='')||cardapplyList.length>0">
-                                <Select v-model="depot.cardapplyId" @on-change="batchChange" clearable v-if="isAdd" >
+                                <Select v-model="depot.cardapplyId" @on-change="batchChange" clearable v-if="isAdd"  >
                                     <Option v-for="item in cardapplyList" :value="item.id" :key="item.id">
                                         {{item.batch}}
                                     </Option>
@@ -156,6 +156,9 @@
                 if(val!='')
                     this.$store.dispatch('depot_cardapply_list1',{ctId:val}).then((list)=>{
                         this.cardapplyList=list;
+                        if(list.length==0){
+                            this.$Message.error("该卡类型没有申请记录");
+                        }
                     });
                 else
                     this.cardapplyList=[];
@@ -181,7 +184,13 @@
                         {type: 'number', required: true, message: '请选择卡类型', trigger: 'change'},
                     ],
                     cardapplyId: [
-                        {type: 'number', required: true, message: '请选择批次', trigger: 'change'},
+                        {validator(rule, value, callback) {
+                            let errors=[];
+                            if(vm.isAdd&&value==''){
+                                errors.push("请选择批次");
+                            }
+                            callback(errors)
+                        }, trigger: 'change'},
                     ],
                     code: [
                         {required: true, message: '出库编号不能为空', trigger: 'blur'},

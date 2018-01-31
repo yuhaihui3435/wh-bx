@@ -1,6 +1,7 @@
 package com.yhh.whbx.sale.salesmen;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -10,6 +11,7 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 import com.yhh.whbx.sale.model.Salesmen;
 
 import java.util.Date;
@@ -74,14 +76,14 @@ public class SalesmenCtr extends CoreController {
         salesmen.setStatus(Consts.STATUS.enable.getVal());
         salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.save();
-        renderSuccessJSON("新增业务员成功。");
+        renderSuccessJSON("新增销售人员成功。");
     }
     @Before({SalesmenValidator.class, Tx.class})
     public void update(){
         Salesmen salesmen=getModel(Salesmen.class,"",true);
         salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.update();
-        renderSuccessJSON("修改业务员信息成功");
+        renderSuccessJSON("修改销售人员信息成功");
     }
 
     public void del(){
@@ -90,9 +92,9 @@ public class SalesmenCtr extends CoreController {
         salesmen.setDAt(new Date());
         salesmen.setOper(currUser()==null?null:Integer.parseInt(currUser().getId().toString()));
         salesmen.update();
-        renderSuccessJSON("删除业务员信息成功");
+        renderSuccessJSON("删除销售人员信息成功");
     }
-
+    
     public void get(){
         Long id=getParaToLong("id");
         renderJson(Salesmen.dao.findById(id));
@@ -104,9 +106,9 @@ public class SalesmenCtr extends CoreController {
         Salesmen salesmen=Salesmen.dao.findById(id);
         salesmen.setStatus(status);
         salesmen.update();
-        renderSuccessJSON(status.equals("0")?"业务员信息激活成功":"业务员信息停用成功");
+        renderSuccessJSON(status.equals("0")?"销售人员信息激活成功":"销售人员信息停用成功");
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void dataReady(){
         Map<String,Object> map=new HashMap<>();
         map.put("saleTypeList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"saleTypeList"));

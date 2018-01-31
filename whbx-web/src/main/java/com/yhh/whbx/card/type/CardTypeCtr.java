@@ -1,6 +1,7 @@
 package com.yhh.whbx.card.type;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -15,6 +16,7 @@ import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
 
@@ -174,7 +176,7 @@ public class CardTypeCtr extends CoreController {
         Cardtype.update();
         renderSuccessJSON(status.equals("0")?"卡类型信息激活成功":"卡类型信息停用成功");
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void dataReady(){
         Map<String,Object> map=new HashMap<>();
         map.put("cttList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"cttList"));

@@ -9,60 +9,76 @@ import com.yhh.whbx.core.CoreModel;
 @SuppressWarnings("serial")
 public abstract class BaseRes<M extends BaseRes<M>> extends CoreModel<M> implements IBean {
 
-	public void setId(java.lang.Long id) {
+	public void setId(Long id) {
 		set("id", id);
 	}
-
-	public java.lang.Long getId() {
+	
+	public Long getId() {
 		return getLong("id");
 	}
 
-	public void setName(java.lang.String name) {
+	public void setName(String name) {
 		set("name", name);
 	}
-
-	public java.lang.String getName() {
+	
+	public String getName() {
 		return getStr("name");
 	}
 
-	public void setUrl(java.lang.String url) {
+	public void setUrl(String url) {
 		set("url", url);
 	}
-
-	public java.lang.String getUrl() {
+	
+	public String getUrl() {
 		return getStr("url");
 	}
 
-	public void setDescription(java.lang.String description) {
+	public void setDescription(String description) {
 		set("description", description);
 	}
-
-	public java.lang.String getDescription() {
+	
+	public String getDescription() {
 		return getStr("description");
 	}
 
-	public void setPid(java.lang.Integer pid) {
+	public void setPid(Integer pid) {
 		set("pid", pid);
 	}
-
-	public java.lang.Integer getPid() {
+	
+	public Integer getPid() {
 		return getInt("pid");
 	}
 
-	public void setSeq(java.lang.Integer seq) {
+	public void setSeq(Integer seq) {
 		set("seq", seq);
 	}
-
-	public java.lang.Integer getSeq() {
+	
+	public Integer getSeq() {
 		return getInt("seq");
 	}
 
-	public void setLogged(java.lang.String logged) {
+	public void setLogged(String logged) {
 		set("logged", logged);
 	}
-
-	public java.lang.String getLogged() {
+	
+	public String getLogged() {
 		return getStr("logged");
+	}
+
+	public void setType(String type) {
+		set("type", type);
+	}
+	
+	public String getType() {
+		return getStr("type");
+	}
+
+	public void setEnabled(String enabled) {
+		set("enabled", enabled);
+	}
+	
+	public String getEnabled() {
+		return getStr("enabled");
 	}
 
 }

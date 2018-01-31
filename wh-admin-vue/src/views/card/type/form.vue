@@ -52,13 +52,13 @@
                                     <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="投保人年龄上限" prop="phAgeToplmt">
-                                            <InputNumber :max="99" :min="1" :step="1" value="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1" element-id="phAgeToplmt" ref="phAgeToplmt"
                                                          v-model="cardtype.phAgeToplmt"></InputNumber>
                                         </FormItem>
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="投保人年龄下限" prop="phAgeLowerlmt">
-                                            <InputNumber :max="99" :min="1" :step="1" value="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1" element-id="phAgeLowerlmt" ref="phAgeLowerlmt"
                                                          v-model="cardtype.phAgeLowerlmt"></InputNumber>
                                         </FormItem>
                                         </Col>
@@ -66,10 +66,10 @@
                                     <Row v-show="!driverType">
                                         <Col span="12">
                                         <FormItem label="被投保人年龄上限" prop="ipAgeToplmt">
-                                            <InputNumber :max="99" :min="0" :step="1"
+                                            <InputNumber :max="99" :min="0" :step="1" element-id="ipAgeToplmt" ref=""
                                                          v-model="cardtype.ipAgeToplmt"></InputNumber>
                                             年
-                                            <InputNumber :max="366" :min="1" :step="1"
+                                            <InputNumber :max="366" :min="1" :step="1" element-id="ipAgeToplmtDay"
                                                          v-model="cardtype.ipAgeToplmtDay"></InputNumber>
                                             天
                                         </FormItem>
@@ -78,7 +78,7 @@
                                         </Col>
                                         <Col span="12">
                                         <FormItem label="被投保人年龄下限" prop="ipAgeLowerlmt">
-                                            <InputNumber :max="99" :min="1" :step="1" value="1"
+                                            <InputNumber :max="99" :min="1" :step="1" value="1" element-id="ipAgeLowerlmt"
                                                          v-model="cardtype.ipAgeLowerlmt"></InputNumber>
                                         </FormItem>
                                         </Col>
@@ -267,6 +267,7 @@
 <script>
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
+    import Kit from '../../../libs/kit'
     import {VueTinymce, Config} from '../../my-components/text-editor/'
 
     let vm=null;
@@ -297,7 +298,7 @@
                 this.modalLoading = true;
                 let param = { uploadList: this.uploadList}
                 this.$refs['formValidate'].validate((valid) => {
-                    console.info(valid)
+//                    console.info(valid)
                     if (valid) {
                         let action = 'save';
                         if (!vm.isAdd)
@@ -379,7 +380,7 @@
                 this.uploaded_delModal = false;
             },
             typeChange(value){
-                console.info(value)
+//                console.info(value)
                 for (let t of this.cttList) {
                     if (t.id == value) {
                         if (t.text == 'driverInsurance') {
@@ -397,6 +398,10 @@
         },
         data () {
             return {
+                afireType:'auto',
+                bfireType:'auto',
+                cfireType:'auto',
+                dfireType:'auto',
                 uploadList: [],
                 uploadNameList: [],
                 self: this,
@@ -439,6 +444,7 @@
                     ],
                     phAgeToplmt:[
                         {validator(rule, value, callback, source, options) {
+
                             var errors = [];
                             value=value==undefined?1:parseInt(value);
                             let phAgeLowerlmt=vm.cardtype.phAgeLowerlmt;
@@ -447,10 +453,19 @@
                                 errors.push("投保人上限不能大于下限");
                             }
                             callback(errors);
+
+                            if(vm.afireType=='auto'){
+                                vm.bfireType='hand';
+                                Kit.simulateChange(document.getElementById('phAgeLowerlmt'))
+                            }else{
+                                vm.afireType='auto';
+                            }
+
                         }}
                     ],
                     phAgeLowerlmt:[
                         {validator(rule, value, callback, source, options) {
+
                             var errors = [];
                             value=value==undefined?1:parseInt(value);
                             let phAgeToplmt=vm.cardtype.phAgeToplmt;
@@ -459,6 +474,13 @@
                                 errors.push("投保人下限不能小于上限");
                             }
                             callback(errors);
+
+                            if(vm.bfireType=='auto'){
+                                vm.afireType='hand';
+                                Kit.simulateChange(document.getElementById('phAgeToplmt'))
+                            }else{
+                                vm.bfireType='auto'
+                            }
                         }}
                     ],
                     ipAgeToplmt:[
@@ -471,6 +493,12 @@
                                 errors.push("被投保人上限不能大于下限");
                             }
                             callback(errors);
+                            if(vm.cfireType=='auto'){
+                                vm.dfireType='hand';
+                                Kit.simulateChange(document.getElementById('ipAgeLowerlmt'))
+                            }else{
+                                vm.cfireType='auto';
+                            }
                         }}
                     ],
                     ipAgeLowerlmt:[
@@ -483,6 +511,12 @@
                                 errors.push("被投保人下限不能小于上限");
                             }
                             callback(errors);
+                            if(vm.dfireType=='auto'){
+                                vm.cfireType='hand';
+                                Kit.simulateChange(document.getElementById('ipAgeToplmt'))
+                            }else{
+                                vm.dfireType='auto';
+                            }
                         }}
                     ]
 

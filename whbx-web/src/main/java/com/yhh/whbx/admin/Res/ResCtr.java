@@ -56,13 +56,14 @@ public class ResCtr extends CoreController {
     public void save(){
         Res res=getModel(Res.class);
         res.save();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
         renderSuccessJSON("新增成功","");
     }
     @Before({ResValidator.class,Tx.class})
     public void update(){
         Res res=getModel(Res.class);
         res.update();
-        CacheKit.removeAll(Consts.CURR_USER_RESES);
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
         renderSuccessJSON("更新成功","");
     }
     @Before(Tx.class)
@@ -72,8 +73,8 @@ public class ResCtr extends CoreController {
         List<RoleRes> list=RoleRes.dao.find("select * from s_role_res where resId=?",id);
         for(RoleRes rr:list){
             RoleRes.dao.deleteById(rr.getId().longValue());
-            CacheKit.removeAll(Consts.CURR_USER_RESES);
-            CacheKit.removeAll(Consts.CURR_USER_ROLES);
+            CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
+            CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
         }
         renderSuccessJSON("删除成功","");
     }

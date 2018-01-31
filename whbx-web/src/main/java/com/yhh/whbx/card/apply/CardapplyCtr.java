@@ -1,6 +1,7 @@
 package com.yhh.whbx.card.apply;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -21,6 +22,7 @@ import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.model.Cards;
 import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -115,7 +117,7 @@ public class CardapplyCtr extends CoreController {
         renderJson(Cardapply.dao.findById(id));
     }
 
-
+    @Clear(AdminAAuthInterceptor.class)
     public void dataReady() {
         Map<String, Object> map = new HashMap<>();
         map.put("mediaList", CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(), "mediaList"));
@@ -221,13 +223,13 @@ public class CardapplyCtr extends CoreController {
             this.pwd = pwd;
         }
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void listByCardtypeId(){
         Integer cardtypeId=getParaToInt("ctId");
         String batch=getPara("bacth");
         renderJson(Cardapply.dao.findByCardtypeIdAndBatch( cardtypeId,batch));
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void recommendNum(){
         Integer id=getParaToInt("applyId");
         Long lastSeq=Cards.dao.findLastCardCodeByCardapplyId(id);

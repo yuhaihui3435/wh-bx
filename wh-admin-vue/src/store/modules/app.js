@@ -39,23 +39,22 @@ const app = {
             state.tagsList.push(...list);
         },
         updateMenulist (state) {
-            let resList = Cookies.get('resList');
+            let ma = Cookies.get('menuArray');
             let menuList = [];
+            if(ma!=undefined)ma= eval ("(" + ma+ ")")
+            // console.info(ma)
             appRouter.forEach((item, index) => {
-                console.info(item)
-                    if(Util.oneOf(item.path,resList)) {
+                    if(Util.oneOf(item.path,ma)) {
                         if (item.children.length === 1) {
                             menuList.push(item);
                         } else {
                             let len = menuList.push(item);
                             let childrenArr = [];
                             childrenArr = item.children.filter(child => {
-                                if (child.access !== undefined) {
-                                    if (Util.oneOf(child.path, resList)) {
+                                if (child.path !== undefined) {
+                                    if (Util.oneOf(item.path+'/'+child.path, ma)) {
                                         return child;
                                     }
-                                } else {
-                                    return child;
                                 }
                             });
                             let handledItem = JSON.parse(JSON.stringify(menuList[len - 1]));

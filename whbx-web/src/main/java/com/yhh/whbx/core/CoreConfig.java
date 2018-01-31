@@ -13,18 +13,19 @@ import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.CMNCtr;
+import com.yhh.whbx.admin.LoginCtr;
 import com.yhh.whbx.admin.Res.ResCtr;
 import com.yhh.whbx.admin.art.ArtCtr;
 import com.yhh.whbx.admin.param.ParamCtr;
 import com.yhh.whbx.admin.role.RoleCtr;
 import com.yhh.whbx.admin.taxonomy.TaxCtr;
 import com.yhh.whbx.admin.user.UserCtr;
-import com.yhh.whbx.admin.LoginCtr;
 import com.yhh.whbx.card.apply.CardapplyCtr;
 import com.yhh.whbx.card.depot.DepotCtr;
 import com.yhh.whbx.card.query.CardsCtr;
 import com.yhh.whbx.card.report.ReportCtr;
 import com.yhh.whbx.card.type.CardTypeCtr;
+import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
 import com.yhh.whbx.interceptors.ExceptionInterceptor;
 import com.yhh.whbx.interceptors.WwwInterceptor;
 import com.yhh.whbx.kits.DateKit;
@@ -56,6 +57,7 @@ public class CoreConfig extends JFinalConfig{
         routes.add(new Routes() {
             @Override
             public void config() {
+//                addInterceptor(new AdminAAuthInterceptor());
                 add("/ad00", ParamCtr.class);
                 add("/ad01", UserCtr.class);
                 add("/ad02", RoleCtr.class);
@@ -66,6 +68,8 @@ public class CoreConfig extends JFinalConfig{
 
             }
         });
+
+
 
         routes.add(new Routes() {
             @Override
@@ -152,6 +156,7 @@ public class CoreConfig extends JFinalConfig{
     @Override
     public void configInterceptor(Interceptors interceptors) {
         interceptors.add(new ExceptionInterceptor());
+        interceptors.add(new AdminIAuthInterceptor());
     }
 
     @Override

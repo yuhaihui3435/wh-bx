@@ -59,6 +59,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'happypack/loader?id=happybabel'
             },
+
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({

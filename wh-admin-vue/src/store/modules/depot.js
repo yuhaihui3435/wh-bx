@@ -8,7 +8,11 @@ const depot = {
         totalPage: 0,
         pageNumber: 1,
         totalRow: 0,
+        totalPage1: 0,
+        pageNumber1: 1,
+        totalRow1: 0,
         depot: {},
+        depot1: {},
         salesmenList: [],
         cardtypeList: [],
         cardapplyList:[],
@@ -26,8 +30,14 @@ const depot = {
             state.depotList = list
         },
         set_depot(state, obj){
+            let o={};
             if (obj != undefined)
-                state.depot = Object.assign({},obj);
+                state.depot = Object.assign(o,obj);
+        },
+        set_depot1(state, obj){
+            let o={};
+            if (obj != undefined)
+                state.depot1 = Object.assign(o,obj);
         },
         set_depot_dataReady(state, obj){
             state.cardtypeList = obj.cardtypeList;
@@ -42,9 +52,9 @@ const depot = {
         },
         set_depot_unlockRecordList(state,page){
             state.unlockRecordList=page.list;
-            state.totalPage = page.totalPage
-            state.pageNumber = page.pageNumber
-            state.totalRow = page.totalRow
+            state.totalPage1 = page.totalPage
+            state.pageNumber1 = page.pageNumber
+            state.totalRow1 = page.totalRow
         }
 
 

@@ -1,16 +1,22 @@
 package com.yhh.whbx.admin;
 
 import com.alibaba.fastjson.JSON;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.StrKit;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Res;
 import com.yhh.whbx.admin.model.User;
 import com.yhh.whbx.core.CoreController;
+import com.yhh.whbx.interceptors.AdminAAuthInterceptor;
+import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
 import com.yhh.whbx.kits.CookieKit;
 import com.yhh.whbx.kits.ext.BCrypt;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yuhaihui8913 on 2018/1/26.
@@ -18,6 +24,7 @@ import java.util.*;
  *
  *
  */
+@Clear({AdminIAuthInterceptor.class, AdminAAuthInterceptor.class})
 public class LoginCtr extends CoreController{
 
     public void login(){

@@ -44,7 +44,7 @@
                     return ;
                 }
 
-                console.info(checkedData);
+                //console.info(checkedData);
 
                 let resIdAry=new Array;
 
