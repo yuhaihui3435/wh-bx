@@ -219,7 +219,7 @@
                             value=value==undefined?-1:parseInt(value);
                             let eNum=vm.depot.eNum;
                             eNum=eNum==undefined?-1:parseInt(eNum);
-                            if(value>=eNum&&eNum>-1){
+                            if(value>eNum&&eNum>-1){
                                 errors.push("起始号不能大于结束号");
                             }
                             callback(errors);
@@ -244,7 +244,7 @@
                             value=value==undefined?-1:parseInt(value);
                             let bNum=vm.depot.bNum;
                             bNum=bNum==undefined?-1:parseInt(bNum);
-                            if(value<=bNum&&bNum>-1){
+                            if(value<bNum&&bNum>-1){
                                 errors.push("结束号不能小于起始号");
                             }
                             callback(errors);

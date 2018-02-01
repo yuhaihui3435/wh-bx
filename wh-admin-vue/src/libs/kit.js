@@ -80,9 +80,9 @@ kit.arrayContains=function contains(arr, obj) {
 }
 
 kit.simulateChange=function simulateClick(elem) {
-    var evt;
-    if ("createEvent" in document) {
-        var event = new InputEvent('input');
+
+    if (document.createEvent) {
+        let event = new InputEvent('input');
         elem.dispatchEvent(event);
     }else if (el.fireEvent) { // IE
         el.fireEvent('input');

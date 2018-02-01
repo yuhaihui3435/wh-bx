@@ -197,7 +197,7 @@
                             value=value==undefined?-1:parseInt(value);
                             let jsENum=vm.depot.jsENum;
                             jsENum=jsENum==undefined?-1:parseInt(jsENum);
-                            if(value>=jsENum&&jsENum>-1){
+                            if(value>jsENum&&jsENum>-1){
                                 errors.push("起始号不能大于结束号");
                             }
 
@@ -218,7 +218,7 @@
                             value=value==undefined?-1:parseInt(value);
                             let jsBNum=vm.depot.jsBNum;
                             jsBNum=jsBNum==undefined?-1:parseInt(jsBNum);
-                            if(value<=jsBNum&&jsBNum>-1){
+                            if(value<jsBNum&&jsBNum>-1){
                                 errors.push("结束号不能小于起始号");
                             }
 
