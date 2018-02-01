@@ -43,7 +43,7 @@
                                     <Icon type="arrow-down-b"></Icon>
                                 </a>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">个人中心</DropdownItem>
+                                    <DropdownItem name="ownSpace">密码修改</DropdownItem>
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -160,9 +160,14 @@
                     this.$store.commit('logout', this);
                     this.$store.commit('clearAllTags');
                     this.$store.commit('clearOpenedSubmenu');
-                    this.$router.push({
-                        name: 'login'
+                    this.$store.dispatch('user_logout').then((res)=>{
+                        if(res.resCode&&res.resCode=='success'){
+                        this.$router.push({
+                            name: 'login'
+                        });
+                    }
                     });
+
                 }
             },
             checkTag (name) {

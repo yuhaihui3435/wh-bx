@@ -99,9 +99,11 @@ public class CoreController extends Controller {
     public void renderUnauthenticationJSON(String str) {
         getResponse().setStatus(401);
         getResponse().setHeader("customData",str);
-        renderFailJSON("请先身份认证后，再进行操作。");
+        renderFailJSON("用户身份无效或被禁用，再进行操作。");
         return;
     }
+
+
 
     public void renderUnauthorizationJSON(String str){
         getResponse().setStatus(403);

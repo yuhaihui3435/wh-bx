@@ -3,7 +3,6 @@ package com.yhh.whbx.admin.user;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
-import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
@@ -133,13 +132,12 @@ public class UserCtr extends CoreController {
         List<Role> ownRoles = CollUtil.newArrayList();
         List<Role> allRoles = CollUtil.newArrayList();
         if (userId != -1) {
-            ownRoles = Role.dao.find("select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", userId);
+            ownRoles = Role.dao.find(Consts.CACHE_NAMES.userRoles.name(),"ownRoles"+userId,"select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", userId);
         }
-        allRoles = Role.dao.find("select * from s_role ");
+        allRoles = Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"allRoles","select * from s_role ");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ownRoles", ownRoles);
         jsonObject.put("allRoles", allRoles);
-        LogKit.debug(jsonObject.toJSONString());
         renderJson(jsonObject.toJSONString());
     }
 
@@ -162,6 +160,7 @@ public class UserCtr extends CoreController {
             user.setId(BigInteger.valueOf(id));
             user.setStatus(Consts.STATUS.forbidden.getVal());
             user.update();
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
         }
 
         renderSuccessJSON("禁用操作执行成功。", "");
@@ -186,6 +185,7 @@ public class UserCtr extends CoreController {
             user.setId(BigInteger.valueOf(id));
             user.setStatus(Consts.STATUS.enable.getVal());
             user.update();
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
         }
 
         renderSuccessJSON("恢复操作执行成功。", "");

@@ -2,6 +2,7 @@ package com.yhh.whbx.www;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.aop.Duang;
 import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -15,6 +16,7 @@ import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.card.type.CardTypeService;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
+import com.yhh.whbx.interceptors.AdminIAuthInterceptor;
 import com.yhh.whbx.interceptors.CardStatusCheckInterceptor;
 import com.yhh.whbx.kits.ALSMSKit;
 import com.yhh.whbx.kits.DateKit;
@@ -25,6 +27,7 @@ import java.util.*;
 /**
  * Created by yuhaihui8913 on 2017/12/26.
  */
+@Clear(AdminIAuthInterceptor.class)
 public class IndexCtr extends CoreController {
     private final static CardsService cardsService = Duang.duang(CardsService.class);
     private final static CardTypeService cardTypeService = Duang.duang(CardTypeService.class);

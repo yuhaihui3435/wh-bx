@@ -56,6 +56,7 @@ public class LoginCtr extends CoreController{
                 List<Res> resList=Res.dao.findResesByUserId(user.getId());
                 data.put("resList",resList);
                 data.put("username",user.getNickname());
+                data.put("loginname",user.getLoginname());
                 user.setLogged(new Date());
                 user.update();
                 if(StrKit.notBlank(rm)&&rm.equals("0"))
@@ -73,6 +74,11 @@ public class LoginCtr extends CoreController{
             return;
         }
 
+    }
+
+    public void logout(){
+        CookieKit.remove(this,Consts.USER_ACCESS_TOKEN);
+        renderSuccessJSON("退出系统成功");
     }
 
 }

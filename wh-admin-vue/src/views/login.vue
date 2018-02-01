@@ -101,6 +101,7 @@ export default {
                             Cookies.set('menuArray',menuArray);
                             Cookies.set('serviceArray',serviceArray);
                             Cookies.set('user',resData.username);
+                            Cookies.set('loginname',resData.loginname);
                             this.$router.push({
                                 name: 'home_index'
                             });

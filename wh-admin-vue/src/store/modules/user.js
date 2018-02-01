@@ -12,8 +12,9 @@ const user = {
     mutations: {
         logout (state, vm) {
             Cookies.remove('user');
-            Cookies.remove('password');
-            Cookies.remove('access');
+            Cookies.remove('loginname');
+            Cookies.remove('menuArray');
+            Cookies.remove('serviceArray');
             // 恢复默认样式
             let themeLink = document.querySelector('link[name="theme"]');
             themeLink.setAttribute('href', '');
@@ -104,6 +105,22 @@ const user = {
             let vm=this._vm;
             return new Promise(function (resolve, reject) {
                 vm.$axios.post('/ad06/login', param).then((res) => {
+                    resolve(res);
+                });
+            });
+        },
+        user_logout:function ({ commit,state },param) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad06/logout', param).then((res) => {
+                    resolve(res);
+                });
+            });
+        },
+        update_pwd:function ({commit,state},param) {
+            let vm=this._vm;
+            return new Promise(function (resolve, reject) {
+                vm.$axios.post('/ad01/modifyPassword', param).then((res) => {
                     resolve(res);
                 });
             });

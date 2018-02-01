@@ -84,6 +84,7 @@ ajaxMethod.forEach((method)=> {
 
             }).catch((response)=> {
                 if (response.status === 401) {
+                    iView.Message.error('身份无效或被禁用，请重新登录')
                     store.commit('logout')
                     router.push({
                         path: "/login"

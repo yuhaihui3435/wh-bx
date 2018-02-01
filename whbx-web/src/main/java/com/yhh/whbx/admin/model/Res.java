@@ -67,7 +67,7 @@ public class Res extends BaseRes<Res> {
 
 
 	public List<Res> getChildren(){
-		List<Res> list=dao.find("select * from s_res where pId=? order by seq",getId());
+		List<Res> list=dao.findByCache(Consts.CACHE_NAMES.userReses.name(),"getResChildren"+getId(),"select * from s_res where pId=? order by seq",getId());
 		return list;
 	}
 
