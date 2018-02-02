@@ -103,7 +103,7 @@
             let now=new Date();
             let preNow=new Date();
             preNow.setDate(now.getDate()-30);
-            now=now.getFullYear()+"-"+now.getMonth()+1+"-"+now.getDate()
+            now=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()
             preNow=preNow.getFullYear()+"-"+(preNow.getMonth()+1)+"-"+preNow.getDate()
             this.at=[preNow,now]
             this.sTime=preNow+' - '+now

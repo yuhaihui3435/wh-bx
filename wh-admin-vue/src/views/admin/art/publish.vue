@@ -177,7 +177,7 @@
                 this.file='';
                 this.previewImg=false;
                 this.imgData='';
-                console.info(this.art)
+//                console.info(this.art)
                 if (isAdd){
                     this.$store.commit('set_art');
                     //this.$refs.mt.setContent('');

@@ -45,7 +45,7 @@ export default {
         return {
             spinShow:false,
             form: {
-                userName: 'iview_admin',
+                userName: '',
                 password: ''
             },
             rules: {

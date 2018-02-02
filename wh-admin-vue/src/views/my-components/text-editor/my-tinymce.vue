@@ -60,6 +60,7 @@
             if(typeof tinymce === "undefined") throw new Error('tinymce undefined');
         },
         mounted () {
+            console.info('hello')
             let maxSize = this.uploadPicMaxSize;
             let url=this.imgUploadUrl;
             const setting = Object.assign({},

@@ -77,7 +77,7 @@ module.exports = merge(webpackBaseConfig, {
         }
         ),
         new HtmlWebpackPlugin({
-            title: 'abjk' + package.version,
+            title: '安保健康卡管理系统',
             favicon: './logo-min.png',
             filename: '../index.html',
             template: './src/template/index.ejs',

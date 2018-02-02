@@ -44,7 +44,7 @@ const app = {
             if(ma!=undefined)ma= eval ("(" + ma+ ")")
             // console.info(ma)
             appRouter.forEach((item, index) => {
-                    if(Util.oneOf(item.path,ma)) {
+                    if(ma&&Util.oneOf(item.path,ma)) {
                         if (item.children.length === 1) {
                             menuList.push(item);
                         } else {

@@ -454,12 +454,12 @@
                             }
                             callback(errors);
 
-//                            if(vm.afireType=='auto'){
-//                                vm.bfireType='hand';
-//                                Kit.simulateChange(document.getElementById('phAgeLowerlmt'))
-//                            }else{
-//                                vm.afireType='auto';
-//                            }
+                            if(vm.afireType=='auto'){
+                                vm.bfireType='hand';
+                                Kit.simulateChange(document.getElementById('phAgeLowerlmt'))
+                            }else{
+                                vm.afireType='auto';
+                            }
 
                         }}
                     ],
@@ -475,12 +475,12 @@
                             }
                             callback(errors);
 
-//                            if(vm.bfireType=='auto'){
-//                                vm.afireType='hand';
-//                                Kit.simulateChange(document.getElementById('phAgeToplmt'))
-//                            }else{
-//                                vm.bfireType='auto'
-//                            }
+                            if(vm.bfireType=='auto'){
+                                vm.afireType='hand';
+                                Kit.simulateChange(document.getElementById('phAgeToplmt'))
+                            }else{
+                                vm.bfireType='auto'
+                            }
                         }}
                     ],
                     ipAgeToplmt:[
@@ -493,12 +493,12 @@
                                 errors.push("被投保人上限不能大于下限");
                             }
                             callback(errors);
-//                            if(vm.cfireType=='auto'){
-//                                vm.dfireType='hand';
-//                                Kit.simulateChange(document.getElementById('ipAgeLowerlmt'))
-//                            }else{
-//                                vm.cfireType='auto';
-//                            }
+                            if(vm.cfireType=='auto'){
+                                vm.dfireType='hand';
+                                Kit.simulateChange(document.getElementById('ipAgeLowerlmt'))
+                            }else{
+                                vm.cfireType='auto';
+                            }
                         }}
                     ],
                     ipAgeLowerlmt:[
@@ -511,12 +511,12 @@
                                 errors.push("被投保人下限不能小于上限");
                             }
                             callback(errors);
-//                            if(vm.dfireType=='auto'){
-//                                vm.cfireType='hand';
-//                                Kit.simulateChange(document.getElementById('ipAgeToplmt'))
-//                            }else{
-//                                vm.dfireType='auto';
-//                            }
+                            if(vm.dfireType=='auto'){
+                                vm.cfireType='hand';
+                                Kit.simulateChange(document.getElementById('ipAgeToplmt'))
+                            }else{
+                                vm.dfireType='auto';
+                            }
                         }}
                     ]
 
