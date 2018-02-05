@@ -30,8 +30,13 @@
                                    icon="android-list"/>
                         </FormItem>
                     </Form>
-                    <div class="margin-top-20">
-                        <VueTinymce ref="mt" :setting="tinymceCfg" v-model="art.text" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
+                    <div class="margin-top-20" style="height: 300px;">
+                        <quill-editor ref="myTextEditor"
+                                      v-model="art.text"
+                                      :options="editorOption" style="height: 200px;"
+                                      >
+                        </quill-editor>
+                        <!--<VueTinymce ref="mt" :setting="tinymceCfg" v-model="art.text" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
                     </div>
                 </Card>
                 </Col>
@@ -134,10 +139,14 @@
 </template>
 
 <script>
+    import 'quill/dist/quill.core.css'
+    import 'quill/dist/quill.snow.css'
+    import 'quill/dist/quill.bubble.css'
     import env from '../../../../build/env';
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
-    import {VueTinymce, Config} from '../../my-components/text-editor/'
+//    import {VueTinymce, Config} from '../../my-components/text-editor/'
+    import { quillEditor } from 'vue-quill-editor'
     export default {
         name: 'art-publish',
         computed: {
@@ -148,7 +157,8 @@
             })
         },
         components:{
-            VueTinymce
+//            VueTinymce
+            quillEditor
         },
         data () {
             return {
@@ -162,10 +172,13 @@
                 previewImg: false,
                 showImg:false,
                 publishLoading:false,
-                tinymceCfg: Object.assign(Config, {
-                    height: 200
-                }),
+//                tinymceCfg: Object.assign(Config, {
+//                    height: 200
+//                }),
                 tinymceImgUploadUrl:consts.imgUploadUrl,
+                editorOption:{
+                    placeholder: "输入任何内容，支持html",
+                }
             };
         },
         methods: {
@@ -177,16 +190,9 @@
                 this.file='';
                 this.previewImg=false;
                 this.imgData='';
-//                console.info(this.art)
                 if (isAdd){
                     this.$store.commit('set_art');
-                    //this.$refs.mt.setContent('');
-                }else{
-                    //this.$refs.mt.setContent(this.art.text);
-                    //this.imgData=this.art.thumbnailImgUrl;
                 }
-
-
             },
             handlePublish(){
                 let vm=this;
@@ -242,9 +248,6 @@
                     });
                     return false;
                 }
-
-
-
                 let reader = new FileReader();
                 reader.onload = function () {
                     vm.imgData = this.result;

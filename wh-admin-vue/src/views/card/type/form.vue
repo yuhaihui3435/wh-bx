@@ -141,7 +141,12 @@
                         <TabPane label="协议信息" icon="document" name="protocol">
 
                             <Card>
-                                <VueTinymce ref="protocol" v-model="cardtype.protocol" :setting="tinymceCfg" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
+                                <!--<VueTinymce ref="protocol" v-model="cardtype.protocol" :setting="tinymceCfg" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
+                                <quill-editor ref="protocolTextEditor"
+                                              v-model="cardtype.protocol"
+                                              :config="editorOption"
+                                >
+                                </quill-editor>
                             </Card>
 
                         </TabPane>
@@ -149,7 +154,12 @@
 
                             <Card>
 
-                                <VueTinymce ref="serviceCert" :setting="tinymceCfg" v-model="cardtype.serviceCert" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>
+                                <!--<VueTinymce ref="serviceCert" :setting="tinymceCfg" v-model="cardtype.serviceCert" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
+                                <quill-editor ref="serviceCertTextEditor"
+                                              v-model="cardtype.serviceCert"
+                                              :config="editorOption"
+                                >
+                                </quill-editor>
                             </Card>
 
                         </TabPane>
@@ -268,8 +278,12 @@
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
     import Kit from '../../../libs/kit'
-    import {VueTinymce, Config} from '../../my-components/text-editor/'
+//    import {VueTinymce, Config} from '../../my-components/text-editor/'
 
+    import 'quill/dist/quill.core.css'
+    import 'quill/dist/quill.snow.css'
+    import 'quill/dist/quill.bubble.css'
+    import { quillEditor } from 'vue-quill-editor'
     let vm=null;
     export default {
         computed: {
@@ -412,10 +426,12 @@
                 uploaded_delModal:false,//已上传
                 uploaded_del_modal_loading: false,//已上传
                 del_index: '',
+                editorOption:{
 
-                tinymceCfg: Object.assign(Config, {
-                    height: 200
-                }),
+                },
+//                tinymceCfg: Object.assign(Config, {
+//                    height: 200
+//                }),
                 tinymceImgUploadUrl:consts.imgUploadUrl,
                 modalTitle: '新增卡类型',
                 modalLoading: false,
@@ -531,7 +547,8 @@
             }
         },
         components: {
-            VueTinymce
+//            VueTinymce
+            quillEditor
         }
     }
 </script>
