@@ -51,6 +51,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'happypack/loader?id=happybabel',
+                exclude: /node_modules(?!\/quill-image-resize-module)/,
                 exclude: /node_modules/
             },
             {
@@ -90,6 +91,9 @@ module.exports = {
             loaders: ['babel-loader'],
             threadPool: happyThreadPool,
             verbose: true
+        }),
+        new webpack.ProvidePlugin({
+            'window.Quill': 'quill'
         })
     ],
     resolve: {
