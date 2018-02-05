@@ -12,6 +12,7 @@ import axios from 'axios'
 import qs from 'qs'
 // import message from 'iview/src/components/message'
 import env from '../build/env';
+
 Vue.use(iView);
 require('es6-promise').polyfill()
 
@@ -120,6 +121,7 @@ new Vue({
     data: {
         currentPageName: ''
     },
+
     mounted () {
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表

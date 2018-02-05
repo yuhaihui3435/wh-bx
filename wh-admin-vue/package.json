@@ -17,6 +17,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@tinymce/tinymce-vue": "^1.0.0",
     "area-data": "^1.0.0",
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",

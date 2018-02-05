@@ -32,7 +32,7 @@ const app = {
         ],
         tagsList: [...otherRouter.children],
         messageCount: 0,
-        dontCache: ['text-editor', 'artical-publish']  // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        dontCache: ['card_type', 'admin_art']  // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
     },
     mutations: {
         setTagsList (state, list) {
@@ -162,6 +162,7 @@ const app = {
             state.messageCount = count;
         },
         increateTag (state, tagObj) {
+
             if (!Util.oneOf(tagObj.name, state.dontCache)) {
                 state.cachePage.push(tagObj.name);
                 localStorage.cachePage = JSON.stringify(state.cachePage);
