@@ -1,6 +1,9 @@
 <style lang="less">
     @import '../../../styles/common.less';
     @import 'upload.less';
+    .ql-font-roboto {
+        font-family: 'Roboto', sans-serif;
+    }
 </style>
 
 <template>
@@ -16,7 +19,7 @@
                 <span>{{modalTitle}}</span>
             </p>
             <Row>
-                <Col span="18">
+                <Col span="18" >
                 <Card>
                     <Form :label-width="80">
                         <FormItem label="文章标题" >
@@ -30,10 +33,10 @@
                                    icon="android-list"/>
                         </FormItem>
                     </Form>
-                    <div class="margin-top-20" style="height: 300px;">
+                    <div class="margin-top-20" style="height: 400px;">
                         <quill-editor ref="myTextEditor"
                                       v-model="art.text"
-                                      :options="editorOption" style="height: 200px;"
+                                      :options="editorOption" style="height: 300px;"
                                       >
                         </quill-editor>
                         <!--<VueTinymce ref="mt" :setting="tinymceCfg" v-model="art.text" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
@@ -218,6 +221,7 @@
                         }
                     },
                     placeholder: "输入任何内容，支持html",
+                    scrollingContainer: '#scrolling-container',
                 }
             };
         },
