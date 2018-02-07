@@ -140,11 +140,11 @@
                         </TabPane>
                         <TabPane label="协议信息" icon="document" name="protocol">
 
-                            <Card>
+                            <Card style="height: 500px;">
                                 <!--<VueTinymce ref="protocol" v-model="cardtype.protocol" :setting="tinymceCfg" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
                                 <quill-editor ref="protocolTextEditor"
                                               v-model="cardtype.protocol"
-                                              :config="editorOption"
+                                              :options="editorOption" style="height: 390px;"
                                 >
                                 </quill-editor>
                             </Card>
@@ -152,12 +152,12 @@
                         </TabPane>
                         <TabPane label="服务凭证信息" icon="document-text" name="serviceCert">
 
-                            <Card>
+                            <Card style="height: 500px;">
 
                                 <!--<VueTinymce ref="serviceCert" :setting="tinymceCfg" v-model="cardtype.serviceCert" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
                                 <quill-editor ref="serviceCertTextEditor"
                                               v-model="cardtype.serviceCert"
-                                              :config="editorOption"
+                                              :options="editorOption" style="height: 390px;"
                                 >
                                 </quill-editor>
                             </Card>
@@ -165,7 +165,7 @@
                         </TabPane>
                         <TabPane label="保险条款文件" icon="ios-folder" name="InsuranceClauseDocument">
 
-                            <Card>
+                            <Card >
 
                                 <p slot="title">
                                 <Icon type="image"></Icon>
@@ -283,7 +283,11 @@
     import 'quill/dist/quill.core.css'
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
-    import { quillEditor } from 'vue-quill-editor'
+    import { quillEditor,Quill } from 'vue-quill-editor'
+    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
+    import  ImageResize  from 'quill-image-resize-module';
+    Quill.register('modules/ImageExtend', ImageExtend)
+    Quill.register('modules/ImageResize', ImageResize)
     let vm=null;
     export default {
         computed: {
@@ -427,18 +431,53 @@
                 uploaded_del_modal_loading: false,//已上传
                 del_index: '',
                 editorOption:{
+                    modules: {
+                        ImageResize: {},
+                        ImageExtend: {
+                            loading: true,
+                            name: 'file',
+                            size: 1,
+                            accept: 'image/png, image/gif, image/jpeg, image/bmp,',
+                            action: consts.imgUploadUrl,  // 必填参数 图片上传地址
+                            response: (res) => {
+                            if(res.resCode&&res.resCode=='success'){
+                return res.resData
+            }else{
+                this.$Message.error('图片上传失败,请重试');
+            }
+        },
+            sizeError: () => {
+                this.$Message.error('图片过大,图片大小不能超过1M')
+            },  // 图片超过大小的回调
+            start: () => {},  // 可选参数 自定义开始上传触发事件
+            end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+            error: () => {},  // 可选参数 上传失败触发的事件
+            success: () => {},  // 可选参数  上传成功触发的事件
+            change: (xhr, formData) => {
 
+            }
+        },
+            toolbar: {
+                container: container,
+                    handlers: {
+                    'image': function () {
+                        QuillWatch.emit(this.quill.id)
+                    }
+                }
+            }
+        },
+            placeholder: "输入任何内容，支持html",
+                scrollingContainer: '#scrolling-container',
                 },
 //                tinymceCfg: Object.assign(Config, {
 //                    height: 200
 //                }),
-                tinymceImgUploadUrl:consts.imgUploadUrl,
+//                tinymceImgUploadUrl:consts.imgUploadUrl,
                 modalTitle: '新增卡类型',
                 modalLoading: false,
                 driverType: false,
                 actTabName: 'baseInfo',
                 statusList: consts.yon,
-
                 ruleValidate: {
                     code: [
                         {type: 'string', required: true, message: '编号不能为空', trigger: 'blur'},
@@ -450,7 +489,7 @@
                     ],
                     faceVal: [
                         {required: true, message: '面值不能为空', trigger: 'blur'},
-                        {type: 'number', message: '面值必须为数字', trigger: 'blur', transform: value => +value},
+                        {type: 'number', message: '面值必须为数字', trigger: 'blur', transform: value => +value },
                     ],
                     actMsg: [
                         {required: true, message: '激活成功提示消息不能为空', trigger: 'blur'},

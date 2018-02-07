@@ -51,7 +51,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'happypack/loader?id=happybabel',
-                exclude: /node_modules(?!\/quill-image-resize-module)/,
+                // exclude: /node_modules(?!\/quill-image-resize-module)/,
                 exclude: /node_modules/
             },
             {

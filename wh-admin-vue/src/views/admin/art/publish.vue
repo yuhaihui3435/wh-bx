@@ -150,7 +150,7 @@
     import consts from '../../../libs/consts'
 //    import {VueTinymce, Config} from '../../my-components/text-editor/'
     import { quillEditor,Quill } from 'vue-quill-editor'
-    import {container, ImageExtend, QuillWatch} from 'quill-image-extend-module'
+    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
     import  ImageResize  from 'quill-image-resize-module';
     Quill.register('modules/ImageExtend', ImageExtend)
     Quill.register('modules/ImageResize', ImageResize)
@@ -187,43 +187,43 @@
                 editorOption:{
                         modules: {
                             ImageResize: {},
-                        ImageExtend: {
-                            loading: true,
-                            name: 'file',
-                            size: 1,
-                            accept: 'image/png, image/gif, image/jpeg, image/bmp,',
-                            action: consts.imgUploadUrl,  // 必填参数 图片上传地址
-                            response: (res) => {
-                                if(res.resCode&&res.resCode=='success'){
-                                    return res.resData
-                                }else{
-                                    this.$Message.error('图片上传失败,请重试');
+                            ImageExtend: {
+                                loading: true,
+                                name: 'file',
+                                size: 1,
+                                accept: 'image/png, image/gif, image/jpeg, image/bmp,',
+                                action: consts.imgUploadUrl,  // 必填参数 图片上传地址
+                                response: (res) => {
+                                    if(res.resCode&&res.resCode=='success'){
+                                        return res.resData
+                                    }else{
+                                        this.$Message.error('图片上传失败,请重试');
+                                    }
+                                },
+                                sizeError: () => {
+                                    this.$Message.error('图片过大,图片大小不能超过1M')
+                                },  // 图片超过大小的回调
+                                start: () => {},  // 可选参数 自定义开始上传触发事件
+                                end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+                                error: () => {},  // 可选参数 上传失败触发的事件
+                                success: () => {},  // 可选参数  上传成功触发的事件
+                                change: (xhr, formData) => {
+
                                 }
                             },
-                            sizeError: () => {
-                                this.$Message.error('图片过大,图片大小不能超过1M')
-                            },  // 图片超过大小的回调
-                            start: () => {},  // 可选参数 自定义开始上传触发事件
-                            end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
-                            error: () => {},  // 可选参数 上传失败触发的事件
-                            success: () => {},  // 可选参数  上传成功触发的事件
-                            change: (xhr, formData) => {
-
-                            }
-                        },
-                        toolbar: {
-                            container: container,
-                            handlers: {
-                                'image': function () {
-                                    QuillWatch.emit(this.quill.id)
+                            toolbar: {
+                                container: container,
+                                handlers: {
+                                    'image': function () {
+                                        QuillWatch.emit(this.quill.id)
+                                    }
                                 }
                             }
-                        }
-                    },
+                            },
                     placeholder: "输入任何内容，支持html",
                     scrollingContainer: '#scrolling-container',
                 }
-            };
+            }
         },
         methods: {
             open(title, isAdd){

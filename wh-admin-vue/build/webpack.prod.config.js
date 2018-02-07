@@ -65,14 +65,15 @@ module.exports = merge(webpackBaseConfig, {
             },
             {
                 from: 'src/views/main-components/theme-switch/theme'
-            },
-            {
-                from: 'src/views/my-components/text-editor/tinymce'
             }
+            // ,
+            // {
+            //     from: 'src/views/my-components/text-editor/tinymce'
+            // }
         ],
             {
             ignore: [
-                'text-editor.vue'
+                // 'text-editor.vue'
             ]
         }
         ),
