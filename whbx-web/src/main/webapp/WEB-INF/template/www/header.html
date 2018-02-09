@@ -1,20 +1,21 @@
-<nav id="mainNav" class="navbar navbar-default navbar-full #(mainNavClass)">
-    <div class="container container-nav">
+<nav id="mainNav" class="navbar navbar-fixed-top  navbar-without-shadow">
+    <div class="container">
         <div class="navbar-header">
             <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs">
+                <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="/index">
-                <img class="logo" src="#(ctx)/static/www/img/white_logo.png" alt="#(siteName)">
+            <a class="navbar-brand" href="/">
+                <img class="navbar-brand__img" src="#(ctx)/static/www/img/white_logo.png" alt="#(siteName)">
             </a>
         </div>
-        <div style="height: 1px;" role="main" aria-expanded="false" class="navbar-collapse collapse" id="bs">
+        <div  aria-expanded="false" class="navbar-collapse collapse" id="bs">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#(ctx)/"></a></li>
-                <li><a href="#(ctx)/cardView"></a></li>
-                <li><a href="#(ctx)/contact"></a></li>
+                <li><a href="#(ctx)/">首页</a></li>
+                <li><a href="#(ctx)/cardView">卡激活</a></li>
+                <li><a href="#(ctx)/contact">卡查询</a></li>
             </ul>
         </div>
     </div>

@@ -11,11 +11,11 @@
     #include("/WEB-INF/template/www/css.html")
 </head>
 
-<body class="#(indexCss)">
+<body >
 <input type="hidden" id="ctx" value="#(ctx)">
 #include("/WEB-INF/template/www/header.html")
 #include("/WEB-INF/template/www/js.html")
-#@content()
+###@content()
 #include("/WEB-INF/template/www/footer.html")
 
 </body>
