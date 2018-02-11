@@ -1,22 +1,33 @@
-<nav id="mainNav" class="navbar navbar-fixed-top  navbar-without-shadow">
-    <div class="container">
-        <div class="navbar-header">
-            <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">
-                <img class="navbar-brand__img" src="#(ctx)/static/www/img/white_logo.png" alt="#(siteName)">
-            </a>
+<header >
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top" >
+        <div class="container">
+            <div class="navbar-header">
+                <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                </a>
+            </div>
+            <div aria-expanded="false" class="navbar-collapse collapse" id="bs">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="active"><a href="#(ctx)/" >首页</a></li>
+                    #for(x : menuList )
+                    <li><a href="#(ctx)#(x.text)#(x.id)">#(x.title)</a></li>
+                    #end
+                </ul>
+            </div>
         </div>
-        <div  aria-expanded="false" class="navbar-collapse collapse" id="bs">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#(ctx)/">首页</a></li>
-                <li><a href="#(ctx)/cardView">卡激活</a></li>
-                <li><a href="#(ctx)/contact">卡查询</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    </nav>
+</header>
+<div class="about_box" style="background:url(/static/www/img/banner.jpg) no-repeat center top; background-size:cover;">
+    <h1>安保健康，用心守护您的健康。</h1>
+
+</div>
+
+<style>
+
+</style>

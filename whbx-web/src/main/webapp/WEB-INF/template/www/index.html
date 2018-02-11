@@ -1,103 +1,113 @@
 #@layout()
 #define content()
-<div id="top-content" class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="8500">
-                    <div class="carousel-inner">
-                        <div class="item active">
-                            <picture>
-                                <source
-                                        media="(min-width: 650px)"
-                                        srcset="#(ctx)/static/www/img/carousel-1_sm.png">
 
-                                <img class="carouselImg animated bounceInDown"
-                                     src="#(ctx)/static/www/img/carousel-1.png"
-                                >
-                            </picture>
-                            <div class="carousel-caption">
-                                <div class="big-title animated bounceInLeft">
-                                    Give your marketing initiatives an edge<br/> with advanced marketing technology
-                                </div>
-                                <div class="sub-title animated bounceInLeft">carousel-2_sm.png
-                                    carousel-2.png
-                                    Strategically
-                                    maneuvering and campaign optimization across platforms are made 3X efficient with the help of
-                                    technology.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item ">
-                            <picture>
-                                <source
-                                        media="(min-width: 650px)"
-                                        srcset="#(ctx)/static/www/img/carousel-2_sm.png">
-                                <img class="carouselImg animated bounceInDown"
-                                     src="#(ctx)/static/www/img/carousel-2.png"
-                                >
-                            </picture>
-                            <div class="carousel-caption">
-                                <div class="big-title animated bounceInLeft">
-                                    Give your marketing initiatives an edge<br/> with advanced marketing technology
-                                </div>
-                                <div class="sub-title animated bounceInLeft">
-                                    Strategically
-                                    maneuvering and campaign optimization across platforms are made 3X efficient with the help of
-                                    technology.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.carousel -->
-            </div>
-            <div class="col-md-4" id="overlay">
+<div class="index_pd or">
+    <h1 >最新产品</h1>
 
-                <div class="overlay-box">
+        #for(x : pInfoList)
+    #if(for.last)
+    <dl class="last">
+        #else
+        <dl >
+        #end
+            <a href="#(ctx)/b/#(x.id)" class="product-thumb" target="_blank">
+                <dd>
 
-                    <div class="overlay-title">
-                        卡激活
-                    </div>
-                    <p class="overlay-subtitle">
-                        请在这里输入您的卡号与密码，开始进行卡激活操作。
-                    </p>
-                    <div class="domain-search-holder" id="domain-search-holder">
+                <img src="#(qn_url)#(x.thumbnail)" style="width: 320px;height: 200px;">
+                </dd>
+                <dt>
+                    <h1></h1>
+                #(x.summary)
+                <span>查看详细</span>
+                </dt>
+            </a>
+    </dl>
+        #end
 
-                        <form id="domain-search" class="form-horizontal" method="post" >
-                            <div class="overlay-form-body">
-                                <input id="domain-code" type="text" name="code" placeholder="请输入卡号" required value="#(code??'')"/>
-                                <input  id="domain-pwd" type="password" name="pwd" placeholder="请输入密码" required value="#(pwd??'')"/>
-                            </div>
-                            <div class="row" style="padding: 10px">
-                                <div class="col-md-6">
-                                <input class=" btn   btn-danger btn-block  btn-lg"  id="act-btn" type="button" onclick="act()"  value="激活" /></div>
-                                <div class="col-md-6"><input class=" btn  btn-info btn-block  btn-lg"  id="query-btn" type="button" onclick="view()"  value="查询" /></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-<div id="about-features" class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row-title">Why Social Frontier?</div>
-                <div class="row-subtitle">
-                    What is your end goal when you are strategizing your marketing plan? SALES, right? You are not wrong if you think like that. The end objective of all businesses globally boils down to numbers only. But the challenge comes when you are only focused on sales and ignore the business's real growth.
-                </div><br>
-                <div class="row-subtitle">
-                    Over the years market has evolved from product centric to customer centric. And in this digital era the evolution is much more paced than 10 years back. Your business is having so many competitors with almost the same product or service that it is difficult to stand out. In such a scenario it is important to focus on the overall brand growth and you will be surprised by the sales that flow in.<br>
-                    <!--<a href=""><button class="btn search-button" type="button" style="margin-top: 20px;">卡查看</button></a>-->
-                </div>
-            </div>
-        </div>
 
-    </div>
-</div>
+<!--<div id="top-content" class="container-fluid">-->
+    <!--<div class="container">-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-8">-->
+                <!--<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="8500">-->
+                    <!--<div class="carousel-inner">-->
+                        <!--<div class="item active">-->
+                            <!--<picture>-->
+                                <!--<source-->
+                                        <!--media="(min-width: 650px)"-->
+                                        <!--srcset="#(ctx)/static/www/img/carousel-1_sm.png">-->
+
+                                <!--<img class="carouselImg animated bounceInDown"-->
+                                     <!--src="#(ctx)/static/www/img/carousel-1.png"-->
+                                <!--&gt;-->
+                            <!--</picture>-->
+                            <!--<div class="carousel-caption">-->
+                                <!--<div class="big-title animated bounceInLeft">-->
+                                    <!--Give your marketing initiatives an edge<br/> with advanced marketing technology-->
+                                <!--</div>-->
+                                <!--<div class="sub-title animated bounceInLeft">carousel-2_sm.png-->
+                                    <!--carousel-2.png-->
+                                    <!--Strategically-->
+                                    <!--maneuvering and campaign optimization across platforms are made 3X efficient with the help of-->
+                                    <!--technology.-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="item ">-->
+                            <!--<picture>-->
+                                <!--<source-->
+                                        <!--media="(min-width: 650px)"-->
+                                        <!--srcset="#(ctx)/static/www/img/carousel-2_sm.png">-->
+                                <!--<img class="carouselImg animated bounceInDown"-->
+                                     <!--src="#(ctx)/static/www/img/carousel-2.png"-->
+                                <!--&gt;-->
+                            <!--</picture>-->
+                            <!--<div class="carousel-caption">-->
+                                <!--<div class="big-title animated bounceInLeft">-->
+                                    <!--Give your marketing initiatives an edge<br/> with advanced marketing technology-->
+                                <!--</div>-->
+                                <!--<div class="sub-title animated bounceInLeft">-->
+                                    <!--Strategically-->
+                                    <!--maneuvering and campaign optimization across platforms are made 3X efficient with the help of-->
+                                    <!--technology.-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; /.carousel &ndash;&gt;-->
+            <!--</div>-->
+            <!--<div class="col-md-4" id="overlay">-->
+
+                <!--<div class="overlay-box">-->
+
+                    <!--<div class="overlay-title">-->
+                        <!--卡激活-->
+                    <!--</div>-->
+                    <!--<p class="overlay-subtitle">-->
+                        <!--请在这里输入您的卡号与密码，开始进行卡激活操作。-->
+                    <!--</p>-->
+                    <!--<div class="domain-search-holder" id="domain-search-holder">-->
+
+                        <!--<form id="domain-search" class="form-horizontal" method="post" >-->
+                            <!--<div class="overlay-form-body">-->
+                                <!--<input id="domain-code" type="text" name="code" placeholder="请输入卡号" required value="#(code??'')"/>-->
+                                <!--<input  id="domain-pwd" type="password" name="pwd" placeholder="请输入密码" required value="#(pwd??'')"/>-->
+                            <!--</div>-->
+                            <!--<div class="row" style="padding: 10px">-->
+                                <!--<div class="col-md-6">-->
+                                <!--<input class=" btn   btn-danger btn-block  btn-lg"  id="act-btn" type="button" onclick="act()"  value="激活" /></div>-->
+                                <!--<div class="col-md-6"><input class=" btn  btn-info btn-block  btn-lg"  id="query-btn" type="button" onclick="view()"  value="查询" /></div>-->
+                            <!--</div>-->
+                        <!--</form>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
 
 <script>
     const ctx=$('#ctx').val();

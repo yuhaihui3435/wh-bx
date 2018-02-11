@@ -86,10 +86,12 @@ public class ArtCtr extends CoreController {
         content.setCAt(new Date());
         content.setStatus(Consts.CHECK_STATUS.normal.getVal());
         if(content.getId()==null)
-            content.save();
+            content.saveWithoutClean();
         else {
+            content.setMAt(new Date());
+            content.setFlag("01");
             Mapping.dao.delByCId(content.getId());
-            content.update();
+            content.updateWithoutClean();
         }
         if(StrUtil.isNotBlank(tax)){
             String[] tax_array=tax.split(",");
@@ -131,7 +133,7 @@ public class ArtCtr extends CoreController {
         for(Integer i:idsList){
             Content c=Content.dao.findById(i);
             c.setDAt(new Date());
-            c.update();
+            c.updateWithoutClean();
         }
         renderSuccessJSON("删除成功","");
 
@@ -168,7 +170,7 @@ public class ArtCtr extends CoreController {
         content.setFlag("00");
         content.setMAt(new Date());
         content.setPAt(new Date());
-        content.update();
+        content.updateWithoutClean();
         renderSuccessJSON("文章发布成功");
     }
 

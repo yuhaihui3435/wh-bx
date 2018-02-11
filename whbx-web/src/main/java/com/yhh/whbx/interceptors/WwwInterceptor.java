@@ -1,6 +1,5 @@
 package com.yhh.whbx.interceptors;
 
-import com.jfinal.aop.Clear;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.plugin.ehcache.CacheKit;
@@ -25,11 +24,8 @@ public class WwwInterceptor implements Interceptor {
             controller.setAttr(str,(String)CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),str));
         }
 
-        if(ak.equals("/")){
-            controller.setAttr("indexCss","gradient");
-        }else{
-            controller.setAttr("mainNavClass","gradient");
-        }
+        List menuList=CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"artList");
+        controller.setAttr("menuList",menuList);
 
         invocation.invoke();
 

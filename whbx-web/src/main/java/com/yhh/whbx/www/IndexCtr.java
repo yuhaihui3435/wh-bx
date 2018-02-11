@@ -11,6 +11,7 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
+import com.yhh.whbx.admin.model.Content;
 import com.yhh.whbx.card.CardsService;
 import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.card.type.CardTypeService;
@@ -33,6 +34,8 @@ public class IndexCtr extends CoreController {
     private final static CardTypeService cardTypeService = Duang.duang(CardTypeService.class);
 
     public void index() {
+        List<Content> contents=Content.dao.find("select * from s_content where dAt is null and module='art' and flag='00' order by pAt desc limit 3");
+        setAttr("pInfoList",contents);
         render("index.html");
     }
 //    @Before({CardStatusCheckInterceptor.class})

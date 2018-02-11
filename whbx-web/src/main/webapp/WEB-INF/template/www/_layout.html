@@ -14,8 +14,12 @@
 <body >
 <input type="hidden" id="ctx" value="#(ctx)">
 #include("/WEB-INF/template/www/header.html")
+
 #include("/WEB-INF/template/www/js.html")
-###@content()
+<script type="text/javascript">
+    $("div.navbar-fixed-top").autoHidingNavbar();
+</script>
+#@content()
 #include("/WEB-INF/template/www/footer.html")
 
 </body>
