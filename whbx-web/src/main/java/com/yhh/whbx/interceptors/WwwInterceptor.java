@@ -27,6 +27,12 @@ public class WwwInterceptor implements Interceptor {
         List menuList=CacheKit.get(Consts.CACHE_NAMES.taxonomy.name(),"artList");
         controller.setAttr("menuList",menuList);
 
+        if(ak.equals("/")){
+            controller.setAttr("currId","-1");
+        }else if (ak.equals("/a")||ak.equals("/b")||ak.equals("/c")){
+            controller.setAttr("currId",controller.getPara(0));
+        }
+
         invocation.invoke();
 
 

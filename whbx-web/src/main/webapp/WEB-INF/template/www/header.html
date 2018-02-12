@@ -13,20 +13,22 @@
                 </a>
             </div>
             <div aria-expanded="false" class="navbar-collapse collapse" id="bs">
+                #if(cKit.isNotEmpty(menuList))
                 <ul class="nav navbar-nav navbar-left">
-                    <li class="active"><a href="#(ctx)/" >首页</a></li>
+                    <li #if(currId=='-1') class="active" #end><a href="#(ctx)/" >首页</a></li>
                     #for(x : menuList )
-                    <li><a href="#(ctx)#(x.text)#(x.id)">#(x.title)</a></li>
+                    <li #if(currId==x.id+'') class="active" #end><a href="#(ctx)#(x.text)#(x.id)" >#(x.title)</a></li>
                     #end
                 </ul>
+                #end
             </div>
         </div>
     </nav>
 </header>
-<div class="about_box" style="background:url(/static/www/img/banner.jpg) no-repeat center top; background-size:cover;">
-    <h1>安保健康，用心守护您的健康。</h1>
+<!--<div class="about_box" style="background:url(/static/www/img/banner.jpg) no-repeat center top; background-size:cover;">-->
+    <!--<h1>安保健康，用心守护您的健康。</h1>-->
 
-</div>
+<!--</div>-->
 
 <style>
 
