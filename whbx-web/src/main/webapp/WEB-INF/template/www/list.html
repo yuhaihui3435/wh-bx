@@ -6,21 +6,21 @@
     <div class="list">
         #if(isNotBlank(x.thumbnail))
         <div class="pic">
-            <a href="#(ctx)/b/#(x.id)">
+            <a href="#(ctx)/b/#(x.id)" target="_blank">
                 <img src="#(qn_url)#(x.thumbnail)" width="320" height="200">
             </a>
         </div>
         #else
         <div class="pic">
             <a href="#(ctx)/b/#(x.id)">
-                <img src="#(ctx)/static/www/img/white_logo.png" >
+                <img src="#(ctx)/static/www/img/white_logo.png"  >
             </a>
         </div>
         #end
         <ul>
             <li>
                 <h1>
-                    <a href="#(ctx)/b/#(x.id)">#(x.title)</a>
+                    <a href="#(ctx)/b/#(x.id)"  target="_blank">#(x.title)</a>
                 </h1>
             </li>
             <li>#(x.pAtTxt)</li>

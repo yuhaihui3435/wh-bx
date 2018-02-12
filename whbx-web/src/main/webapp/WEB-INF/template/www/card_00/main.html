@@ -1,19 +1,12 @@
 #@layout()
 #define content()
-<script src="#(ctx)/static/www/js/jquery.smartWizard.min.js"></script>
-<script src="#(ctx)/static/common/js/GB2260.js"></script>
-<script src="#(ctx)/static/common/js/IDValidator.js"></script>
-<link rel="stylesheet" type="text/css" href="#(ctx)/static/www/css/smart_wizard.min.css">
-<link rel="stylesheet" type="text/css" href="#(ctx)/static/www/css/smart_wizard_theme_circles.min.css">
-
 <div id="details" class="container-fluid">
     <div class="container">
         <div class="row">
-
             <div class="col-md-8 col-md-offset-2 ">
                 <ol class="breadcrumb">
                     <li><a href="#(ctx)/">首页</a></li>
-                    <li class="active">保单详细信息录入</li>
+                    <li class="active">保险条款说明</li>
                 </ol>
             </div>
         </div>
@@ -36,115 +29,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div id="rootwizard" class="clearfix">
-
-                    <ul>
-                        <li><a href="#tab1" >第一步<br /><small>&nbsp;&nbsp;&nbsp;&nbsp;阅读协议</small></a></li>
-                        <li><a href="#tab2" >第二步<br /><small>填写投保信息</small></a></li>
-                        <!--<li><a href="#tab3" >第三步<br><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完成</small></a></li>-->
-                    </ul>
-
-                    <div >
-
-                            <div  id="tab1">
-                                #include("/WEB-INF/template/www/card_00/protocol.html")
-                            </div>
-                            <div  id="tab2">
-                                #include("/WEB-INF/template/www/card_00/addInsureinfo.html")
-                            </div>
-                            <!--<div  id="tab3">-->
-
-                            <!--</div>-->
-
-                    </div>
-                </div>
+                #include("/WEB-INF/template/www/card_00/protocol.html")
             </div>
         </div>
-
     </div>
 </div>
-    <script>
-        window.onload = function(event) {
-            let str=window.location.href;
-            if(Bee.StringUtils.contains(str,"#tab2")){
-                $("#submitBtn").show();
-            }
-        };
-        $(document).ready(function () {
-            $('#rootwizard').smartWizard({theme:"circles", lang: {  // Language variables
-                next: '下一步',
-                previous: '上一步'
-            }, autoAdjustHeight:true, cycleSteps: false,transitionEffect: 'fade', // Effect on navigation, none/slide/fade
-                transitionSpeed: '400',toolbarSettings: {
-                    toolbarPosition: 'bottom', // none, top, bottom, both
-                    toolbarButtonPosition: 'right', // left, right
-                    showNextButton: true, // show/hide a Next button
-                    showPreviousButton: true, // show/hide a Previous button
-                    toolbarExtraButtons: [
-                        $('<button id="submitBtn" style="display: none;"></button>').text('提交')
-                            .addClass('btn btn-info')
-                            .on('click', function(){
-                                let d=formCheck();
-                                if(d!=undefined){
-                                    let i=layer.confirm('确定要提交投保信息吗？', {
-                                        btn: ['否','是'] //按钮
-                                    }, function(){
-                                        layer.close(i)
-                                    }, function(){
-                                        let ips=d.ips;
-                                        d.ipLen=ips.length;
-                                        $.each(ips,function (index,obj) {
-                                            Object.assign(d,obj)
-                                            d.ips=null;
-                                        })
-                                        $.ajax({
-                                            type:'post',
-                                            url:ctx+'saveCardInfo',
-                                            data:d,
-                                            cache:false,
-                                            dataType:'json',
-                                            success:function(data){
-                                                if(data.resCode=='success'){
-                                                    layer.alert(data.resMsg, {icon: 1},function () {
-                                                        window.location.href=$('#ctx').val()+'index';
-                                                    });
-                                                }else if(data.resCode=='fail'){
-                                                    layer.alert(data.resMsg, {icon: 5});
-                                                }
-                                            },
-                                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                                layer.alert('网络错误，请稍后重试', {icon: 5});
-                                            },beforeSend(XHR){
-                                                layer.msg('数据处理中...',{shade: [0.8, '#393D49'],time:100000})
-                                            },complete(XHR, TS){
-                                                layer.closeAll('loading');
-                                            }
-                                        });
-                                    });
+<script>
+    $(document).ready(function () {
 
-                                }
-
-                            })
-                    ]
-                }, });
-
-            $('#rootwizard').on('leaveStep',function (e, anchorObject, stepNumber, stepDirection) {
-                if(stepNumber==0&&stepDirection=="forward"){
-
-                    if($('#cb').is(':checked')){
-                        $("#submitBtn").show();
-                        return true;
-                    }else{
-                        layer.alert('请阅读协议后，勾选已阅读', {icon: 5})
-                        return false;
-                    }
-                }else if(stepNumber==1&&stepDirection=="backward"){
-
-                    $("#submitBtn").hide();
-                }
-            });
-            $('input[required]').before('<span style="color:red">*</span>');
-        });
-
-    </script>
-    #end
+    });
+</script>
+#end

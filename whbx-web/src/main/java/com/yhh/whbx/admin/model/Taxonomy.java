@@ -60,7 +60,7 @@ public class Taxonomy extends BaseTaxonomy<Taxonomy> {
 	}
 
 	public List<Taxonomy> findByModuleExcept(String m){
-		return dao.find("select * from s_taxonomy where module=? and parentId <>0 and dAt is null ",m);
+		return dao.find("select * from s_taxonomy where module=? and parentId <>0 and dAt is null order by  idx",m);
 	}
 
 

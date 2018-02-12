@@ -50,12 +50,12 @@ public abstract class BaseTaxonomy<M extends BaseTaxonomy<M>> extends CoreModel<
 		return getLong("count");
 	}
 
-	public void setOrder(Integer order) {
-		set("order", order);
+	public void setIdx(Integer idx) {
+		set("idx", idx);
 	}
 
-	public Integer getOrder() {
-		return getInt("order");
+	public Integer getIdx() {
+		return getInt("idx");
 	}
 
 	public void setParentId(Long parentId) {

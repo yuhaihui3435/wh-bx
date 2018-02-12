@@ -1,3 +1,17 @@
+#@layout()
+#define content()
+<script src="#(ctx)/static/common/js/GB2260.js"></script>
+<script src="#(ctx)/static/common/js/IDValidator.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 ">
+            <ol class="breadcrumb">
+                <li><a href="#(ctx)/">首页</a></li>
+                <li class="active">保险条款说明</li>
+            </ol>
+        </div>
+    </div>
+</div>
 <div class="well well-sm" id="contactWell" style="background-color: white;">
     <form class="form-horizontal" id="cardInfoForm" method="post">
         <input type="hidden" id="cardId" name="cardId" value="#(card.id??'')">
@@ -459,5 +473,48 @@
         }
 
 
+        function saveData() {
+            let d = formCheck();
+            if (d != undefined) {
+                let i = layer.confirm('确定要提交投保信息吗？', {
+                    btn: ['否', '是'] //按钮
+                }, function () {
+                    layer.close(i)
+                }, function () {
+                    let ips = d.ips;
+                    d.ipLen = ips.length;
+                    $.each(ips, function (index, obj) {
+                        Object.assign(d, obj)
+                        d.ips = null;
+                    })
+                    $.ajax({
+                        type: 'post',
+                        url: ctx + 'saveCardInfo',
+                        data: d,
+                        cache: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.resCode == 'success') {
+                                layer.alert(data.resMsg, {icon: 1}, function () {
+                                    window.location.href = $('#ctx').val() + 'index';
+                                });
+                            } else if (data.resCode == 'fail') {
+                                layer.alert(data.resMsg, {icon: 5});
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.alert('网络错误，请稍后重试', {icon: 5});
+                        }, beforeSend(XHR){
+                            layer.msg('数据处理中...', {shade: [0.8, '#393D49'], time: 100000})
+                        }, complete(XHR, TS){
+                            layer.closeAll('loading');
+                        }
+                    });
+                });
+            }
+        }
+
+
     </script>
 </div>
+#end
