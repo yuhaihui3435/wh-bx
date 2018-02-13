@@ -169,6 +169,8 @@ public class CardsCtr extends CoreController {
         alias.put("ipJob", "被投保人工作");
         alias.put("policyNum", "保单号");
         alias.put("reportTel", "报案电话");
+        alias.put("bAt", "保险开始时间");
+        alias.put("eAt", "保险终止时间");
         writer.setHeaderAlias(alias);
         writer.write(list1);
 //            getResponse().setContentType("application/x-msdownload");
@@ -246,6 +248,8 @@ public class CardsCtr extends CoreController {
         alias.put("cipType", "被投保车类型");
         alias.put("policyNum", "保单号");
         alias.put("reportTel", "报案电话");
+        alias.put("bAt", "保险开始时间");
+        alias.put("eAt", "保险终止时间");
         writer.setHeaderAlias(alias);
         writer.write(list1);
 //            getResponse().setContentType("application/x-msdownload");
@@ -310,7 +314,8 @@ public class CardsCtr extends CoreController {
         try {
             UploadFile uploadFile = getFile();
             List<Map<String, Object>> list = null;
-            String code, policyNum, reportTel;
+            String code, policyNum, reportTel,bAt,eAt;
+
             StringBuilder stringBuilder = new StringBuilder();
             String msg = "一共导入{}条数据，失败{}条。";
             int count = 0;
@@ -327,6 +332,10 @@ public class CardsCtr extends CoreController {
                 policyNum = obj == null ? "" : obj.toString();
                 obj = map.get("报案电话");
                 reportTel = obj == null ? "" : obj.toString();
+                obj=map.get("保险开始时间");
+                bAt=obj==null?"":obj.toString();
+                obj=map.get("保险终止时间");
+                eAt=obj==null?"":obj.toString();
                 Cards cards = Cards.dao.findFristByPropEQ("code", code);
                 if (cards == null) {
                     if (stringBuilder.length() == 0)
@@ -336,6 +345,8 @@ public class CardsCtr extends CoreController {
                 } else {
                     cards.setPolicyNum(policyNum);
                     cards.setReportTel(reportTel);
+                    cards.setBAt(bAt);
+                    cards.setEAt(eAt);
                     cards.update();
                 }
             }

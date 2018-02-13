@@ -509,7 +509,18 @@
                         width: 100,
 
                     },
+                    {
+                        title: '保险开始时间',
+                        key: 'bAt',
+                        width: 100,
 
+                    },
+                    {
+                        title: '保险终止时间',
+                        key: 'eAt',
+                        width: 100,
+
+                    },
 
                     {
                         title: '操作',

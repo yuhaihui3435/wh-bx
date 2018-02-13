@@ -141,14 +141,27 @@
                             <Col span="24" align="middle"><h1>保险单信息</h1> </Col>
                         </Row>
                         <Row v-if="card.policyNum">
-                            <Col span="8">
+                            <Col span="12">
                             <FormItem label="保单号:" >
                                 {{card.policyNum}}
                             </FormItem>
                             </Col>
-                            <Col span="8">
+                            <Col span="12">
                             <FormItem label="报案电话:" >
                                 {{card.reportTel}}
+                            </FormItem>
+                            </Col>
+
+                        </Row>
+                        <Row v-if="card.policyNum">
+                            <Col span="12">
+                            <FormItem label="保险开始时间:" >
+                                {{card.bAt}}
+                            </FormItem>
+                            </Col>
+                            <Col span="12">
+                            <FormItem label="保险终止时间:" >
+                                {{card.eAt}}
                             </FormItem>
                             </Col>
 

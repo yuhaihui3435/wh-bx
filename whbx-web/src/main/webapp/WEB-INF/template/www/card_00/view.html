@@ -32,9 +32,13 @@
                 <div class="col-md-6" style="text-align: left"><label>保险单号：</label>#(card.policyNum??"")</div>
             </div>
             <div class="row" style="font-size: medium;margin-top: 10px">
-                <div class="col-md-12" style="text-align: left">
+                <div class="col-md-6" style="text-align: left">
                     <label>保险有效期：</label>
-
+                    #(card.bAt??"")&nbsp;&nbsp;&nbsp;#(card.eAt??"")
+                </div>
+                <div class="col-md-6" style="text-align: left">
+                    <label>报险电话：</label>
+                    #(card.reportTel??"")
                 </div>
             </div>
             <div class="row" style="font-size: medium;margin-top: 10px">
@@ -88,7 +92,7 @@
                 <div class="row" style="font-size: medium;margin-top: 10px">
                     <div class="col-md-6" style="text-align: left">
                         <label>生效日期：</label>
-
+                        #(card.bAt??"")
                     </div>
                     <div class="col-md-6" style="text-align: left">
                         <label>受益人：</label>

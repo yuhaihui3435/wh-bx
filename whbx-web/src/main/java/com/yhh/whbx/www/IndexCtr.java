@@ -338,6 +338,14 @@ public class IndexCtr extends CoreController {
         render("view.html");
     }
 
+    public void d(){
+        Integer id=getParaToInt(0);
+        int pn =getParaToInt(1,1);
+        Content content=Content.dao.findFirst("select sc.* from s_content sc left join s_mapping sm on sc.id=sm.cid  where dAt is null and module='art' and flag='00' and sm.tid=? order by pAt desc limit 1",id);
+        setAttr("content",content);
+        render("view.html");
+    }
+
 
 
 }

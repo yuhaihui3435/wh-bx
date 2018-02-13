@@ -1,42 +1,36 @@
 #@layout()
 #define content()
-<div id="details" class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 ">
-                <ol class="breadcrumb">
-                    <li><a href="#(ctx)/">首页</a></li>
-                    <li class="active">保险条款说明</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 ">
-                <div class="well well-sm" style="background-color: white;">
-                    <legend class="text-center header">卡信息</legend>
-                    <div class="row">
-                        <div class="col-md-4">卡号：#(card.code??"")</div>
-                        <div class="col-md-4">卡类型：#(card.cardtypeName??"")</div>
-                        <div class="col-md-4">卡面值：#(card.faceVal??"")</div>
-                    </div>
+<div id="details" class="container-fluid" style="margin-top: 110px">
 
+    <div class="container" id="protocolDiv">
+        <div class="row">
+            <div class="container" style="padding: 0 0;margin-bottom: 10px">
+                <div class="row" style="text-align: center">
+                    <h2>#(card.cardtypeName??"")<h3>协议条款</h3></h2>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 #include("/WEB-INF/template/www/card_00/protocol.html")
+            </div>
+        </div>
+    </div>
+    <div class="container" id="addInsureinfoDiv">
+        <div class="row">
+            <div class="container" style="padding: 0 0;margin-bottom: 10px">
+                <div class="row" style="text-align: center">
+                    <h2>录入投保详细信息</h2>
+                </div>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                #include("/WEB-INF/template/www/card_00/addInsureinfo.html")
             </div>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function () {
-
+        $("#protocolDiv").show();
+        $("#addInsureinfoDiv").hide();
     });
 </script>
 #end

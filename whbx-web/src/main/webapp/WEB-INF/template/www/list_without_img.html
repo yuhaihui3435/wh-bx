@@ -1,14 +1,14 @@
 #@layout()
 #define content()
-<div class="container" style="margin-top: 110px;padding-bottom: 60px" >
+<div class="container" style="margin-top: 110px;padding-bottom: 60px;font-size: small" >
     #if(notEmpty(cList.list))
     #for(x : cList.list)
     <div class="row" style="padding-top: 10px;border-bottom:1px dashed rgba(0,0,0,0.11)" >
         <div class="col-md-3  pull-left">
-            <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> <span style="padding-left: 5px">名称：</span><span style="font-size: small">#(x.title)</span>
+            <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> <span style="padding-left: 5px"></span><span style="font-size: small">#(x.title)</span>
         </div>
         <div class="col-md-5  pull-left" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-            简介：<span style="font-size: small;">#(x.summary)</span>
+            <span style="font-size: small;">#(x.summary)</span>
         </div>
         <div class="col-md-4   pull-right">
             发布时间：<span>#(x.pAtTxt)</span>&nbsp;&nbsp;&nbsp;

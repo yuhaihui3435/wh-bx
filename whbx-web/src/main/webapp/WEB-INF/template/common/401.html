@@ -7,11 +7,17 @@
         padding: 4em;
         margin-top: 4em;
         margin-bottom: 4em;
-        border: 1px dashed #15a7ff;
+        border: 1px dashed #eee;
+        background-color: #F6F9FC
         /*border-right-color: #999;*/
         /*border-bottom-color: #999;*/
     }
-    h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
+    h1 { font-size: large; color: #000; line-height: 2.5em; }
+    div.dialog p{
+        line-height: 2.5em;
+        color: #ff0000;
+        font-size: medium;
+    }
 </style>
 <div id="details" class="container-fluid" style="padding-top: 110px">
     <div class="container">
@@ -19,8 +25,9 @@
 
             <div class="col-md-8 col-md-offset-2 dialog">
 
-                <h1>您未被授权，无法完成此操作</h1>
-                <a href="#(ctx)/index">返回首页</a>
+                <h1>401</h1>
+                <p>您未被授权，无法完成此操作</p>
+                <a class="btn btn-info " href="#(ctx)/index">返回首页</a>
             </div>
         </div>
     </div>

@@ -29,7 +29,7 @@ public class WwwInterceptor implements Interceptor {
 
         if(ak.equals("/")){
             controller.setAttr("currId","-1");
-        }else if (ak.equals("/a")||ak.equals("/b")||ak.equals("/c")){
+        }else if (ak.equals("/a")||ak.equals("/b")||ak.equals("/c")||ak.equals("/d")){
             controller.setAttr("currId",controller.getPara(0));
         }
 

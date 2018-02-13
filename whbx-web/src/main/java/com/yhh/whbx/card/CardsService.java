@@ -148,6 +148,8 @@ public class CardsService {
                 ret.put("ipJob",cardsIp.getJobTxt());
                 ret.put("policyNum","");
                 ret.put("reportTel","");
+                ret.put("bAt","");
+                ret.put("eAt","");
                 list.add(ret);
             }
         }else if(cards.getCardtypeTypeTxt().equals("driverInsurance")){
@@ -171,6 +173,8 @@ public class CardsService {
             ret.put("cipSeatCount", carIp.getSeatCount());
             ret.put("policyNum","");
             ret.put("reportTel","");
+            ret.put("bAt","");
+            ret.put("eAt","");
             list.add(ret);
         }
     }

@@ -258,7 +258,50 @@
                 $("#linkName").parent().show();
             }
         }
+        function saveData() {
+            let d = formCheck();
+            if (d != undefined) {
+                let i = layer.confirm('确定要提交投保信息吗？', {
+                    btn: ['否', '是'] //按钮
+                }, function () {
+                    layer.close(i)
+                }, function () {
+                    $.ajax({
+                        type: 'post',
+                        url: ctx + 'saveCardCarInfo',
+                        data: d,
+                        cache: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.resCode == 'success') {
+                                layer.alert(data.resMsg, {icon: 1}, function () {
+                                    window.location.href = $('#ctx').val() + 'index';
+                                });
+                            } else if (data.resCode == 'fail') {
+                                layer.alert(data.resMsg, {icon: 5});
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.alert('网络错误，请稍后重试', {icon: 5});
+                        }, beforeSend(XHR){
+                            layer.msg('数据处理中...', {shade: [0.8, '#393D49'], time: 100000})
+                        }, complete(XHR, TS){
+                            layer.closeAll('loading');
+                        }
+                    });
+                });
 
+            }
+        }
+
+        function preHandler() {
+            $("#protocolDiv").show();
+            $("#addInsureinfoDiv").hide();
+        }
 
     </script>
+</div>
+<div class="row pull-right">
+    <button class="btn btn-danger" onclick="preHandler()">上一步</button>
+    <button class="btn btn-primary" onclick="saveData()">提交</button>
 </div>

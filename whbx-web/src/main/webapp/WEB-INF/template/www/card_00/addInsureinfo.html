@@ -1,18 +1,6 @@
-#@layout()
-#define content()
 <script src="#(ctx)/static/common/js/GB2260.js"></script>
 <script src="#(ctx)/static/common/js/IDValidator.js"></script>
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2 ">
-            <ol class="breadcrumb">
-                <li><a href="#(ctx)/">首页</a></li>
-                <li class="active">保险条款说明</li>
-            </ol>
-        </div>
-    </div>
-</div>
-<div class="well well-sm" id="contactWell" style="background-color: white;">
+<div class="well well-sm" id="contactWell" style="background-color: #F6F9FC;">
     <form class="form-horizontal" id="cardInfoForm" method="post">
         <input type="hidden" id="cardId" name="cardId" value="#(card.id??'')">
         <fieldset>
@@ -514,7 +502,13 @@
             }
         }
 
-
+        function preHandler() {
+            $("#protocolDiv").show();
+            $("#addInsureinfoDiv").hide();
+        }
     </script>
 </div>
-#end
+<div class="row pull-right">
+    <button class="btn btn-danger" onclick="preHandler()">上一步</button>
+    <button class="btn btn-primary" onclick="saveData()">提交</button>
+</div>

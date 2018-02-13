@@ -129,4 +129,20 @@ public abstract class BaseCards<M extends BaseCards<M>> extends CoreModel<M> imp
 		return getStr("reportTel");
 	}
 
+	public void setBAt(String bAt) {
+		set("bAt", bAt);
+	}
+
+	public String  getBAt() {
+		return getStr("bAt");
+	}
+
+	public void setEAt(String eAt) {
+		set("eAt", eAt);
+	}
+
+	public String getEAt() {
+		return getStr("eAt");
+	}
+
 }
