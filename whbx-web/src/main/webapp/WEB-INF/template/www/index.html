@@ -1,51 +1,50 @@
 #@layout()
 #define content()
+<style>
+    @media (min-width: 544px) {
+        #aboutUs {
+            padding-top: 14rem;
+            padding-bottom: 7rem;
+        }
+    }
 
-<h1 style="    background-color: #ffffff;
-    font-size: 26px;
-    line-height: 30px;
-    text-align: center; margin-bottom: 25px;padding-top: 110px;
-    color: #15a7ff;">卡激活</h1>
-<div class="container" style="padding: 0 0;background-color: #F6F9FC">
+    #aboutUs {
+        background-color: #024379;
+        color: white;
+        padding-top: 7rem;
+        padding-bottom: 7rem;
+    }
 
-    <div class="row" style="text-align: center;
-    border: 0px dashed;
-    border-color: #eee;
-    padding: 25px;margin-left: 0px;margin-right: 0px;border-radius: 10px;background: url('/static/www/img/banner.jpg')">
-        <div class="col-md-4" >
-            <img
-                    src="#(ctx)/static/www/img/carousel-1_sm.png" style="height:auto"
-            >
-        </div>
-        <div class="col-md-8" style="text-align: center">
-            <div style="margin-top: 50px;margin-bottom: 30px;font-size: medium;font-weight: 800;color: floralwhite">
-            <p >
-                请在这里输入您的卡号与密码，开始进行卡激活操作。
-            </p>
+    .align-items-center {
+        align-items: center !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+</style>
+<div id="aboutUs">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-sm-6">
+                <h2>Sense of worth</h2>
+                <p class="lead">
+                    AnBaoJianKang for your safety and health to provide 100 percent protection, for you to provide a good service is our eternal responsibility.
+                </p>
             </div>
-                <form id="form" class="form-horizontal col-md-6 col-md-offset-3" style="color:floralwhite;" method="post" >
-                    <div class="form-group">
-                        <label for="code" class="col-md-3">卡号</label>
-                        <input id="code" class="col-md-9" type="text" name="code" placeholder="请输入卡号" required
-                               value="#(code??'')"/></div>
-                    <div class="form-group">
-                        <label for="code" class="col-md-3">密码</label>
-                        <input id="pwd" class="col-md-9" type="password" name="pwd" placeholder="请输入密码" required
-                               value="#(pwd??'')"/>
-                    </div>
-                    <div class="row" style="padding: 10px">
-                        <div class="col-md-6 ">
-                            <input class=" btn   btn-danger btn-block  btn-lg" id="act-btn" type="button"
-                                   onclick="act()" value="激活"/></div>
-                        <div class="col-md-6"><input class=" btn  btn-info btn-block  btn-lg" id="query-btn"
-                                                     type="button" onclick="view()" value="查询"/></div>
-                    </div>
-                </form>
+            <!--<div class="col-12 col-sm-6">-->
+                <!--<img src="dist/HowItWorks.png" class="img-fluid" >-->
+            <!--</div>-->
         </div>
     </div>
 </div>
-
-
 <div class="index_pd or">
     <h1>最新产品</h1>
 
@@ -93,7 +92,7 @@
     }
     function filedCheck(code, pwd) {
         if (code.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
-           alert('卡号不能为空')
+            alert('卡号不能为空')
             return 1;
         }
         if (pwd.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
