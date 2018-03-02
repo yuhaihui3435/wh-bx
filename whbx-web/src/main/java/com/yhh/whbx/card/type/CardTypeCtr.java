@@ -78,7 +78,7 @@ public class CardTypeCtr extends CoreController {
         cardtype.setCAt(new Date());
         cardtype.setStatus(Consts.STATUS.enable.getVal());
         cardtype.setOper(currUser()==null?null:currUser().getId().intValue());
-        cardtype.save();
+        cardtype.saveWithoutClean();
 
         String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
         String filename=null;
@@ -113,7 +113,7 @@ public class CardTypeCtr extends CoreController {
             savePath="/cmn/files/";
         Cardtype cardtype=getModel(Cardtype.class,"",true);
         cardtype.setOper(currUser()==null?null:currUser().getId().intValue());
-        cardtype.update();
+        cardtype.updateWithoutClean();
         String serverUrl= CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"qn_url");
         String filename=null;
         List<Attachment> attachments=new ArrayList<>();

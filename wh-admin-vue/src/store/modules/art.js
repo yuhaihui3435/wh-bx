@@ -27,6 +27,9 @@ const art = {
         },
         set_artTax_list(state, list){
             state.artTaxList = list
+        },
+        set_art_content(state,txt){
+            state.art.text=txt;
         }
 
     },

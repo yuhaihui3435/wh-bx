@@ -142,11 +142,12 @@
 
                             <Card style="height: 500px;">
                                 <!--<VueTinymce ref="protocol" v-model="cardtype.protocol" :setting="tinymceCfg" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
-                                <quill-editor ref="protocolTextEditor"
-                                              v-model="cardtype.protocol"
-                                              :options="editorOption" style="height: 390px;"
-                                >
-                                </quill-editor>
+                                <!--<quill-editor ref="protocolTextEditor"-->
+                                              <!--v-model="cardtype.protocol"-->
+                                              <!--:options="editorOption" style="height: 390px;"-->
+                                <!--&gt;-->
+                                <!--</quill-editor>-->
+                                <div id="editorElem1" style="text-align:left"></div>
                             </Card>
 
                         </TabPane>
@@ -155,11 +156,13 @@
                             <Card style="height: 500px;">
 
                                 <!--<VueTinymce ref="serviceCert" :setting="tinymceCfg" v-model="cardtype.serviceCert" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
-                                <quill-editor ref="serviceCertTextEditor"
-                                              v-model="cardtype.serviceCert"
-                                              :options="editorOption" style="height: 390px;"
-                                >
-                                </quill-editor>
+                                <!--<quill-editor ref="serviceCertTextEditor"-->
+                                              <!--v-model="cardtype.serviceCert"-->
+                                              <!--:options="editorOption" style="height: 390px;"-->
+                                <!--&gt;-->
+                                <!--</quill-editor>-->
+
+                                <div id="editorElem2" style="text-align:left"></div>
                             </Card>
 
                         </TabPane>
@@ -278,17 +281,20 @@
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
     import Kit from '../../../libs/kit'
+    import E from 'wangeditor'
 //    import {VueTinymce, Config} from '../../my-components/text-editor/'
 
-    import 'quill/dist/quill.core.css'
-    import 'quill/dist/quill.snow.css'
-    import 'quill/dist/quill.bubble.css'
-    import { quillEditor,Quill } from 'vue-quill-editor'
-    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
-    import  ImageResize  from 'quill-image-resize-module';
-    Quill.register('modules/ImageExtend', ImageExtend)
-    Quill.register('modules/ImageResize', ImageResize)
+//    import 'quill/dist/quill.core.css'
+//    import 'quill/dist/quill.snow.css'
+//    import 'quill/dist/quill.bubble.css'
+//    import { quillEditor,Quill } from 'vue-quill-editor'
+//    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
+//    import  ImageResize  from 'quill-image-resize-module';
+//    Quill.register('modules/ImageExtend', ImageExtend)
+//    Quill.register('modules/ImageResize', ImageResize)
     let vm=null;
+    let editor1=null
+    let editor2=null
     export default {
         computed: {
             ...mapState({
@@ -306,9 +312,16 @@
                 this.isAdd = isAdd;
                 this.cardtypeModal = true;
                 this.modalLoading = false;
+                editor1.txt.clear()
+                editor2.txt.clear()
+
                 if (isAdd) {
                     this.driverType = false;//类型下拉框恢复初始状态
                 } else {
+                    console.info(this.cardtype)
+                    this.driverType=this.cardtype.typeVal=='driverInsurance'?true:false
+                    editor2.txt.html(this.cardtype.serviceCert)
+                    editor1.txt.html(this.cardtype.protocol)
                 }
             },
             save(){
@@ -413,6 +426,20 @@
         },
         mounted () {
             vm=this;
+            editor1 = new E('#editorElem1')
+            editor1.customConfig.onchange = (html) => {
+                this.$store.commit('set_cardtype_protocol',html)
+            }
+            editor1.customConfig.uploadImgShowBase64 = true
+            editor1.create()
+
+            editor2 = new E('#editorElem2')
+            editor2.customConfig.onchange = (html) => {
+                console.info(html)
+                this.$store.commit('set_cardtype_serviceCert',html)
+            }
+            editor2.customConfig.uploadImgShowBase64 = true
+            editor2.create()
         },
         data () {
             return {
@@ -430,45 +457,45 @@
                 uploaded_delModal:false,//已上传
                 uploaded_del_modal_loading: false,//已上传
                 del_index: '',
-                editorOption:{
-                    modules: {
-                        ImageResize: {},
-                        ImageExtend: {
-                            loading: true,
-                            name: 'file',
-                            size: 1,
-                            accept: 'image/png, image/gif, image/jpeg, image/bmp,',
-                            action: consts.imgUploadUrl,  // 必填参数 图片上传地址
-                            response: (res) => {
-                            if(res.resCode&&res.resCode=='success'){
-                return res.resData
-            }else{
-                this.$Message.error('图片上传失败,请重试');
-            }
-        },
-            sizeError: () => {
-                this.$Message.error('图片过大,图片大小不能超过1M')
-            },  // 图片超过大小的回调
-            start: () => {},  // 可选参数 自定义开始上传触发事件
-            end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
-            error: () => {},  // 可选参数 上传失败触发的事件
-            success: () => {},  // 可选参数  上传成功触发的事件
-            change: (xhr, formData) => {
-
-            }
-        },
-            toolbar: {
-                container: container,
-                    handlers: {
-                    'image': function () {
-                        QuillWatch.emit(this.quill.id)
-                    }
-                }
-            }
-        },
-            placeholder: "输入任何内容，支持html",
-                scrollingContainer: '#scrolling-container',
-                },
+//                editorOption:{
+//                    modules: {
+//                        ImageResize: {},
+//                        ImageExtend: {
+//                            loading: true,
+//                            name: 'file',
+//                            size: 1,
+//                            accept: 'image/png, image/gif, image/jpeg, image/bmp,',
+//                            action: consts.imgUploadUrl,  // 必填参数 图片上传地址
+//                            response: (res) => {
+//                            if(res.resCode&&res.resCode=='success'){
+//                return res.resData
+//            }else{
+//                this.$Message.error('图片上传失败,请重试');
+//            }
+//        },
+//            sizeError: () => {
+//                this.$Message.error('图片过大,图片大小不能超过1M')
+//            },  // 图片超过大小的回调
+//            start: () => {},  // 可选参数 自定义开始上传触发事件
+//            end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+//            error: () => {},  // 可选参数 上传失败触发的事件
+//            success: () => {},  // 可选参数  上传成功触发的事件
+//            change: (xhr, formData) => {
+//
+//            }
+//        },
+//            toolbar: {
+//                container: container,
+//                    handlers: {
+//                    'image': function () {
+//                        QuillWatch.emit(this.quill.id)
+//                    }
+//                }
+//            }
+//        },
+//            placeholder: "输入任何内容，支持html",
+//                scrollingContainer: '#scrolling-container',
+//                },
 //                tinymceCfg: Object.assign(Config, {
 //                    height: 200
 //                }),
@@ -587,7 +614,12 @@
         },
         components: {
 //            VueTinymce
-            quillEditor
+//            quillEditor
+        }
+        ,
+        destroyed () {
+            editor1=null;
+            editor2=null;
         }
     }
 </script>

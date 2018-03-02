@@ -34,11 +34,12 @@
                         </FormItem>
                     </Form>
                     <div class="margin-top-20" style="height: 400px;">
-                        <quill-editor ref="myTextEditor"
-                                      v-model="art.text"
-                                      :options="editorOption" style="height: 300px;"
-                                      >
-                        </quill-editor>
+                        <div id="editorElem" style="text-align:left"></div>
+                        <!--<quill-editor ref="myTextEditor"-->
+                                      <!--v-model="art.text"-->
+                                      <!--:options="editorOption" style="height: 300px;"-->
+                                      <!--&gt;-->
+                        <!--</quill-editor>-->
                         <!--<VueTinymce ref="mt" :setting="tinymceCfg" v-model="art.text" :imgUploadUrl="tinymceImgUploadUrl"></VueTinymce>-->
                     </div>
                 </Card>
@@ -142,18 +143,21 @@
 </template>
 
 <script>
-    import 'quill/dist/quill.core.css'
-    import 'quill/dist/quill.snow.css'
-    import 'quill/dist/quill.bubble.css'
+//    import 'quill/dist/quill.core.css'
+//    import 'quill/dist/quill.snow.css'
+//    import 'quill/dist/quill.bubble.css'
     import env from '../../../../build/env';
     import {mapState} from 'vuex'
     import consts from '../../../libs/consts'
 //    import {VueTinymce, Config} from '../../my-components/text-editor/'
-    import { quillEditor,Quill } from 'vue-quill-editor'
-    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
-    import  ImageResize  from 'quill-image-resize-module';
-    Quill.register('modules/ImageExtend', ImageExtend)
-    Quill.register('modules/ImageResize', ImageResize)
+//    import { quillEditor,Quill } from 'vue-quill-editor'
+//    import {container, ImageExtend, QuillWatch} from '../../../libs/quill-img-upload'
+//    import  ImageResize  from 'quill-image-resize-module';
+//    Quill.register('modules/ImageExtend', ImageExtend)
+//    Quill.register('modules/ImageResize', ImageResize)
+    import E from 'wangeditor'
+
+    var editor=null;
     export default {
         name: 'art-publish',
         computed: {
@@ -165,7 +169,7 @@
         },
         components:{
 //            VueTinymce
-            quillEditor
+//            quillEditor
         },
 
         data () {
@@ -184,45 +188,45 @@
 //                    height: 200
 //                }),
 //                tinymceImgUploadUrl:consts.imgUploadUrl,
-                editorOption:{
-                        modules: {
-                            ImageResize: {},
-                            ImageExtend: {
-                                loading: true,
-                                name: 'file',
-                                size: 1,
-                                accept: 'image/png, image/gif, image/jpeg, image/bmp,',
-                                action: consts.imgUploadUrl,  // 必填参数 图片上传地址
-                                response: (res) => {
-                                    if(res.resCode&&res.resCode=='success'){
-                                        return res.resData
-                                    }else{
-                                        this.$Message.error('图片上传失败,请重试');
-                                    }
-                                },
-                                sizeError: () => {
-                                    this.$Message.error('图片过大,图片大小不能超过1M')
-                                },  // 图片超过大小的回调
-                                start: () => {},  // 可选参数 自定义开始上传触发事件
-                                end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
-                                error: () => {},  // 可选参数 上传失败触发的事件
-                                success: () => {},  // 可选参数  上传成功触发的事件
-                                change: (xhr, formData) => {
-
-                                }
-                            },
-                            toolbar: {
-                                container: container,
-                                handlers: {
-                                    'image': function () {
-                                        QuillWatch.emit(this.quill.id)
-                                    }
-                                }
-                            }
-                            },
-                    placeholder: "输入任何内容，支持html",
-                    scrollingContainer: '#scrolling-container',
-                }
+//                editorOption:{
+//                        modules: {
+//                            ImageResize: {},
+//                            ImageExtend: {
+//                                loading: true,
+//                                name: 'file',
+//                                size: 1,
+//                                accept: 'image/png, image/gif, image/jpeg, image/bmp,',
+//                                action: consts.imgUploadUrl,  // 必填参数 图片上传地址
+//                                response: (res) => {
+//                                    if(res.resCode&&res.resCode=='success'){
+//                                        return res.resData
+//                                    }else{
+//                                        this.$Message.error('图片上传失败,请重试');
+//                                    }
+//                                },
+//                                sizeError: () => {
+//                                    this.$Message.error('图片过大,图片大小不能超过1M')
+//                                },  // 图片超过大小的回调
+//                                start: () => {},  // 可选参数 自定义开始上传触发事件
+//                                end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+//                                error: () => {},  // 可选参数 上传失败触发的事件
+//                                success: () => {},  // 可选参数  上传成功触发的事件
+//                                change: (xhr, formData) => {
+//
+//                                }
+//                            },
+//                            toolbar: {
+//                                container: container,
+//                                handlers: {
+//                                    'image': function () {
+//                                        QuillWatch.emit(this.quill.id)
+//                                    }
+//                                }
+//                            }
+//                            },
+//                    placeholder: "输入任何内容，支持html",
+//                    scrollingContainer: '#scrolling-container',
+//                }
             }
         },
         methods: {
@@ -234,8 +238,11 @@
                 this.file='';
                 this.previewImg=false;
                 this.imgData='';
+                editor.txt.clear()
                 if (isAdd){
                     this.$store.commit('set_art');
+                }else{
+                    editor.txt.html(this.art.text)
                 }
             },
             handlePublish(){
@@ -258,6 +265,7 @@
                 }
 
                 let thumbnailBase64=this.imgData
+
                 //let text=this.$refs.mt.getContent();
                 //let action=(this.art.id)?'update':'save'
                 let param={'tax':taxIds,'thumbnailBase64':thumbnailBase64,'action':'save'}
@@ -327,11 +335,17 @@
         },
         mounted () {
             this.$store.dispatch('art_tax_jsonArray');
+            editor = new E('#editorElem')
+            editor.customConfig.onchange = (html) => {
+                this.$store.commit('set_art_content',html)
+            }
+            editor.customConfig.uploadImgShowBase64 = true
+            editor.create()
 
         },
 
         destroyed () {
-
+            editor=null;
         }
     };
 </script>

@@ -30,6 +30,13 @@ const cardtype = {
             state.cttList = obj.cttList;
             state.ioList = obj.ioList;
         },
+        set_cardtype_serviceCert(state, txt){
+                state.cardtype.serviceCert = txt;
+        },
+        set_cardtype_protocol(state, txt){
+                state.cardtype.protocol = txt;
+        },
+
     },
     actions: {
         cardtype_page: function ({commit, state}, param) {

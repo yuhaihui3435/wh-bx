@@ -95,11 +95,11 @@
                 this.$store.dispatch('cardtype_get', {id: cardtype.id}).then(() => {
                     this.$refs.ctf.open('编辑卡类型', false);
                 })
-
             },
             add(){
                 this.$store.commit('set_cardtype',{actMsg:'恭喜您已经激活成功！',manyPeople:'1',ipAgeToplmt:0})
                 this.$refs.ctf.open('新增卡类型', true)
+
             },
             view(id){
                 this.$store.dispatch('cardtype_get', {id: id}).then(() => {

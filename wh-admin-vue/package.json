@@ -42,6 +42,7 @@
     "vue-quill-editor-upload": "^1.1.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
+    "wangeditor": "^3.0.16",
     "webpack-dev-middleware": "^1.12.2"
   },
   "devDependencies": {
