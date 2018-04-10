@@ -60,7 +60,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="total" :current="pageNumber" @on-change="changePage" show-total :pageSize="15"
+                        <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total :pageSize="15"
                               show-elevator></Page>
                     </div>
                 </div>
@@ -153,6 +153,7 @@
                 'totalPage': state => state.cardapply.totalPage,
                 'total': state => state.cardapply.totalRow,
                 'pageNumber': state => state.cardapply.pageNumber,
+                'pageSize': state => state.cardapply.pageSize,
                 'cardapply': state => state.cardapply.cardapply,
                 'cardtypeList': state => state.cardapply.cardtypeList,
                 'mediaList': state => state.cardapply.mediaList,

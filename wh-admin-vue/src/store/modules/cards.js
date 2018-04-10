@@ -7,6 +7,7 @@ const cards = {
         cardsList_01: [],
         totalPage: 0,
         pageNumber: 1,
+        pageSize: 15,
         totalRow: 0,
         cards: {},
         cardtypeList: [],
@@ -23,6 +24,7 @@ const cards = {
             state.totalPage = page.totalPage
             state.totalRow = page.totalRow
             state.pageNumber = page.pageNumber
+            state.pageSize = page.pageSize
         },
         set_cards_page_00(state, page){
             state.cardsList_00 = page.list

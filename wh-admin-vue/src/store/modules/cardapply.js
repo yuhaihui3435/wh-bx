@@ -7,6 +7,7 @@ const cardapply = {
         cardapplyList: [],
         totalPage: 0,
         pageNumber: 1,
+        pageSize: 15,
         totalRow: 0,
         cardapply: {},
         mediaList: [],
@@ -17,6 +18,7 @@ const cardapply = {
             state.cardapplyList = page.list
             state.totalPage = page.totalPage
             state.pageNumber = page.pageNumber
+            state.pageSize = page.pageSize
             state.totalRow = page.totalRow
         },
         set_cardapply_list(state, list){

@@ -95,7 +95,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="total" :current="pageNumber" @on-change="search" show-total :pageSize="15"
+                        <Page :total="total" :current="pageNumber"  @on-change="search" show-total :page-size="15"
                               show-elevator></Page>
                     </div>
                 </div>
@@ -220,6 +220,7 @@
                 'totalPage': state => state.cards.totalPage,
                 'total': state => state.cards.totalRow,
                 'pageNumber': state => state.cards.pageNumber,
+                'pageSize': state => state.cards.pageSize,
                 'cardtypeList': state => state.cards.cardtypeList,
                 'salesmenList': state => state.cards.salesmenList,
                 'cardapplyList': state => state.cards.cardapplyList,

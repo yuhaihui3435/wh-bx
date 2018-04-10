@@ -24,7 +24,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="total" :current="pageNumber" @on-change="search"  show-total show-elevator></Page>
+                        <Page :total="total" :current="pageNumber" @on-change="search" :page-size="15"  show-total show-elevator></Page>
                     </div>
                 </div>
             </Card>

@@ -4,6 +4,7 @@ const art = {
         artList: [],
         totalPage: 0,
         pageNumber: 1,
+        pageSize:15,
         totalRow: 0,
         art: {title: '', flag: '01', top: '1', good: '1', module: 'art'},
         artTaxList: []
@@ -14,6 +15,7 @@ const art = {
             state.totalPage = page.totalPage
             state.totalRow = page.totalRow
             state.pageNumber = page.pageNumber
+            state.pageSize = page.pageSize
         },
         set_art(state, obj){
             if (obj != undefined)

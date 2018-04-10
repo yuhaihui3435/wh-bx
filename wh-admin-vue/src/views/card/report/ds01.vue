@@ -37,7 +37,7 @@
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
-                        <Page :total="total" :current="pageNumber" @on-change="search" show-total :pageSize="15"
+                        <Page :total="total" :current="pageNumber" @on-change="search" show-total :page-size="15"
                               show-elevator></Page>
                     </div>
                 </div>
