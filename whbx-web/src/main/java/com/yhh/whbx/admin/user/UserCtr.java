@@ -44,14 +44,14 @@ public class UserCtr extends CoreController {
     @Before({UserValidator.class, Tx.class})
     public void save() {
 
-        User user = getModel(User.class,"",true);
+        User user = getModel(User.class, "", true);
         Integer[] roledIds = null;
         if (isParaExists("roleIds")) {
-            String roleIds_str=getPara("roleIds");
-            String[] roleIds_str_array=roleIds_str.split(",");
-            roledIds=new Integer[roleIds_str_array.length];
+            String roleIds_str = getPara("roleIds");
+            String[] roleIds_str_array = roleIds_str.split(",");
+            roledIds = new Integer[roleIds_str_array.length];
             for (int i = 0; i < roleIds_str_array.length; i++) {
-                roledIds[i]=Integer.parseInt(roleIds_str_array[i]);
+                roledIds[i] = Integer.parseInt(roleIds_str_array[i]);
             }
         }
         user.setCAt(new Date());
@@ -79,15 +79,15 @@ public class UserCtr extends CoreController {
 
     @Before({UserValidator.class, Tx.class})
     public void update() {
-        User user = getModel(User.class,"",true);
+        User user = getModel(User.class, "", true);
         user.setMAt(new Date());
         Integer[] roledIds = null;
         if (isParaExists("roleIds")) {
-            String roleIds_str=getPara("roleIds");
-            String[] roleIds_str_array=roleIds_str.split(",");
-            roledIds=new Integer[roleIds_str_array.length];
+            String roleIds_str = getPara("roleIds");
+            String[] roleIds_str_array = roleIds_str.split(",");
+            roledIds = new Integer[roleIds_str_array.length];
             for (int i = 0; i < roleIds_str_array.length; i++) {
-                roledIds[i]=Integer.parseInt(roleIds_str_array[i]);
+                roledIds[i] = Integer.parseInt(roleIds_str_array[i]);
             }
         }
 
@@ -102,23 +102,31 @@ public class UserCtr extends CoreController {
                 ur.save();
             }
         }
-        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(), "id_" + user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(), "findUserOwnRoles_" + user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(), "findResesByUserId_" + user.getId());
         user.update();
         renderSuccessJSON("更新用户信息成功。", "");
     }
+
     @Before({Tx.class})
-    public void del(){
-        int id=getParaToInt("id");
-        User user=User.dao.findById(BigInteger.valueOf(id));
+    public void del() {
+        int id = getParaToInt("id");
+        User user = User.dao.findById(BigInteger.valueOf(id));
         user.setDAt(new Date());
         user.update();
-        CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),user.getId());
-        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(),user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(), "id_" + user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(), "findUserOwnRoles_" + user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(), user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userReses.name(), "findResesByUserId_" + user.getId());
         renderSuccessJSON("删除用户信息成功。");
     }
+
     /**
      * @param
      * @return void
@@ -132,9 +140,9 @@ public class UserCtr extends CoreController {
         List<Role> ownRoles = CollUtil.newArrayList();
         List<Role> allRoles = CollUtil.newArrayList();
         if (userId != -1) {
-            ownRoles = Role.dao.find(Consts.CACHE_NAMES.userRoles.name(),"ownRoles"+userId,"select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", userId);
+            ownRoles = Role.dao.find(Consts.CACHE_NAMES.userRoles.name(), "ownRoles" + userId, "select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", userId);
         }
-        allRoles = Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"allRoles","select * from s_role ");
+        allRoles = Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(), "allRoles", "select * from s_role ");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ownRoles", ownRoles);
         jsonObject.put("allRoles", allRoles);
@@ -151,16 +159,17 @@ public class UserCtr extends CoreController {
     @Before(Tx.class)
     public void forbidden() {
         String userIds = getPara("ids");
-        String[] ids = StrUtil.split(userIds,",");
+        String[] ids = StrUtil.split(userIds, ",");
         int id;
         User user = null;
-        for (String s:ids){
+        for (String s : ids) {
             id = Integer.parseInt(s);
             user = new User();
             user.setId(BigInteger.valueOf(id));
             user.setStatus(Consts.STATUS.forbidden.getVal());
             user.update();
-            CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(), user.getId());
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(), "id_" + user.getId());
         }
 
         renderSuccessJSON("禁用操作执行成功。", "");
@@ -176,57 +185,56 @@ public class UserCtr extends CoreController {
     @Before(Tx.class)
     public void resumed() {
         String userIds = getPara("ids");
-        String[] ids= StrUtil.split(userIds,",");
+        String[] ids = StrUtil.split(userIds, ",");
         int id;
         User user = null;
-        for(String s:ids) {
+        for (String s : ids) {
             id = Integer.parseInt(s);
             user = new User();
             user.setId(BigInteger.valueOf(id));
             user.setStatus(Consts.STATUS.enable.getVal());
             user.update();
-            CacheKit.remove(Consts.CACHE_NAMES.user.name(),user.getId());
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(), user.getId());
+            CacheKit.remove(Consts.CACHE_NAMES.user.name(), "id_" + user.getId());
         }
 
         renderSuccessJSON("恢复操作执行成功。", "");
     }
+
     @Before(Tx.class)
     @Clear(AdminAAuthInterceptor.class)
-    public void modifyPassword(){
-        String loginname=getPara("loginname");
-        String old_pwd=getPara("oldPwd");
-        String new_pwd=getPara("newPwd");
-        if(old_pwd.equals(new_pwd)){
-            renderFailJSON("新密码不能同旧密码一致。","");
-        }else{
-            User user=User.dao.findFirst("select * from s_user where loginname=? ",loginname);
-            Boolean bl=BCrypt.checkpw(old_pwd,user.getPassword());
-            if(bl){
+    public void modifyPassword() {
+        String loginname = getPara("loginname");
+        String old_pwd = getPara("oldPwd");
+        String new_pwd = getPara("newPwd");
+        if (old_pwd.equals(new_pwd)) {
+            renderFailJSON("新密码不能同旧密码一致。", "");
+        } else {
+            User user = User.dao.findFirst("select * from s_user where loginname=? ", loginname);
+            Boolean bl = BCrypt.checkpw(old_pwd, user.getPassword());
+            if (bl) {
                 user.setSalt(BCrypt.gensalt());
-                user.setPassword(BCrypt.hashpw(new_pwd,user.getSalt()));
+                user.setPassword(BCrypt.hashpw(new_pwd, user.getSalt()));
                 user.update();
-                renderSuccessJSON("密码修改成功。","");
-            }else{
-                renderFailJSON("您输入的旧密码不正确！","");
+                renderSuccessJSON("密码修改成功。", "");
+            } else {
+                renderFailJSON("您输入的旧密码不正确！", "");
             }
         }
     }
 
-    public void resetPwd(){
-        if(currUser()!=null&&!currUser().getIsAdmin().equals(Consts.YORN_STR.yes.getVal())){
+    public void resetPwd() {
+        if (currUser() != null && !currUser().getIsAdmin().equals(Consts.YORN_STR.yes.getVal())) {
             renderFailJSON("重置密码需要超级管理员权限");
             return;
         }
-        Integer id=getParaToInt("id");
-        User user=User.dao.findById(id);
-        String newPwd=RandomUtil.randomString(6);
+        Integer id = getParaToInt("id");
+        User user = User.dao.findById(id);
+        String newPwd = RandomUtil.randomString(6);
         user.setSalt(BCrypt.gensalt());
-        user.setPassword(BCrypt.hashpw(newPwd,user.getSalt()));
+        user.setPassword(BCrypt.hashpw(newPwd, user.getSalt()));
         user.update();
-        renderSuccessJSON("新密码为:"+newPwd+",请尽快登录进行密码修改!");
+        renderSuccessJSON("新密码为:" + newPwd + ",请尽快登录进行密码修改!");
     }
-
-
-
-
 }
+

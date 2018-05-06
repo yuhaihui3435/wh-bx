@@ -87,7 +87,7 @@ public class User extends BaseUser<User>  {
 
 	public List<Role> findUserOwnRoles(){
 
-			return  Role.dao.find("select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", getId());
+		return  Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"findUserOwnRoles_"+getId(),"select sr.* from s_role sr,s_user_role sur where sr.id=sur.rId and sur.uId=?", getId());
 
 	}
 
@@ -184,6 +184,23 @@ public class User extends BaseUser<User>  {
 	@Override
 	public String getTableName() {
 		return "s_user";
+	}
+
+
+	public User findUserByIdWithCache(int id){
+		return User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(),"id_"+id,"select * from s_user where id=? ",id);
+	}
+
+	public User findSectUser(Integer id){
+		User user=User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(),"id_"+id,"select * from s_user where id=?",id);
+		if (user==null)return null;
+		User ret=new User();
+		ret.setId(user.getId());
+		ret.setAvatar(user.getAvatar());
+		ret.setStatus(user.getStatus());
+		ret.setDAt(user.getDAt());
+		ret.setNickname(user.getNickname());
+		return ret;
 	}
 
 
