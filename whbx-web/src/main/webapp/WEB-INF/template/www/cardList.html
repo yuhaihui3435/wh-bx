@@ -1,0 +1,94 @@
+#@layout()
+#define content()
+
+    <div class="container">
+    #for(x:cardsPhs)
+        <div class="panel panel-info">
+            <div class="panel-heading" style="font-size: 18px;font-weight: bold">
+                <span>#(x.cardtypeName)</span>
+            </div>
+            <div class="panel-body" style="font-size: 14px;">
+                <div class="col-md-12">
+                    <span class="col-sm-3">
+                        卡号：#(x.code)
+                    </span>
+                    <span class="col-sm-3">
+                        激活状态：#(x.act=='0'?'已激活':'未激活')
+                    </span>
+                    <span class="col-sm-3">
+                        激活日期：#date(x.actAt,"yyyy-MM-dd")
+                    </span>
+                    <span class="col-sm-3">
+                        面值：#(x.faceVal)
+                    </span>
+                </div>
+                #if(isNotBlank(x.policyNum))
+                <div class="col-md-12" style="margin-top: 20px">
+                    <span class="col-sm-3">
+                        保单号：#(x.policyNum)
+                    </span>
+                    <span class="col-sm-3">
+                        报案电话：#(x.reportTel)
+                    </span>
+                    <span class="col-sm-3">
+                        保险生效日期：#(x.bAt)
+                    </span>
+                    <span class="col-sm-3">
+                        保险到期日期：#(x.eAt)
+                    </span>
+                </div>
+                #end
+                <div class="col-md-12" style="margin-top: 20px"><a class="btn btn-success pull-right" href="#(ctx)/viewDetail_special/#(x.qt)-#(x.code)">查看投保详细</a></div>
+            </div>
+        </div>
+    #end
+
+    #for(y:cardsCarPhs)
+        <div class="panel panel-info">
+            <div class="panel-heading" style="font-size: 18px;font-weight: bold">
+                <span>#(y.cardtypeName)</span>
+            </div>
+            <div class="panel-body" style="font-size: 14px;">
+                <div class="col-md-12">
+                    <span class="col-sm-3">
+                        卡号：#(y.code)
+                    </span>
+                    <span class="col-sm-3">
+                        激活状态：#(y.act=='0'?'已激活':'未激活')
+                    </span>
+                    <span class="col-sm-3">
+                        激活日期：#date(y.actAt,"yyyy-MM-dd")
+                    </span>
+                    <span class="col-sm-3">
+                        面值：#(y.faceVal)
+                    </span>
+                </div>
+                #if(isNotBlank(y.policyNum))
+                <div class="col-md-12" style="margin-top: 20px">
+                    <span class="col-sm-3">
+                        保单号：#(y.policyNum)
+                    </span>
+                    <span class="col-sm-3">
+                        报案电话：#(y.reportTel)
+                    </span>
+                    <span class="col-sm-3">
+                        保险生效日期：#(y.bAt)
+                    </span>
+                    <span class="col-sm-3">
+                        保险到期日期：#(y.eAt)
+                    </span>
+                </div>
+                #end
+                <div class="col-md-12" style="margin-top: 20px"><a class="btn btn-success pull-right" href="#(ctx)/viewDetail_special/#(y.qt)-#(y.code)">查看投保详细</a></div>
+            </div>
+        </div>
+    #end
+
+        <div class="row" style="margin-top: 20px;margin-bottom: 20px">
+            <div class="col-md-4 col-md-offset-4 text-center">
+                <a class="btn btn-info btn-block btn-lg" href="#(ctx)/toCardAct">返回</a>
+            </div>
+        </div>
+    </div>
+
+#end

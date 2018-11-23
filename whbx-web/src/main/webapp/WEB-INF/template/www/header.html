@@ -1,5 +1,6 @@
+
 <section id="header">
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <nav id="mainNav" class="navbar navbar-default" >
         <div class="container">
             <div class="navbar-header">
                 <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -17,19 +18,59 @@
                 <ul class="nav navbar-nav navbar-left">
                     <li #if(currId=='-1') class="active" #end><a href="#(ctx)/">首页</a></li>
                     #for(x : menuList )
+                    #if(x.text!='hidden')
                     <li #if(currId==x.id+'') class="active" #end><a href="#(ctx)#(x.text)#(x.id)">#(x.title)</a></li>
                         #if(currId==x.id+'')
                             #set(currTitle=x.title)
                         #end
                     #end
+                    #end
+
                 </ul>
                 #end
+                <button  class=" pull-right btn btn-success" onclick="location.href='#(ctx)/toCardAct'">卡激活</button>
             </div>
         </div>
     </nav>
-    #(ctx)
+
     #if(currId=="-1")
-        #include("/WEB-INF/template/www/cardAct.html")
+    <style>
+        /*.rollpic {*/
+        /*margin-top: 80px;*/
+        /*}*/
+
+        .rollpic div {
+            margin: 0 0 0;
+        }
+
+        .rollpic ol {
+            bottom: 10px !important;
+        }
+    </style>
+    <div class="rollpic">
+        <div data-am-widget="slider" class="am-slider am-slider-default" data-am-slider='{}' >
+            <ul class="am-slides">
+
+                #for(x : pInfoList)
+                <li>
+                    #if(isNotEmpty(x.linkTo))
+                    <a href="#(x.linkTo)"target="_blank">
+                        #end
+                        <img src="#(qn_url)#(x.thumbnail)"/>
+                        #if(isNotEmpty(x.linkTo))
+                    </a>
+                    #end
+                </li>
+                #end
+            </ul>
+        </div>
+    </div>
+
+    <!--[if lt IE 9]>
+    <script src="#(ctx)/static/www/js/amazeui/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="#(ctx)/static/www/js/amazeui/amazeui.min.js"></script>
+
     #end
 </section>
 #if(currId!="-1")
@@ -47,7 +88,7 @@
 <style>
     #header {
         background-size: cover;
-        background: #3398eb url(/static/www/img/double-blue-cover.png) no-repeat center center;
+        /*background: #3398eb url(/static/www/img/double-blue-cover.png) no-repeat center center;*/
         /*min-height: 100%;*/
     }
 
@@ -68,7 +109,7 @@
     #catcher {
         background-color: #2F4052;
         color: white !important;
-        padding-top: 110px;
+        /*padding-top: 110px;*/
     }
     .padding-bottom-40 {
         padding-bottom: 40px!important;
@@ -83,5 +124,7 @@
     }
 </style>
 #end
+
+
 
 

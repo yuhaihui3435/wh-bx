@@ -78,6 +78,8 @@ public class Res extends BaseRes<Res> {
 	}
 
 	public List<Res> getChildren() {
+		System.out.printf(""+get("roleId"));
+		System.out.printf(""+getId());
 		List<Res> list = dao.findByCache(Consts.CACHE_NAMES.userReses.name(), "getResChildren_" + get("roleId")+"_"+getId(),
 				"select r.*,rr.roleId as roleId from s_res r left join s_role_res rr on r.id=rr.resId where r.pId=? and rr.roleId=? order by r.seq", getId(),get("roleId"));
 		return list;

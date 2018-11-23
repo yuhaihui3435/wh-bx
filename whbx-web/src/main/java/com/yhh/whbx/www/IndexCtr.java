@@ -10,6 +10,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.admin.model.Attachment;
 import com.yhh.whbx.admin.model.Content;
@@ -35,8 +36,12 @@ public class IndexCtr extends CoreController {
     private final static CardTypeService cardTypeService = Duang.duang(CardTypeService.class);
 
     public void index() {
-        List<Content> contents=Content.dao.find("select sc.* from  s_content sc left join s_mapping sm on sc.id=sm.cid where dAt is null and module='art' and flag='00' and tid=389 order by pAt desc limit 3");
+        List<Content> contents=Content.dao.find("select sc.* from  s_content sc left join s_mapping sm on sc.id=sm.cid where dAt is null and module='art' and flag='00' and tid=437 order by pAt desc limit 3");
+        List<Content> products=Content.dao.find("select sc.* from  s_content sc left join s_mapping sm on sc.id=sm.cid where dAt is null and module='art' and flag='00' and tid=389 order by pAt desc limit 8");
+        Content lastNotice=Content.dao.findFirst("select sc.* from s_content sc left join s_mapping sm on sc.id=sm.cid where dAt is null and tid=392 order by pAt desc limit 1");
         setAttr("pInfoList",contents);
+        setAttr("lastNotice",lastNotice);
+        setAttr("products",products);
         render("index.html");
     }
 //    @Before({CardStatusCheckInterceptor.class})
@@ -246,6 +251,74 @@ public class IndexCtr extends CoreController {
 
     }
 
+    public void viewDetail_special() {
+        String qt = getPara(0);
+        String code = getPara(1);
+        Integer cardsId = null;
+        Cards cards = null;
+        if(StrUtil.isBlank(qt))
+            throw new CoreException("查询附加码不能为空");
+        if(StrUtil.isBlank(code))
+            throw  new CoreException("卡号不能为空");
+
+        cards = Cards.dao.findByCode(code);
+        if(!qt.equals(cards.getQt()))
+            throw new CoreException("查询附加码不正确");
+
+        if (cards.getAct() == null || !cards.getAct().equals(Consts.YORN_STR.yes.getVal())) {
+            throw new CoreException("此卡未激活，请激活后进行查看");
+        }
+        cardsId=cards.getId().intValue();
+        List<Attachment> attachments = null;
+        if (cards.getCardtype().equals("accidentInsurance")) {
+            CardsPh cardsPh = CardsPh.dao.findFristByPropEQ("cardsId", cardsId);
+            List<CardsIp> cardsIpList = CardsIp.dao.findByPropEQ("cardsId", cardsId);
+            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "cards");
+            setAttr("cardsPh", cardsPh);
+            setAttr("cardsIpList", cardsIpList);
+            setAttr("electronicPolicy", attachments);
+            setAttr("card", cards);
+            render("card_00/view.html");
+        } else if (cards.getCardtype().equals("driverInsurance")) {
+            CardsCarPh cardsCarPh = CardsCarPh.dao.findFristByPropEQ("cardsId", cardsId);
+            CardsCarIp cardsCarIp = CardsCarIp.dao.findFristByPropEQ("cardsId", cardsId);
+            attachments = Attachment.dao.findByObjIdAndModule(cardsId, "cards");
+            setAttr("cardsCarPh", cardsCarPh);
+            setAttr("cardsCarIp", cardsCarIp);
+            setAttr("electronicPolicy", attachments);
+            setAttr("card", cards);
+            render("card_01/view.html");
+        }
+
+    }
+
+
+    public void cardList() {
+        String name = getPara("name");
+        String idNo = getPara("idNo");
+        if(StrUtil.isBlank(name)){
+            throw new CoreException("姓名不能为空");
+        }
+        if(StrUtil.isBlank(idNo)){
+            throw new CoreException("身份证号不能为空");
+        }
+
+
+        List<Cards> cardsPhs=Cards.dao.find("select bc.*,ct.name as cardtypeName,ct.faceVal as faceVal from b_cards bc left join  b_cards_ph bcp on bcp.cardsId=bc.id LEFT JOIN b_cardapply ca on bc.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id where bcp.name=? and bcp.idCard=?  ",name,idNo);
+
+        List<Cards> cardsCarPhs=Cards.dao.find("select bc.*,ct.name as cardtypeName,ct.faceVal as faceVal from b_cards bc left join  b_cards_car_ph bccp on bccp.cardsid=bc.id LEFT JOIN b_cardapply ca on bc.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id  where bccp.name=? and bccp.certCode=?",name,idNo);
+
+        if(cardsCarPhs.isEmpty()&&cardsPhs.isEmpty()){
+            throw new CoreException("没有查询到投保数据");
+        }
+
+
+        setAttr("cardsPhs",cardsPhs);
+        setAttr("cardsCarPhs",cardsCarPhs);
+
+        render("cardList.html");
+    }
+
 
     public void occQuery() {
         String insurance = getPara("insurance");
@@ -346,6 +419,10 @@ public class IndexCtr extends CoreController {
         render("view.html");
     }
 
+
+    public void toCardAct(){
+        render("cardAct.html");
+    }
 
 
 }

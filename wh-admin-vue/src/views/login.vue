@@ -88,7 +88,7 @@ export default {
                                 }if(tmp.type=='1'&&tmp.enabled=='y'){
                                     serviceArray.push(tmp.url);
                                     if(tmp.children.length>0){
-                                        for(let k=0;k<tmp.children.length;j++){
+                                        for(let k=0;k<tmp.children.length;k++){
                                             if(tmp.children[k].type=='1'&&tmp.children[k].enabled=='y'){
                                                 serviceArray.push(tmp.children[k].url);
                                             }

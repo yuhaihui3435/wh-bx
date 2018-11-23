@@ -5,7 +5,7 @@
          monitoring="autodetect"
          dynamicConfig="true">
          
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="java.io.tmpdir/whbx"/>
 
     <cache name="paramCache"
            maxEntriesLocalHeap="5000"
@@ -65,6 +65,13 @@
            memoryStoreEvictionPolicy="FIFO"
     />
     <cache name="currUser"
+           maxEntriesLocalHeap="5000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
+    <cache name="login"
            maxEntriesLocalHeap="5000"
            eternal="true"
            overflowToDisk="true"

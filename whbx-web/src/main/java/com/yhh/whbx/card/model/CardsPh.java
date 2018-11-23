@@ -23,4 +23,10 @@ public class CardsPh extends BaseCardsPh<CardsPh> {
 	public String getCertTypeTxt(){
 		return Taxonomy.dao.findById(getCertTypeId()).getTitle();
 	}
+
+//	public Cards getCards(){
+//		return Cards.dao.findByCardId(getCardsId());
+//	}
+
+
 }

@@ -9,13 +9,28 @@
     <meta name="description" content="#(siteDescription)">
     <title>#(siteTitle)</title>
     #include("/WEB-INF/template/www/css.html")
+    <style>
+        .str_wrap{
+            padding-left: 3em;
+            padding-right: 3em;
+            background: #fefefe;
+            height: 2em;
+            line-height: 2em;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body >
 <input type="hidden" id="ctx" value="#(ctx)">
-#include("/WEB-INF/template/www/header.html")
-
+#if(lastNotice!=null)
+<div class="str1 str_wrap">
+    #(lastNotice.title)
+</div>
+#end
 #include("/WEB-INF/template/www/js.html")
+#include("/WEB-INF/template/www/header.html")
 <script type="text/javascript">
     $("div.navbar-fixed-top").autoHidingNavbar();
 </script>
@@ -24,4 +39,9 @@
 
 </body>
 </html>
+<script>
+    $(function () {
+        $('.str1').liMarquee();
+    })
+</script>
 #end

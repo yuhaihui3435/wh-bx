@@ -31,5 +31,9 @@ public class CardsCarPh extends BaseCardsCarPh<CardsCarPh> {
 		return (getProvince()==null?"":getProvince())+(getCity()==null?"":getCity())+(getDistrict()==null?"":getDistrict())+getAddress();
 	}
 
+//	public Cards getCards(){
+//		return Cards.dao.findByCardId(getCardsId());
+//	}
+
 
 }

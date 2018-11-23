@@ -117,7 +117,7 @@ a.blue:hover{ background: #15a7ff; border:1px solid #15a7ff; color:#fff;}
 
 
 
-.navbar {position: relative;min-height:50px; margin-bottom: 20px;border: 1px solid transparent;}
+.navbar {position: relative;min-height:50px; margin-bottom: 0px;border: 1px solid transparent;}
 .navbar:before,
 .navbar:after {display: table;content: " ";}
 .navbar:after {clear: both;}

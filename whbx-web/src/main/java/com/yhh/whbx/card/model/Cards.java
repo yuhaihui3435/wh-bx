@@ -6,6 +6,8 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.ehcache.CacheKit;
+import com.xiaoleilu.hutool.crypto.digest.HMac;
+import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.base.BaseCards;
@@ -66,6 +68,11 @@ public class Cards extends BaseCards<Cards> {
 	public Cards findByCode(String code){
 		SqlPara sqlPara=Db.getSqlPara("cards.findByCode", Kv.by("code",code));
 		return dao.findFirst(sqlPara);
+	}
+
+	public Cards findByCardId(Integer cardId){
+		SqlPara sqlPara=Db.getSqlPara("cards.findByCardId", Kv.by("cardId",cardId));
+		return dao.findFirstByCache("cards","id_"+cardId,sqlPara.getSql());
 	}
 
 	public Long findLastCardCodeByCardapplyId(Integer cardapplyId){
@@ -155,6 +162,12 @@ public class Cards extends BaseCards<Cards> {
 
 	public List<CardsIp> getCip(){
 		return (getCardtypeTypeTxt()!=null&&getCardtypeTypeTxt().equals("accidentInsurance"))?CardsIp.dao.findByPropEQ("cardsId",getId()):null;
+	}
+
+	public String getQt(){
+		byte[]  key=getPwd().getBytes();
+		HMac mac = new HMac(HmacAlgorithm.HmacMD5, key);
+		return mac.digestHex(getCode());
 	}
 
 

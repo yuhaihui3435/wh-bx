@@ -1,6 +1,7 @@
 #@layout()
 #define content()
 <style>
+
     @media (min-width: 544px) {
         #aboutUs {
             padding-top: 14rem;
@@ -29,78 +30,357 @@
         margin-right: -15px;
         margin-left: -15px;
     }
+
+
+    /*最新产品*/
+
+
+    .gallery-words {
+        height: 125px;
+        width: 100%;
+        line-height: 26px;
+        overflow: hidden;
+    }
+
+    .briefcase {
+        font-size: 48px !important;
+        margin-top: -13px !important;
+    }
+
+    .customer-case li {
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+
+    .customer-case {
+        padding: 30px 0 0 0;
+    }
+
+    .case-content {
+        text-align: left;
+        background-color: #f3f3f3;
+        border-left: 8px solid #0086da;
+        height: 110px;
+        padding: 8px 6px;
+        position: absolute;
+        bottom: 0;
+        left: 40%;
+        width: 180px;
+    }
+
+    .case-content span {
+        font-weight: bold;
+    }
+
+    .case-content p {
+        font-size: 14px;
+        height: 44px;
+        line-height: 22px;
+        overflow: hidden;
+    }
+
+    .customer-case-all {
+        width: 100%;
+        position: relative;
+    }
+
+    .customer-case-img {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .customer-case-ul {
+        margin-top: 30px;
+    }
+
+    .customer-case-img img {
+        width: 100%;
+    }
+
+    .case-more {
+        width: 100px;
+        height: 25px;
+        float: right;
+        margin-top: 8px;
+        text-align: center;
+        margin-right: -6px;
+    }
+
+    .case-more .see {
+        background-color: #0086da;
+        width: 75px;
+        color: #fff;
+        font-size: 15px;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .case-more .more {
+        background-color: #05598e;
+        width: 25px;
+        height: 25px;
+    }
+
+    .case-more .more i {
+        color: #fff;
+    }
+
+    .our-customer {
+        padding-top: 30px;
+    }
+
+    .customer-content2 {
+        margin-top: 10px;
+        padding-bottom: 30px;
+    }
+
+    .customer-case-ul li:hover .customer-case-img img {
+        transform: scale(1.4);
+        transition: all 1s ease 0s;
+        -webkit-transform: scale(1.4);
+        -webkit-transform: all 1s ease 0s;
+    }
+
+    .case-content:hover .case-more .see {
+        background-color: #05598e;
+        -webkit-transition: all 0.4s linear 0s;
+        -moz-transition: all 0.4s linear 0s;
+        -o-transition: all 0.4s linear 0s;
+        transition: all 0.4s linear 0s;
+    }
+
+    .part-title {
+        text-align: center;
+        position: relative;
+    }
+
+    .part-title-i {
+        vertical-align: sub;
+        font-size: 36px;
+        color: #0086da;
+        margin-right: 5px;
+    }
+
+    .part-title-span {
+        font-size: 26px;
+    }
+
+    .part-title p {
+        font-size: 17px;
+        color: #999;
+        margin-top: -5px;
+    }
+
+    .part-title img {
+        width: 170px;
+    }
+
+    .case-li {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .case-li-mengban {
+        width: 100%;
+        background: rgba(0, 0, 0, .72);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+    }
+
+    .case-li-mengban:hover {
+        -webkit-transition: all 1s;
+        -moz-transition: all 1s;
+        -ms-transition: all 1s;
+        -o-transition: all 1s;
+        transition: all 1s;
+        opacity: 1;
+    }
+
+    .case-img1 {
+        position: relative;
+        padding: 0 !important;
+        background-color: #0086da;
+        width: 100%;
+        margin: 0 auto;
+        margin: 0 !important;
+    }
+
+    .case-li:hover .case-word {
+        display: block;
+        bottom: 70px;
+        -webkit-transition: all 0.6s;
+        -moz-transition: all 0.6s;
+        -ms-transition: all 0.6s;
+        -o-transition: all 0.6s;
+        transition: all 0.6s;
+    }
+
+    .case-word {
+        position: absolute;
+        left: 0px;
+        bottom: -80px;
+        z-index: 5;
+        width: 100%;
+        color: #FFFFFF;
+        text-align: center;
+    }
+
+    .case-word h3,
+    .case-word a,
+    .case-word div {
+        color: #FFFFFF !important;
+    }
+
+    .case-word p {
+        font-size: 13px;
+    }
+
+    .case-word a span i {
+        margin-right: 10px;
+        font-size: 15px;
+    }
+
+    .case-word a span {
+        font-size: 13px;
+        padding: 4px 13px;
+        border: 1px solid #FFFFFF;
+        border-radius: 4px;
+        margin-top: 20px;
+        display: inline-block;
+    }
+
+    .am-gallery-title {
+        margin: 12px 0 !important;
+        font-size: 17px !important;
+    }
+
+    .lan-bott {
+        width: 100%;
+        background-color: #128abc;
+        height: 110px;
+        padding: 20px 55px;
+    }
+
+    .lan-bott .left {
+        line-height: 35px;
+        color: #fff;
+    }
+
+    .lan-bott .left span {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+
+    .see-more {
+        border: 2px solid #fff;
+        padding: 7px 10px;
+        font-size: 13px;
+        color: #fff;
+        margin-top: 18px;
+        display: inline-block;
+        border-radius: 4px;
+    }
+
+    .see-more i {
+        margin-left: 5px;
+        font-size: 16px;
+    }
+
+    .see-more:hover {
+        color: #0086da;
+        background-color: #fff;
+        -webkit-transition: all 0.4s;
+        -moz-transition: all 0.4s;
+        -ms-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        transition: all 0.4s;
+    }
+    .right {
+        float: right;
+    }
+
 </style>
-<div id="aboutUs">
-    <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-12 col-sm-6">
-                <h2>Sense of worth</h2>
-                <p class="lead">
-                    AnBaoJianKang for your safety and health to provide 100 percent protection, for you to provide a good service is our eternal responsibility.
-                </p>
-            </div>
+<!--<div id="aboutUs">-->
+    <!--<div class="container">-->
+        <!--<div class="row align-items-center justify-content-center">-->
             <!--<div class="col-12 col-sm-6">-->
-                <!--<img src="dist/HowItWorks.png" class="img-fluid" >-->
+                <!--<h2>Sense of worth</h2>-->
+                <!--<p class="lead">-->
+                    <!--AnBaoJianKang for your safety and health to provide 100 percent protection, for you to provide a good service is our eternal responsibility.-->
+                <!--</p>-->
             <!--</div>-->
+            <!--&lt;!&ndash;<div class="col-12 col-sm-6">&ndash;&gt;-->
+                <!--&lt;!&ndash;<img src="dist/HowItWorks.png" class="img-fluid" >&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="index_pd or">-->
+    <!--<h1>最新产品</h1>-->
+
+    <!--#for(x : pInfoList)-->
+    <!--#if(for.last)-->
+    <!--<dl class="last">-->
+        <!--#else-->
+        <!--<dl>-->
+            <!--#end-->
+            <!--<a href="#(ctx)/b/#(x.id)" class="product-thumb" target="_blank">-->
+                <!--<dd>-->
+
+                    <!--<img src="#(qn_url)#(x.thumbnail)" style="width: 320px;height: 200px;">-->
+                <!--</dd>-->
+                <!--<dt>-->
+                <!--<h1></h1>-->
+                <!--#(x.summary)-->
+                <!--<span>查看详细</span>-->
+                <!--</dt>-->
+            <!--</a>-->
+        <!--</dl>-->
+        <!--#end-->
+<!--</div>-->
+
+<div  style="margin-top: 50px;    background-color: #f0eeed;">
+    <div class="customer-case part-all ">
+        <div class="part-title">
+            <a href="#(ctx)/a/389" >
+                <i class=" am-icon-briefcase part-title-i"></i>
+                <span class="part-title-span">最新产品</span>
+            </a>
         </div>
+        <ul data-am-widget="gallery" class=" am-avg-sm-1 am-avg-md-4 am-avg-lg-4 am-gallery-bordered customer-case-content" >
+            #for(x : products)
+            <li class="case-li am-u-sm-6 am-u-md-6 am-u-lg-3">
+                <div class="am-gallery-item case-img1">
+                    <a href="#(ctx)/b/#(x.id)" target="_blank">
+                        <img src="#(qn_url)#(x.thumbnail)"  />
+                    </a>
+                </div>
+                <div class="case-li-mengban">
+                    <div class=" case-word">
+                        <h3 class="am-gallery-title">#(x.title)</h3>
+                        <p>#(x.pAtTxt)</p>
+                        <a href="#(ctx)/b/#(x.id)" target="_blank"><span><i class="am-icon-eye"></i>查看更多</span></a>
+                    </div>
+                </div>
+            </li>
+            #end
+        </ul>
+    </div>
+    <div class="lan-bott">
+        <div class="left"><span>安保健康为您的安全和健康提供100％的保障，为您提供良好的服务是我们永恒的责任。</span>
+            <p>AnBaoJianKang for your safety and health to provide 100 percent protection, for you to provide a good service is our eternal responsibility.</p>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
-<div class="index_pd or">
-    <h1>最新产品</h1>
-
-    #for(x : pInfoList)
-    #if(for.last)
-    <dl class="last">
-        #else
-        <dl>
-            #end
-            <a href="#(ctx)/b/#(x.id)" class="product-thumb" target="_blank">
-                <dd>
-
-                    <img src="#(qn_url)#(x.thumbnail)" style="width: 320px;height: 200px;">
-                </dd>
-                <dt>
-                <h1></h1>
-                #(x.summary)
-                <span>查看详细</span>
-                </dt>
-            </a>
-        </dl>
-        #end
-</div>
 
 
-<script>
-    const ctx = $('#ctx').val();
-    function act() {
-        let code = $("#code").val();
-        let pwd = $("#pwd").val();
-        if (filedCheck(code, pwd) == 1) {
-            return;
-        }
-        $('#form').attr("action", ctx + 'enterDetail');
-        $('#form').submit();
-    }
-    function view() {
-        let code = $("#code").val();
-        let pwd = $("#pwd").val();
-        if (filedCheck(code, pwd) == 1) {
-            return;
-        }
-        $('#form').attr("action", ctx + 'viewDetail')
-        $('#form').submit();
-    }
-    function filedCheck(code, pwd) {
-        if (code.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
-            alert('卡号不能为空')
-            return 1;
-        }
-        if (pwd.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
-            alert('密码不能为空')
-            return 1;
-        }
-        return 0;
-    }
-</script>
+
+
 
 #end
