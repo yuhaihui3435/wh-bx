@@ -168,7 +168,7 @@ public class IndexCtr extends CoreController {
         cardsPh.save();
         Db.batchSave(list, 10);
         try {
-            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsPh.getTel(), "{\"code\":\"" + cards.getCode() + "\"}");
+            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"name\":\""+cardsPh.getName()+"}");
             if (!ret.equals(Consts.YORN_STR.yes.name()))
                 LogKit.error("卡激活短信通知失败");
 
@@ -209,6 +209,14 @@ public class IndexCtr extends CoreController {
         cardsCarPh.setCAt(new Date());
         cardsCarIp.save();
         cardsCarPh.save();
+        try {
+            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsCarPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"name\":\""+cardsCarPh.getName()+"}");
+            if (!ret.equals(Consts.YORN_STR.yes.name()))
+                LogKit.error("卡激活短信通知失败");
+
+        } catch (ClientException e) {
+            LogKit.error("卡激活短信通知失败>>" + e.getMessage());
+        }
         renderSuccessJSON(cardsService.getCardtypeByCardcode(cards.getCode()).getActMsg());
     }
 
