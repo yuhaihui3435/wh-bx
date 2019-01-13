@@ -150,6 +150,7 @@ public class CardsService {
                 ret.put("reportTel","");
                 ret.put("bAt","");
                 ret.put("eAt","");
+                ret.put("salesmenName",cards.getSalesmenName());
                 list.add(ret);
             }
         }else if(cards.getCardtypeTypeTxt().equals("driverInsurance")){
@@ -175,6 +176,7 @@ public class CardsService {
             ret.put("reportTel","");
             ret.put("bAt","");
             ret.put("eAt","");
+            ret.put("salesmenName",cards.getSalesmenName());
             list.add(ret);
         }
     }

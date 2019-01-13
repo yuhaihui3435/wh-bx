@@ -179,6 +179,7 @@ public class CardsCtr extends CoreController {
         alias.put("reportTel", "报案电话");
         alias.put("bAt", "保险开始时间");
         alias.put("eAt", "保险终止时间");
+        alias.put("salesmenName","紧急联系人");
         writer.setHeaderAlias(alias);
         writer.write(list1);
 //            getResponse().setContentType("application/x-msdownload");
@@ -277,6 +278,7 @@ public class CardsCtr extends CoreController {
         alias.put("reportTel", "报案电话");
         alias.put("bAt", "保险开始时间");
         alias.put("eAt", "保险终止时间");
+        alias.put("salesmenName","紧急联系人");
         writer.setHeaderAlias(alias);
         writer.write(list1);
 //            getResponse().setContentType("application/x-msdownload");

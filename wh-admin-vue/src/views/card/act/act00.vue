@@ -433,6 +433,12 @@
                         fixed: 'left'
                     },
                     {
+                                            type: 'index',
+                                            width: 60,
+                                            align: 'center',
+                                            fixed: 'left'
+                    },
+                    {
                         title: '卡号',
                         key: 'code',
                         fixed: 'left',
