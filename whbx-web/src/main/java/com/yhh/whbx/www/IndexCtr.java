@@ -168,7 +168,7 @@ public class IndexCtr extends CoreController {
         cardsPh.save();
         Db.batchSave(list, 10);
         try {
-            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"name\":\""+cardsPh.getName()+"}");
+            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"person\":\""+cardsPh.getName()+"\"}");
             if (!ret.equals(Consts.YORN_STR.yes.name()))
                 LogKit.error("卡激活短信通知失败");
 
@@ -210,7 +210,7 @@ public class IndexCtr extends CoreController {
         cardsCarIp.save();
         cardsCarPh.save();
         try {
-            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsCarPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"name\":\""+cardsCarPh.getName()+"}");
+            String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), cardsCarPh.getTel(), "{\"code\":\"" + cards.getCode() + "\",\"person\":\""+cardsCarPh.getName()+"\"}");
             if (!ret.equals(Consts.YORN_STR.yes.name()))
                 LogKit.error("卡激活短信通知失败");
 
@@ -431,6 +431,5 @@ public class IndexCtr extends CoreController {
     public void toCardAct(){
         render("cardAct.html");
     }
-
 
 }

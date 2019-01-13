@@ -51,7 +51,7 @@ const cardtype = {
             // p.protocol = param.protocol
             p.phAgeToplmt=(p.phAgeToplmt == undefined||p.phAgeToplmt=='')?'1':p.phAgeToplmt;
             p.phAgeLowerlmt=(p.phAgeLowerlmt == undefined||p.phAgeLowerlmt=='')?'1':p.phAgeLowerlmt;
-            p.ipAgeToplmt=(p.ipAgeToplmt == undefined||p.ipAgeToplmt=='')?'1':p.ipAgeToplmt;
+            p.ipAgeToplmt=(p.ipAgeToplmt == undefined||p.ipAgeToplmt=='')?'0':p.ipAgeToplmt;
             p.ipAgeLowerlmt=(p.ipAgeLowerlmt == undefined||p.ipAgeLowerlmt=='')?'1':p.ipAgeLowerlmt;
             p.ipAgeToplmtDay=(p.ipAgeToplmtDay == undefined||p.ipAgeToplmtDay=='')?'1':p.ipAgeToplmtDay;
             let uploadList = param.uploadList;

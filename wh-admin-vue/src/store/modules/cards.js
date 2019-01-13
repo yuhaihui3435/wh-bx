@@ -31,7 +31,7 @@ const cards = {
 
             for(var i=0;i<state.cardsList_00.length;i++){
                 let c=state.cardsList_00[i];
-                c['_disabled']=c.disabled;
+                // c['_disabled']=c.disabled;
             }
 
             state.totalPage = page.totalPage
@@ -43,7 +43,7 @@ const cards = {
 
             for(var i=0;i<state.cardsList_01.length;i++){
                 let c=state.cardsList_01[i];
-                c['_disabled']=c.disabled;
+                // c['_disabled']=c.disabled;
             }
 
             state.totalPage = page.totalPage

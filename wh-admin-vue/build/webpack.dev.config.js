@@ -54,12 +54,12 @@ module.exports = merge(webpackBaseConfig, {
         // contentBase: path.join(__dirname, "dist"),
         port:8888,
         overlay: true,
-        host:'0.0.0.0',
+        host:'127.0.0.1',
         historyApiFallback: true,
         stats: { colors: true },
         proxy: {
             '/api': {
-                target: 'http://localhost:8081',
+                target: 'http://localhost:8083',
                 pathRewrite: {'^/api' : '/'},
                 changeOrigin: true
             }

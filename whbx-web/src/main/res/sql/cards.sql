@@ -13,7 +13,7 @@
          and #(x.key) #para(x.value)
       #end
     #end
-    ORDER BY c.actAt,c.id DESC
+    ORDER BY c.actAt DESC
 #end
 
 #sql("findByCode")
@@ -33,8 +33,16 @@
 #sql("findListByIds")
   select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus,ct.type as cardtypeType,(select text from s_taxonomy where id=ct.type) as cardtypeTypeTxt
     from b_cards c LEFT JOIN b_depot d on c.depotId=d.id LEFT JOIN b_cardapply ca on c.applyId=ca.id LEFT JOIN b_cardtype ct ON ca.cardtypeId=ct.id LEFT JOIN b_salesmen sm on d.salesmenId=sm.id
-    where 1=1 and c.id in ( #para(ids) ) AND c.act='0' AND c.isLocked='0' AND c.exportCode is NULL
-    ORDER BY c.actAt,c.id DESC
+    where 1=1 and c.id in (
+    #for(x:ids)
+      #para(x)
+      #if(!for.last)
+        ,
+      #end
+    #end
+    ) AND c.act='0' AND c.isLocked='0'
+    ###AND c.exportCode is NULL
+    ORDER BY c.actAt DESC
 #end
 #sql("findList")
   select c.*,ct.name as cardtypeName,ca.batch as batch,sm.name as salesmenName,ct.faceVal as faceVal,d.outStatus as outStatus,ct.type as cardtypeType,(select text from s_taxonomy where id=ct.type) as cardtypeTypeTxt
@@ -46,12 +54,12 @@
       #if(x.key=='c.exportCode'&&x.value=='0')
          and c.exportCode is not NULL
         #else if(x.key=='c.exportCode'&&x.value=='1')
-         and c.exportCode is NULL
+         ###and c.exportCode is NULL
         #else
          and #(x.key) #para(x.value)
       #end
     #end
-    ORDER BY c.actAt,c.id DESC
+    ORDER BY c.actAt DESC
 #end
 
 #sql("ds00")

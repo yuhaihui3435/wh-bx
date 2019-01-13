@@ -1,7 +1,7 @@
 <template>
-        <Tabs type="card">
-            <Tab-pane label="已激活意外险卡"><act00></act00></Tab-pane>
-            <Tab-pane label="已激活驾乘险卡"><act01></act01></Tab-pane>
+        <Tabs type="card" @on-click="handleTabClick">
+            <Tab-pane label="已激活意外险卡"><act00 ref="act00"></act00></Tab-pane>
+            <Tab-pane label="已激活驾乘险卡"><act01 ref="act01"></act01></Tab-pane>
         </Tabs>
 </template>
 <script>
@@ -16,6 +16,13 @@
 
         },
         methods: {
+            handleTabClick(name){
+                if(name==0){
+                    this.$refs.act00.search(1);
+                }else if(name==1){
+                    this.$refs.act01.search(1);
+                }
+            }
         },
         mounted () {
 
@@ -25,7 +32,7 @@
         },
         data () {
             return {
-
+                curTabName:''
             }
         }
     }

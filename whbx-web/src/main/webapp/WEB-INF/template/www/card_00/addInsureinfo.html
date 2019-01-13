@@ -182,25 +182,25 @@
     </form>
     <script>
 
-        let pc =#(card.peopleCount)
+        let pc =#(card.peopleCount);
         const idv = new IDValidator();
         const ctx = $('#ctx').val();
         const insurance = $('#insurance').val();
-        const cardCode='#(card.code)'
+        const cardCode='#(card.code)';
         function relationChange(val) {
             if(val=='05'){
                 $("#ipName-1").val($('#phName').val());
                 let sex=$("input[name='phSex'][checked]").val();
                 $("input[name='ipSex-1'][value=" + sex + "]").attr("checked", true);
-                $("#ipIdcard-1").val($('#phIdcard').val())
-                $("#ipTel-1").val($('#phTel').val())
-                $("#ipBirthday-1").val($('#phBirthday').val())
+                $("#ipIdcard-1").val($('#phIdcard').val());
+                $("#ipTel-1").val($('#phTel').val());
+                $("#ipBirthday-1").val($('#phBirthday').val());
             }else{
                 $("#ipName-1").val('');
                 $("input[name='ipSex-1'][value=" + sex + "]").attr("checked", true);
-                $("#ipIdcard-1").val('')
-                $("#ipTel-1").val('')
-                $("#ipBirthday-1").val('')
+                $("#ipIdcard-1").val('');
+                $("#ipTel-1").val('');
+                $("#ipBirthday-1").val('');
             }
         }
         //        $('#phBirthday').datetimepicker({

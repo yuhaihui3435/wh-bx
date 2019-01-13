@@ -1,5 +1,6 @@
 package com.yhh.whbx.card.query;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
 import com.jfinal.kit.Kv;
@@ -29,8 +30,10 @@ import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.card.type.CardTypeService;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
+import com.yhh.whbx.kits.ALSMSKit;
 import com.yhh.whbx.kits.DateKit;
 import com.yhh.whbx.kits.QiNiuKit;
+import com.yhh.whbx.kits.ResKit;
 import com.yhh.whbx.sale.model.Salesmen;
 
 import java.io.File;
@@ -123,7 +126,7 @@ public class CardsCtr extends CoreController {
         SqlPara sqlPara = null;
         List<Map> list1 = null;
         if (StrUtil.isNotBlank(ids)) {
-            kv = Kv.by("ids", ids);
+            kv = Kv.by("ids", ids.split(","));
             sqlPara = Db.getSqlPara("cards.findListByIds", kv);
             list = Cards.dao.find(sqlPara);
 
@@ -140,8 +143,13 @@ public class CardsCtr extends CoreController {
 
         long exportCode = Math.abs(DateUtil.current(true));
 
-        for (Cards cards : list) {
+        boolean sendSMS=true;
 
+
+        for (Cards cards : list) {
+            if(StrUtil.isNotBlank(cards.getExportCode())){
+                sendSMS=false;
+            }
             cardsService.assemblePolicy(cards, list1);
             _cards = Cards.dao.findById(cards.getId());
             _cards.setExportAt(new Date());
@@ -186,6 +194,23 @@ public class CardsCtr extends CoreController {
         out.close();
         QiNiuKit.upload(file, "/cards/export/" + fileName);
         file.delete();
+
+        if(sendSMS) {
+            LogKit.info("发送激活短信通知");
+            for (int i = 0; i < list1.size(); i++) {
+                Map<String, String> map = list1.get(i);
+                try {
+                    String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), map.get("phTel"), "{\"code\":\"" + map.get("cardsCode") + "\",\"person\":\"" + map.get("phName") + "\"}");
+                    if (!ret.equals(Consts.YORN_STR.yes.name()))
+                        LogKit.error("卡激活短信通知失败");
+
+                } catch (ClientException e) {
+                    LogKit.error("卡激活短信通知失败>>" + e.getMessage());
+                }
+            }
+        }
+
+
         renderSuccessJSON("卡激活数据导出成功", (String) CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url") + "/cards/export/" + fileName);
 //        } catch (Exception e) {
 //            LogKit.error("卡激活数据导出失败>>" + e.getMessage());
@@ -219,9 +244,11 @@ public class CardsCtr extends CoreController {
         }
 
         long exportCode = Math.abs(DateUtil.current(true));
-
+        boolean sendSMS=true;
         for (Cards cards : list) {
-
+            if(StrUtil.isNotBlank(cards.getExportCode())){
+                sendSMS=false;
+            }
             cardsService.assemblePolicy(cards, list1);
             _cards = Cards.dao.findById(cards.getId());
             _cards.setExportAt(new Date());
@@ -265,6 +292,22 @@ public class CardsCtr extends CoreController {
         out.close();
         QiNiuKit.upload(file, "/cards/export/" + fileName);
         file.delete();
+        if(sendSMS) {
+            LogKit.info("发送车辆短信通知");
+            for (int i = 0; i < list1.size(); i++) {
+                Map<String, String> map = list1.get(i);
+                try {
+                    String ret = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), map.get("cphTel"), "{\"code\":\"" + map.get("cardsCode") + "\",\"person\":\"" + map.get("cphName") + "\"}");
+                    if (!ret.equals(Consts.YORN_STR.yes.name()))
+                        LogKit.error("卡激活短信通知失败");
+
+                } catch (ClientException e) {
+                    LogKit.error("卡激活短信通知失败>>" + e.getMessage());
+                }
+            }
+        }
+
+
         renderSuccessJSON("卡激活数据导出成功", (String) CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url") + "/cards/export/" + fileName);
 //        } catch (Exception e) {
 //            LogKit.error("卡激活数据导出失败>>" + e.getMessage());
@@ -626,8 +669,20 @@ public class CardsCtr extends CoreController {
             renderFailJSON(ret.toString());
             return;
         } else {
-            if (!dtos.isEmpty())
+            if (!dtos.isEmpty()) {
                 cardsService.batchSavePhAndIp(dtos);
+                for (int i = 0; i < dtos.size(); i++) {
+                    DTO data = dtos.get(i);
+                    try {
+                        String smsRet = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), data.getCardsPh().getTel(), "{\"code\":\"" + data.getCards().getCode() + "\",\"person\":\"" + data.getCardsPh().getName() + "\"}");
+                        if (!smsRet.equals(Consts.YORN_STR.yes.name()))
+                            LogKit.error("卡激活短信通知失败");
+
+                    } catch (ClientException e) {
+                        LogKit.error("卡激活短信通知失败>>" + e.getMessage());
+                    }
+                }
+            }
             else {
                 renderFailJSON("导入的数据为空");
                 return;
@@ -765,6 +820,17 @@ public class CardsCtr extends CoreController {
                 return;
             }else{
                 cardsService.batchSaveCarPhAndIp(dto01List);
+                for (int i = 0; i < dto01List.size(); i++) {
+                    DTO01 data = dto01List.get(i);
+                    try {
+                        String smsRet = ALSMSKit.sendSMS(ResKit.getConfig("sms.anbao.card.act.signname"), ResKit.getConfig("sms.anbao.card.act.templatecode"), data.getCardsCarPh().getTel(), "{\"code\":\"" + data.getCards().getCode() + "\",\"person\":\"" + data.getCardsCarPh().getName() + "\"}");
+                        if (!smsRet.equals(Consts.YORN_STR.yes.name()))
+                            LogKit.error("卡激活短信通知失败");
+
+                    } catch (ClientException e) {
+                        LogKit.error("卡激活短信通知失败>>" + e.getMessage());
+                    }
+                }
             }
         }
         renderSuccessJSON("批量激活数据导入成功");

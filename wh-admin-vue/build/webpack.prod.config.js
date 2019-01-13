@@ -57,7 +57,7 @@ module.exports = merge(webpackBaseConfig, {
         // }),
         new CopyWebpackPlugin([
             {
-                from: 'logo-min.png'
+                from: './static/logo-min.png'
             },
             {
                 from: 'src/styles/fonts',
@@ -77,9 +77,10 @@ module.exports = merge(webpackBaseConfig, {
             ]
         }
         ),
+
         new HtmlWebpackPlugin({
             title: '安保健康卡管理系统',
-            favicon: './logo-min.png',
+            favicon: './static/logo-min.png',
             filename: '../index.html',
             template: './src/template/index.ejs',
             inject: false

@@ -1,3 +1,10 @@
+<style lang="less">
+    @import '../../../styles/common.less';
+    .ivu-table .demo-table-error-row td{
+        background-color: #ff6600;
+        color: #fff;
+    }
+</style>
 <template>
     <div>
         <Row>
@@ -91,7 +98,7 @@
                 <Row class="margin-top-10">
 
 
-                    <Table :context="self" border :data="cardsList" :columns="tableColums" @on-selection-change="getSelection" stripe></Table>
+                    <Table :context="self" border :row-class-name="rowClassName" :data="cardsList" :columns="tableColums" @on-selection-change="getSelection" ></Table>
                 </Row>
                 <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
@@ -227,6 +234,12 @@
             })
         },
         methods: {
+            rowClassName (row, index) {
+                if (row.disabled ) {
+                    return 'demo-table-error-row';
+                }
+                return '';
+            },
             search(pn){
 
                 if(pn==undefined)pn=1
@@ -590,6 +603,3 @@
         }
     }
 </script>
-<style lang="less">
-    @import '../../../styles/common.less';
-</style>
