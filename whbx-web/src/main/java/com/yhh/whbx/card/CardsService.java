@@ -10,6 +10,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 import com.yhh.whbx.Consts;
 import com.yhh.whbx.card.model.*;
 import com.yhh.whbx.card.query.CardsCtr;
+import com.yhh.whbx.card.type.CardTypeService;
 import com.yhh.whbx.core.CoreException;
 
 import java.nio.charset.Charset;
@@ -52,6 +53,12 @@ public class CardsService {
 
         if(cards.getStatus()!=null&&cards.getStatus().equals(Consts.YORN_STR.no.getVal())){
             throw new CoreException("此卡状态异常，请联系销售人员");
+        }
+
+        Cardapply cardapply=Cardapply.dao.findById(cards.getApplyId());
+        Cardtype cardtype=Cardtype.dao.findById(cardapply.getCardtypeId());
+        if(cardtype!=null&&cardtype.getStatus().equals(Consts.YORN_STR.no.getVal())){
+            throw new CoreException("此类型卡已经停用，请联系销售人员");
         }
         if(cards.getDepotId()==null){
             throw new CoreException("此卡未出库，请联系销售人员");
