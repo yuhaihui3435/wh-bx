@@ -423,10 +423,16 @@
                         fixed: 'left'
                     },
                     {
+                         type: 'index',
+                         width: 60,
+                         align: 'center'
+                    },
+                    {
                         title: '卡号',
                         key: 'code',
                         fixed: 'left',
                         width: 100,
+                        fixed: 'left'
 
                     },
                     {
