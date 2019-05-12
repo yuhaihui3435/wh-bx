@@ -55,9 +55,14 @@ public class DepotCtr extends CoreController {
         if (!isParaBlank("salesmenId"))
             kv.put("salesmenId=", getParaToInt("salesmenId"));
         if (!isParaBlank("outTime")){
+
             String[] array= StrUtil.split(getPara("outTime")," - ");
-            kv.put("outTime>=",StrUtil.trimEnd(array[0]));
-            kv.put("outTime<",StrUtil.trimEnd(array[1]));
+            if(StrUtil.isNotBlank(StrUtil.trimEnd(array[0]))) {
+                kv.put("outTime>=", StrUtil.trimEnd(array[0]));
+            }
+            if(StrUtil.isNotBlank(StrUtil.trimEnd(array[1]))) {
+                kv.put("outTime<", StrUtil.trimEnd(array[1]));
+            }
         }
 
 

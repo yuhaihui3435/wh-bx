@@ -47,7 +47,10 @@
                             </Select>
                         </FormItem>
                         <FormItem>
-                            <DatePicker type="datetimerange"   placement="bottom-end" placeholder="出库时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
+                            <DatePicker type="datetime"   placement="bottom-end" v-model="oowStartTime" placeholder="出库开始时间" @on-change="oowStartTimeChange" style="width: 200px"></DatePicker>
+                        </FormItem>
+                        <FormItem>
+                             <DatePicker type="datetime"   placement="bottom-end" v-model="oowEndTime" placeholder="出库结束时间" @on-change="oowEndTimeChange" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem>
                             <span @click="search" style="margin: 0 10px;"><Button type="primary"
@@ -192,12 +195,14 @@
                 })
             },
             search(){
+
+
                 let param = {
                     cardtypeId: this.cardtypeId,
                     outStatus: this.outStatus,
                     status: this.status,
                     salesmenId: this.salesmenId,
-                    outTime: this.outTime,
+                    outTime: this.oowStartTime+' - '+this.oowEndTime,
                     cardapplyId: this.cardapplyId
                 }
                 this.$store.dispatch('depot_page', param)
@@ -281,6 +286,12 @@
                 else
                     this.outTime='';
             },
+            oowStartTimeChange(val){
+                  this.oowStartTime=val;
+            },
+            oowEndTimeChange(val){
+                  this.oowEndTime=val;
+            },
 
 
 
@@ -296,6 +307,8 @@
 
         data () {
             return {
+                oowStartTime:'',
+                oowEndTime:'',
                 cardapplyId:'',
                 cardtypeId: '',//卡类型
                 outStatus: '',//是否已经出库

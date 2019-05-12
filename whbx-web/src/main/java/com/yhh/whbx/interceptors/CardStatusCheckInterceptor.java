@@ -3,7 +3,9 @@ package com.yhh.whbx.interceptors;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.yhh.whbx.Consts;
+import com.yhh.whbx.card.model.Cardapply;
 import com.yhh.whbx.card.model.Cards;
+import com.yhh.whbx.card.model.Cardtype;
 import com.yhh.whbx.core.CoreController;
 import com.yhh.whbx.core.CoreException;
 import com.yhh.whbx.kits.ReqKit;
@@ -48,6 +50,17 @@ public class CardStatusCheckInterceptor implements Interceptor
                     throw new CoreException("卡片被锁定，请联系销售人员");
                 }
             }
+            Cardapply cardapply=Cardapply.dao.findById(cards.getApplyId());
+            Cardtype cardtype=Cardtype.dao.findById(cardapply.getCardtypeId());
+            if(cardtype!=null&&cardtype.getStatus().equals(Consts.YORN_STR.no.getVal())){
+                if(ReqKit.isAjaxRequest(cc.getRequest())){
+                    cc.renderFailJSON("该类型卡被禁用,无法注册");
+                    return;
+                }else{
+                    throw new CoreException("该类型卡被禁用,无法注册");
+                }
+            }
+
         }
         invocation.invoke();
 

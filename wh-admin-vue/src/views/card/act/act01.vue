@@ -41,8 +41,11 @@
                         </FormItem>
 
                         <FormItem>
-                            <DatePicker :options="options" type="datetimerange" v-model="at"   placement="bottom-end" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
-                        </FormItem>
+                                                                                                    <DatePicker type="datetime"   placement="bottom-end" placeholder="激活开始时间" @on-change="startTimeChange" style="width: 200px"></DatePicker>
+                                                                                                </FormItem>
+                                                                                                <FormItem>
+                                                                                                     <DatePicker type="datetime"     placement="bottom-end" placeholder="激活结束时间" @on-change="endTimeChange" style="width: 200px"></DatePicker>
+                                                                                                </FormItem>
                         <FormItem>
                             <Select v-model="exportStatus" placeholder="导出状态" clearable style="width:100px" align="left">
                                 <Option v-for="item in yonList" :value="item.value" :key="item.value">{{ item.label}}
@@ -244,7 +247,7 @@
                 let param = {
                     exportStatus:this.exportStatus,
                     salesmenId: this.salesmenId,
-                    actTime: this.actTime,
+                    actTime: this.startTime+' - '+this.endTime,
                     code:this.code,
                     policyNum:this.policyNum,
                     actStatus:this.actStatus,
@@ -315,6 +318,7 @@
                     phName:this.phName,
                     ipPlateNum:this.ipPlateNum,
                     phTel:this.phTel,
+
                 }
 
                 this.$store.dispatch('car_cards_act_export',param).then((res)=>{
@@ -351,6 +355,7 @@
                 this.ipPlateNum='';
                 this.at='';
                 this.phTel='';
+
             },
             handleFormatError(file){
                 vm.$store.commit('upadteSpinshow',false);
@@ -381,7 +386,13 @@
             },
             downloadTemplate(){
                 window.open(consts.env+'/static/templates/act01.xls')
-            }
+            },
+            startTimeChange(val){
+                                                      this.startTime=val;
+                                                },
+                                                endTimeChange(val){
+                                                      this.endTime=val;
+                                                },
 
         },
         mounted () {
@@ -398,6 +409,8 @@
         },
         data () {
             return {
+                startTime:'',
+                endTime:'',
                 env:consts.env,
                 at:'',
                 selections:[],
@@ -422,11 +435,13 @@
                         align: 'center',
                         fixed: 'left'
                     },
-                    {
-                         type: 'index',
-                         width: 60,
-                         align: 'center'
-                    },
+                     {
+                                                                title: '序号',
+                                                                key: 'dataIndex',
+                                                                fixed: 'left',
+                                                                width: 60,
+
+                                                            },
                     {
                         title: '卡号',
                         key: 'code',
