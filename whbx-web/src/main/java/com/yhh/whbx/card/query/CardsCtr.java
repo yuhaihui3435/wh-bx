@@ -459,8 +459,12 @@ public class CardsCtr extends CoreController {
             kv.put("ct.type=", getPara("cardtypeType"));
         if (!isParaBlank("actTime")) {
             String[] array = StrUtil.split(getPara("actTime"), " - ");
-            kv.put("c.actAt>=", StrUtil.trimEnd(array[0]));
-            kv.put("c.actAt<", StrUtil.trimEnd(array[1]));
+            if(StrUtil.isNotBlank(StrUtil.trimEnd(array[0]))) {
+                kv.put("c.actAt>=", StrUtil.trimEnd(array[0]));
+            }
+            if(StrUtil.isNotBlank(StrUtil.trimEnd(array[1]))) {
+                kv.put("c.actAt<", StrUtil.trimEnd(array[1]));
+            }
         }
 
         return kv;

@@ -193,6 +193,26 @@
                                 return [start, end];
                             }
                         }
+                        ,
+                                                {
+                                                    text: '最近180天',
+                                                    value () {
+                                                        const end = new Date();
+                                                        const start = new Date();
+                                                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+                                                        return [start, end];
+                                                    }
+                                                }
+                        ,
+                                                {
+                                                    text: '最近360天',
+                                                    value () {
+                                                        const end = new Date();
+                                                        const start = new Date();
+                                                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 360);
+                                                        return [start, end];
+                                                    }
+                                                }
                     ]
                 }
             }

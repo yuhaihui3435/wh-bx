@@ -31,6 +31,7 @@ const cards = {
 
             for(var i=0;i<state.cardsList_00.length;i++){
                 let c=state.cardsList_00[i];
+                c['dataIndex']=(page.pageNumber-1)*15+(i+1);
                 // c['_disabled']=c.disabled;
             }
 
@@ -43,6 +44,7 @@ const cards = {
 
             for(var i=0;i<state.cardsList_01.length;i++){
                 let c=state.cardsList_01[i];
+                c['dataIndex']=(page.pageNumber-1)*15+(i+1);
                 // c['_disabled']=c.disabled;
             }
 

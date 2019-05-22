@@ -21,9 +21,14 @@
                             <Input v-model="faceVal" placeholder="面值" style="width: 200px"/>
                         </FormItem>
 
+
                         <FormItem>
-                            <DatePicker type="datetimerange" :options="options"   placement="bottom-end" v-model="at" placeholder="激活时间" @on-change="dateTimeChange" style="width: 200px"></DatePicker>
-                        </FormItem>
+                                                    <DatePicker type="datetime"   placement="bottom-end" placeholder="激活开始时间" @on-change="startTimeChange" style="width: 200px"></DatePicker>
+                                                </FormItem>
+                                                <FormItem>
+                                                     <DatePicker type="datetime"   placement="bottom-end" placeholder="激活结束时间" @on-change="endTimeChange" style="width: 200px"></DatePicker>
+                                                </FormItem>
+
                         <FormItem>
                             <Select v-model="cardtypeId" placeholder="卡类型" clearable style="width:100px" align="left" @on-change="cardtypeChange">
                                 <Option v-for="item in cardtypeList" :value="item.id" :key="item.id">{{ item.name }}
@@ -171,7 +176,7 @@
                     outStatus: this.outStatus,
                     status: this.status,
                     salesmenId: this.salesmenId,
-                    actTime: this.actTime,
+                    actTime: this.startTime+' - '+this.endTime,
                     cardapplyId: this.cardapplyId,
                     code:this.code,
                     faceVal:this.faceVal,
@@ -220,7 +225,14 @@
                 this.salesmenId= '';//分配
                 this.actTime= '';//出库时间
                 this.at='';
-            }
+
+            },
+            startTimeChange(val){
+                              this.startTime=val;
+                        },
+                        endTimeChange(val){
+                              this.endTime=val;
+                        },
 
         },
         mounted () {
@@ -232,6 +244,8 @@
         },
         data () {
             return {
+                startTime:'',
+                endTime:'',
                 at:'',
                 cardapplyId:'',//卡申请id
                 cardtypeId:'',//卡类型id

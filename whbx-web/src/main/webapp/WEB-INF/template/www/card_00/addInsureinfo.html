@@ -154,13 +154,13 @@
                 <div class="col-md-4" style="display: none">
                     <label>职业种类</label>
 
-                    <select onchange="occ_1_handle('#(i+1)')" id="occ_1-#(i+1)" size="10" style="width: 100%">
+                    <select onchange="occ_1_handle('#(i+1)')" id="occ_1-#(i+1)" size="10" style="width: 100%;overflow-x:hidden">
 
                     </select>
                 </div>
                 <div class="col-md-4" style="display: none;">
                     <label>职业小类</label>
-                    <select id="occCode-#(i+1)"  size="10" style="width: 100%">
+                    <select id="occCode-#(i+1)"  size="10" style="width: 100%;overflow:auto">
 
                     </select>
                 </div>
@@ -275,7 +275,7 @@
                         occ_code_obj_p.show();
                         occ_code_obj.empty();
                         $.each(data, function (index, obj) {
-                            occ_code_obj.append("<option value='" + obj.id + "'>" + obj.name +"[职业类别:"+(obj.type==undefined?"无":obj.type)+ "]</option>");
+                            occ_code_obj.append("<option value='" + obj.id + "' title='"+obj.name+"[职业类别:"+(obj.type==undefined?"无":obj.type)+"]'>" + obj.name +"[职业类别:"+(obj.type==undefined?"无":obj.type)+ "]</option>");
                         })
                     }
                     , beforeSend(XHR){
