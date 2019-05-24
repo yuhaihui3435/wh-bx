@@ -53,9 +53,9 @@
     #for(x : cond)
       #if(x.key=='c.exportCode'&&x.value=='0')
          and c.exportCode is not NULL
-        #else if(x.key=='c.exportCode'&&x.value=='1')
+      #else if(x.key=='c.exportCode'&&x.value=='1')
          ###and c.exportCode is NULL
-        #else
+      #else
          and #(x.key) #para(x.value)
       #end
     #end

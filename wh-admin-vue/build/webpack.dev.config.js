@@ -59,7 +59,7 @@ module.exports = merge(webpackBaseConfig, {
         stats: { colors: true },
         proxy: {
             '/api': {
-                target: 'http://localhost:8081',
+                target: 'http://localhost:8083',
                 pathRewrite: {'^/api' : '/'},
                 changeOrigin: true
             }

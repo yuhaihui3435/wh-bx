@@ -68,8 +68,8 @@ public class CardsService {
             throw new CoreException("此卡被锁定，请联系销售人员");
         }
 
-        Integer applyId=cards.getApplyId();
-        Cardapply cardapply=Cardapply.dao.findById(new Long(applyId));
+//        Integer applyId=cards.getApplyId();
+//        cardapply=Cardapply.dao.findById(new Long(applyId));
         String key=cardapply.getSkey();
         byte[] key_array= Base64.decode(key, Charset.forName("UTF-8"));
         pwd= SecureUtil.aes(key_array).encryptHex(pwd);

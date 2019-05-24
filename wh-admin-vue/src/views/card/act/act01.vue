@@ -308,7 +308,7 @@
                 let param = {
                     exportStatus:"1",
                     salesmenId: this.salesmenId,
-                    actTime: this.actTime,
+                    actTime: this.startTime+' - '+this.endTime,
                     code:this.code,
                     policyNum:this.policyNum,
                     actStatus:this.actStatus,
